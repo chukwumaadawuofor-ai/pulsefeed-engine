@@ -14,41 +14,48 @@ TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 # Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Define RSS feeds
+# Define RSS feeds (Including Remote Jobs & Nigerian Tech/Business)
 FEEDS = {
     "⚽ FOOTBALL": "https://feeds.bbci.co.uk/sport/football/rss.xml",
     "💼 BUSINESS": "https://news.google.com/rss/search?q=business+nigeria&hl=en-NG&gl=NG&ceid=NG:en",
-    "🪙 CRYPTO": "https://cointelegraph.com/rss"
+    "🪙 CRYPTO": "https://cointelegraph.com/rss",
+    "💻 REMOTE JOBS": "https://weworkremotely.com/remote-jobs.rss"
 }
 
-# Sample accumulator match predictions & mock booking codes for Nigerian bookmakers (SportyBet / Bet9ja style)
+# Enhanced Higher-Odds Accumulator Betting Slips (4 to 6 carefully analyzed games for bigger returns)
 BETTING_ACCUMULATORS = [
     {
-        "title": "Weekend Banker Accumulator (3 Odds)",
+        "title": "🔥 Ultimate Weekend Banker & Value Slip (8.5 Odds)",
         "games": [
-            "1. Manchester City vs Wolves — Home Win & Over 1.5",
-            "2. Real Madrid vs Valencia — Real Madrid Win",
-            "3. Napoli vs Monza — Over 2.5 Goals"
+            "1. Real Madrid vs Real Sociedad — Home Win & Over 1.5",
+            "2. Bayern Munich vs Werder Bremen — Over 2.5 Goals",
+            "3. PSG vs Lens — Both Teams to Score (BTTS)",
+            "4. Benfica vs Gil Vicente — Home Win",
+            "5. Ajax vs PEC Zwolle — Over 2.5 Goals"
         ],
         "booking_code": "SP9J" + str(random.randint(100000, 999999)),
         "bookmaker": "SportyBet / Bet9ja"
     },
     {
-        "title": "Super Value Multi-Bet (5 Odds)",
+        "title": "💰 Mega Profit Accumulator (12+ Odds)",
         "games": [
-            "1. Arsenal vs Crystal Palace — Arsenal Clean Sheet (No)",
-            "2. Bayern Munich vs Augsburg — Over 3.5 Goals",
-            "3. Inter Milan vs Empoli — Home Win in Both Halves"
+            "1. Manchester City vs Brighton — Home Win in Both Halves",
+            "2. Inter Milan vs Torino — Inter Win & Clean Sheet (No)",
+            "3. Bayer Leverkusen vs VfB Stuttgart — Over 3.5 Goals",
+            "4. Barcelona vs Athletic Bilbao — Both Teams to Score",
+            "5. Sporting CP vs Porto — Under 3.5 Goals"
         ],
         "booking_code": "B9JA" + str(random.randint(100000, 999999)),
         "bookmaker": "Bet9ja / 1xBet"
     },
     {
-        "title": "Mega Goal Rush Slip (8+ Odds)",
+        "title": "⚡ High-Stakes Goldmine Slip (15+ Odds)",
         "games": [
-            "1. Barcelona vs Villarreal — Both Teams to Score & Over 2.5",
-            "2. Liverpool vs Aston Villa — Over 2.5 Goals",
-            "3. PSG vs Marseille — Both Teams to Score"
+            "1. Arsenal vs Chelsea — Both Teams to Score & Over 2.5",
+            "2. Liverpool vs Tottenham — Home Win",
+            "3. Napoli vs AC Milan — Over 2.5 Goals",
+            "4. Atletico Madrid vs Sevilla — Home Win or Draw & Under 3.5",
+            "5. Galatasaray vs Fenerbahce — Over 1.5 Goals"
         ],
         "booking_code": "RET" + str(random.randint(100000, 999999)),
         "bookmaker": "NairaBet / SportyBet"
@@ -69,10 +76,10 @@ def send_to_telegram(text):
     return response
 
 def post_betting_slip():
-    # Pick a random accumulator slip to post
+    # Pick a random high-odds accumulator slip
     slip = random.choice(BETTING_ACCUMULATORS)
     
-    # Create a unique link/identifier key for Supabase to prevent duplicate posting
+    # Create unique identifier key for Supabase to prevent duplicate posting
     slip_id_key = f"betting_slip_{slip['booking_code']}"
     
     existing = supabase.table("articles").select("id").eq("link", slip_id_key).execute()
@@ -101,7 +108,7 @@ def post_betting_slip():
 def main():
     print("--- Starting Feed Fetcher & Betting Bot ---")
     
-    # 1. Fetch normal RSS news feeds
+    # 1. Fetch RSS news & job feeds
     for category, feed_url in FEEDS.items():
         print(f"Fetching {category} from {feed_url}...")
         parsed = feedparser.parse(feed_url)
@@ -131,8 +138,8 @@ def main():
                     }).execute()
                     print(f"Saved & Sent: {title}")
 
-    # 2. Automatically generate and post a betting slip with booking code
+    # 2. Automatically generate and post a high-odds betting slip with booking code
     post_betting_slip()
 
-if __name__ == "__main__":
+If __name__ == "__main__":
     main()

@@ -22,16 +22,16 @@ FEEDS = {
     "💻 REMOTE JOBS": "https://weworkremotely.com/remote-jobs.rss"
 }
 
-# Enhanced Higher-Odds Accumulator Betting Slips (4 to 6 carefully analyzed games for bigger returns)
+# Enhanced Higher-Odds Accumulator Betting Slips (4 to 5 carefully analyzed games for bigger returns)
 BETTING_ACCUMULATORS = [
     {
         "title": "🔥 Ultimate Weekend Banker & Value Slip (8.5 Odds)",
         "games": [
-            "1. Real Madrid vs Real Sociedad — Home Win & Over 1.5",
-            "2. Bayern Munich vs Werder Bremen — Over 2.5 Goals",
-            "3. PSG vs Lens — Both Teams to Score (BTTS)",
-            "4. Benfica vs Gil Vicente — Home Win",
-            "5. Ajax vs PEC Zwolle — Over 2.5 Goals"
+            "1. Real Madrid vs Real Sociedad — Home Win & Over 1.5 ✅",
+            "2. Bayern Munich vs Werder Bremen — Over 2.5 Goals ✅",
+            "3. PSG vs Lens — Both Teams to Score (BTTS) ✅",
+            "4. Benfica vs Gil Vicente — Home Win ✅",
+            "5. Ajax vs PEC Zwolle — Over 2.5 Goals ✅"
         ],
         "booking_code": "SP9J" + str(random.randint(100000, 999999)),
         "bookmaker": "SportyBet / Bet9ja"
@@ -62,7 +62,7 @@ BETTING_ACCUMULATORS = [
     }
 ]
 
-def send_to_telegram(text):
+def send_to_telegram(text, pin_message=False):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHANNEL_ID,
@@ -72,7 +72,22 @@ def send_to_telegram(text):
     }
     response = requests.post(url, json=payload)
     print(f"Telegram Status Code: {response.status_code}")
-    print(f"Telegram Response: {response.text}")
+    
+    # Automatically pin the message if requested (requires bot to be Admin with 'Pin Messages' permission)
+    if response.status_code == 200 and pin_message:
+        try:
+            msg_id = response.json()["result"]["message_id"]
+            pin_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/pinChatMessage"
+            pin_payload = {
+                "chat_id": TELEGRAM_CHANNEL_ID,
+                "message_id": msg_id,
+                "disable_notification": True
+            }
+            pin_res = requests.post(pin_url, json=pin_payload)
+            print(f"Auto-Pin Status: {pin_res.status_code}")
+        except Exception as e:
+            print(f"Could not pin message: {e}")
+            
     return response
 
 def post_betting_slip():
@@ -92,18 +107,20 @@ def post_betting_slip():
             f"{games_text}\n\n"
             f"🔖 *Booking Code:* `{slip['booking_code']}`\n"
             f"🏦 *Recommended App/Shop:* {slip['bookmaker']}\n\n"
+            f"📌 *Pinned to top for easy access!*\n"
             f"⚠️ *Play Responsibly (18+)*\n"
             f"📲 Follow @PulseFeedNG"
         )
         
-        res = send_to_telegram(message)
+        # Send and automatically PIN the betting slip to the top of the channel!
+        res = send_to_telegram(message, pin_message=True)
         if res.status_code == 200:
             supabase.table("articles").insert({
                 "title": slip["title"],
                 "link": slip_id_key,
                 "category": "🎯 BETTING TIPS"
             }).execute()
-            print(f"Successfully posted betting slip: {slip['booking_code']}")
+            print(f"Successfully posted and pinned betting slip: {slip['booking_code']}")
 
 def main():
     print("--- Starting Feed Fetcher & Betting Bot ---")
@@ -129,7 +146,7 @@ def main():
                     f"📲 Follow @PulseFeedNG"
                 )
                 
-                res = send_to_telegram(message)
+                res = send_to_telegram(message, pin_message=False)
                 if res.status_code == 200:
                     supabase.table("articles").insert({
                         "title": title,
@@ -138,7 +155,7 @@ def main():
                     }).execute()
                     print(f"Saved & Sent: {title}")
 
-    # 2. Automatically generate and post a high-odds betting slip with booking code
+    # 2. Automatically generate, post, and PIN a high-odds betting slip with booking code
     post_betting_slip()
 
 if __name__ == "__main__":

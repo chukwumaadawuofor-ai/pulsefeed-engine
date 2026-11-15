@@ -1,110 +1,76 @@
 import os
-import feedparser
 import requests
+import feedparser
 from datetime import datetime
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from GitHub Secrets
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHANNEL = os.environ.get("TELEGRAM_CHANNEL_ID")
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
-
-# Supabase Headers
-HEADERS = {
+# Supabase headers
+headers = {
     "apikey": SUPABASE_KEY,
     "Authorization": f"Bearer {SUPABASE_KEY}",
     "Content-Type": "application/json",
-    "Prefer": "resolution=merge-duplicates"
+    "Prefer": "return=representation"
 }
 
-# RSS Feeds to monitor (Football & Finance)
-FEEDS = [
-    {"name": "BBC Sport Football", "category": "Football", "url": "https://feeds.bbci.co.uk/sport/football/rss.xml"},
-    {"name": "Reuters Business", "category": "Finance", "url": "https://www.reutersagency.com/feed/?best-topics=business-finance&post_type=best"},
-    {"name": "CoinDesk Crypto", "category": "Crypto", "url": "https://www.coindesk.com/arc/outboundrss/?outputType=xml"}
-]
+# RSS Feed sources
+FEEDS = {
+    "Football": "http://feeds.bbci.co.uk/sport/football/rss.xml",
+    "Business": "https://feeds.reuters.com/reuters/businessNews",
+    "Crypto": "https://www.coindesk.com/arc/outboundfeeds/rss/"
+}
 
-def send_telegram_alert(title, link, category):
-    """Sends formatted teaser to your Telegram channel"""
-    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHANNEL_ID:
-        print("Telegram credentials missing. Skipping notification.")
-        return
-
-    emoji = "⚽" if category == "Football" else "📈" if category == "Finance" else "🚀"
-    
-    message = (
-        f"{emoji} **{category} Update**\n\n"
-        f"*{title}*\n\n"
-        f"🔗 [Read Full Update]({link})"
-    )
-
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": TELEGRAM_CHANNEL_ID,
-        "text": message,
-        "parse_mode": "Markdown",
-        "disable_web_page_preview": False
-    }
-
-    try:
-        response = requests.post(url, json=payload, timeout=10)
-        if response.status_code != 200:
-            print(f"Telegram Error: {response.text}")
-    except Exception as e:
-        print(f"Failed to send Telegram alert: {e}")
-
-def save_to_supabase(article):
-    """Upserts article to Supabase table 'articles' using 'link' as unique constraint"""
-    url = f"{SUPABASE_URL}/rest/v1/articles"
-    try:
-        response = requests.post(url, headers=HEADERS, json=article, timeout=10)
-        if response.status_code in [200, 201]:
-            return True
-        else:
-            print(f"Supabase Error: {response.text}")
-            return False
-    except Exception as e:
-        print(f"Database connection error: {e}")
-        return False
-
-def process_feeds():
+def run_worker():
     print(f"--- Running Feed Fetcher at {datetime.now()} ---")
     
-    for feed_info in FEEDS:
-        print(f"Fetching {feed_info['name']}...")
-        parsed_feed = feedparser.parse(feed_info["url"])
+    for category, feed_url in FEEDS.items():
+        print(f"Fetching {category}...")
+        parsed_feed = feedparser.parse(feed_url)
         
-        for entry in parsed_feed.entries[:5]:
-            title = entry.get("title", "No Title")
-            link = entry.get("link", "")
-            published = entry.get("published", datetime.now().isoformat())
+        for entry in parsed_feed.entries[:5]: # Take top 5 entries per run
+            title = entry.get("title")
+            link = entry.get("link")
+            published = entry.get("published", str(datetime.now()))
             
-            if not link:
+            # 1. Check if article already exists in Supabase (duplicate check)
+            check_url = f"{SUPABASE_URL}/rest/v1/articles?link=eq.{link}"
+            res = requests.get(check_url, headers=headers)
+            
+            if res.status_code == 200 and len(res.json()) > 0:
+                # Article already exists, skip it
                 continue
-
-            article_data = {
+            
+            # 2. Insert new article into Supabase
+            payload = {
                 "title": title,
                 "link": link,
-                "source": feed_info["name"],
-                "category": feed_info["category"],
+                "source": category,
+                "category": category,
                 "published_at": published
             }
-
-            url_check = f"{SUPABASE_URL}/rest/v1/articles?link=eq.{requests.utils.quote(link, safe='')}"
-            check_res = requests.get(url_check, headers=HEADERS).json()
-
-            if not check_res:
-                success = save_to_supabase(article_data)
-                if success:
-                    print(f"New item saved & broadcasting: {title}")
-                    send_telegram_alert(title, link, feed_info["category"])
-            else:
-                continue
-
+            insert_res = requests.post(f"{SUPABASE_URL}/rest/v1/articles", headers=headers, json=payload)
+            
+            if insert_res.status_code in [200, 201]:
+                print(f"Saved to Supabase: {title}")
+                
+                # 3. Broadcast teaser to Telegram Channel with logging
+                telegram_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+                msg = f"*{category} Update*\n\n{title}\n\n🔗 {link}"
+                tg_payload = {
+                    "chat_id": TELEGRAM_CHANNEL,
+                    "text": msg,
+                    "parse_mode": "Markdown"
+                }
+                
+                tg_res = requests.post(telegram_url, json=tg_payload)
+                print(f"Telegram Status Code: {tg_res.status_code}")
+                print(f"Telegram Response JSON: {tg_res.json()}")
+                
     print("--- Feed processing complete ---")
 
 if __name__ == "__main__":
-    process_feeds()
+    run_worker()

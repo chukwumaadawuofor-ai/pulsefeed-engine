@@ -141,5 +141,5 @@ def main():
     # 2. Automatically generate and post a high-odds betting slip with booking code
     post_betting_slip()
 
-If __name__ == "__main__":
+if __name__ == "__main__":
     main()

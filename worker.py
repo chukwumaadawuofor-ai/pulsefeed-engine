@@ -1,76 +1,65 @@
 import os
-import requests
 import feedparser
-from datetime import datetime
+import requests
+from supabase import create_client, Client
 
-# Load environment variables from GitHub Secrets
+# Load environment variables
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHANNEL = os.environ.get("TELEGRAM_CHANNEL_ID")
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 
-# Supabase headers
-headers = {
-    "apikey": SUPABASE_KEY,
-    "Authorization": f"Bearer {SUPABASE_KEY}",
-    "Content-Type": "application/json",
-    "Prefer": "return=representation"
-}
+# Initialize Supabase client
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# RSS Feed sources
+# Define RSS feeds
 FEEDS = {
-    "Football": "http://feeds.bbci.co.uk/sport/football/rss.xml",
-    "Business": "https://feeds.reuters.com/reuters/businessNews",
-    "Crypto": "https://www.coindesk.com/arc/outboundfeeds/rss/"
+    "Football": "https://rss.app/feeds/v1.1/wtuh7e98a5d3f23a.json", # Replace or keep your feed URLs
+    "Business": "https://news.google.com/rss/search?q=business+nigeria&hl=en-NG&gl=NG&ceid=NG:en",
+    "Crypto": "https://cointelegraph.com/rss"
 }
 
-def run_worker():
-    print(f"--- Running Feed Fetcher at {datetime.now()} ---")
+def send_to_telegram(text):
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": TELEGRAM_CHANNEL_ID,
+        "text": text,
+        "parse_mode": "Markdown"
+    }
+    response = requests.post(url, json=payload)
+    print(f"Telegram Status Code: {response.status_code}")
+    print(f"Telegram Response: {response.text}")
+    return response
+
+def main():
+    print("--- Starting Feed Fetcher ---")
     
-    for category, feed_url in FEEDS.items():
-        print(f"Fetching {category}...")
-        parsed_feed = feedparser.parse(feed_url)
+    for category, url in FEEDS.items():
+        print(f"Fetching {category} from {url}...")
+        parsed = feedparser.parse(url)
+        print(f"Found {len(parsed.entries)} entries in {category}")
         
-        for entry in parsed_feed.entries[:5]: # Take top 5 entries per run
-            title = entry.get("title")
-            link = entry.get("link")
-            published = entry.get("published", str(datetime.now()))
+        for entry in parsed.entries[:3]: # Limit to top 3 for testing
+            title = entry.get("title", "No Title")
+            link = entry.get("link", "")
             
-            # 1. Check if article already exists in Supabase (duplicate check)
-            check_url = f"{SUPABASE_URL}/rest/v1/articles?link=eq.{link}"
-            res = requests.get(check_url, headers=headers)
-            
-            if res.status_code == 200 and len(res.json()) > 0:
-                # Article already exists, skip it
+            # Check if article already exists in Supabase
+            existing = supabase.table("articles").select("id").eq("link", link).execute()
+            if existing.data:
+                print(f"Skipping duplicate: {title}")
                 continue
+                
+            print(f"New article found: {title}")
             
-            # 2. Insert new article into Supabase
-            payload = {
-                "title": title,
-                "link": link,
-                "source": category,
-                "category": category,
-                "published_at": published
-            }
-            insert_res = requests.post(f"{SUPABASE_URL}/rest/v1/articles", headers=headers, json=payload)
+            # Insert into Supabase
+            insert_res = supabase.table("articles").insert({"title": title, "link": link, "category": category}).execute()
+            print(f"Supabase Insert Response: {insert_res}")
             
-            if insert_res.status_code in [200, 201]:
-                print(f"Saved to Supabase: {title}")
-                
-                # 3. Broadcast teaser to Telegram Channel with logging
-                telegram_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-                msg = f"*{category} Update*\n\n{title}\n\n🔗 {link}"
-                tg_payload = {
-                    "chat_id": TELEGRAM_CHANNEL,
-                    "text": msg,
-                    "parse_mode": "Markdown"
-                }
-                
-                tg_res = requests.post(telegram_url, json=tg_payload)
-                print(f"Telegram Status Code: {tg_res.status_code}")
-                print(f"Telegram Response JSON: {tg_res.json()}")
-                
+            # Format and send to Telegram
+            message = f"*{category} Update*\n\n{title}\n\n[Read More]({link})"
+            send_to_telegram(message)
+
     print("--- Feed processing complete ---")
 
 if __name__ == "__main__":
-    run_worker()
+    main()

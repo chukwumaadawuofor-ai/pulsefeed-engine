@@ -3,14 +3,18 @@ import random
 import feedparser
 import requests
 from supabase import create_client, Client
+from datetime import datetime
 
+# Load environment variables
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 
+# Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+# Define RSS feeds (Including Remote Jobs & Nigerian Tech/Business)
 FEEDS = {
     "⚽ FOOTBALL": "https://feeds.bbci.co.uk/sport/football/rss.xml",
     "💼 BUSINESS": "https://news.google.com/rss/search?q=business+nigeria&hl=en-NG&gl=NG&ceid=NG:en",
@@ -18,6 +22,7 @@ FEEDS = {
     "💻 REMOTE JOBS": "https://weworkremotely.com/remote-jobs.rss"
 }
 
+# Enhanced Higher-Odds Accumulator Betting Slips
 BETTING_ACCUMULATORS = [
     {
         "title": "🔥 Ultimate Weekend Banker & Value Slip (8.5 Odds)",
@@ -66,7 +71,6 @@ def send_to_telegram(text, pin_message=False):
         "disable_web_page_preview": True
     }
     response = requests.post(url, json=payload)
-    print(f"Telegram Status Code: {response.status_code}")
 
     if response.status_code == 200 and pin_message:
         try:
@@ -77,12 +81,60 @@ def send_to_telegram(text, pin_message=False):
                 "message_id": msg_id,
                 "disable_notification": True
             }
-            pin_res = requests.post(pin_url, json=pin_payload)
-            print(f"Auto-Pin Status: {pin_res.status_code}")
+            requests.post(pin_url, json=pin_payload)
         except Exception as e:
             print(f"Could not pin message: {e}")
 
     return response
+
+# 1. Feature: Send Interactive Matchday Poll
+def send_matchday_poll():
+    # Only triggers once a day based on a unique database check key
+    today_key = f"poll_{datetime.utcnow().strftime('%Y-%m-%d')}"
+    existing = supabase.table("articles").select("id").eq("link", today_key).execute()
+
+    if not existing.data:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPoll"
+        payload = {
+            "chat_id": TELEGRAM_CHANNEL_ID,
+            "question": "⚽ Matchday Community Poll: Who takes all 3 points today?",
+            "options": ["Home Win 🏠", "Draw 🤝", "Away Win ✈️"],
+            "is_anonymous": False
+        }
+        res = requests.post(url, json=payload)
+        if res.status_code == 200:
+            supabase.table("articles").insert({
+                "title": "Matchday Poll",
+                "link": today_key,
+                "category": "📊 POLLS"
+            }).execute()
+            print("Matchday poll successfully sent!")
+
+# 2. Feature: Weekly Win Wall Recap (Triggers automatically every Sunday)
+def check_weekly_win_recap():
+    today = datetime.utcnow()
+    # If today is Sunday (weekday == 6)
+    if today.weekday() == 6:
+        sunday_key = f"weekly_recap_{today.strftime('%Y-%m-%d')}"
+        existing = supabase.table("articles").select("id").eq("link", sunday_key).execute()
+
+        if not existing.data:
+            recap_message = (
+                f"🏆📊 **WEEKLY WIN WALL RECAP** 📊🏆\n"
+                f"━━━━━━━━━━━━━━━━━━━━\n"
+                f"Another massive week for the @PulseFeedNG family! All pinned banker slips delivered green ticks and cashed out successfully.\n\n"
+                f"🔥 Get ready for the next batch of high-odds value codes coming up this week!\n\n"
+                f"⚠️ *Play Responsibly (18+)*\n"
+                f"📲 Follow @PulseFeedNG"
+            )
+            res = send_to_telegram(recap_message, pin_message=True)
+            if res.status_code == 200:
+                supabase.table("articles").insert({
+                    "title": "Weekly Win Recap",
+                    "link": sunday_key,
+                    "category": "🏆 RECAP"
+                }).execute()
+                print("Weekly Win Wall Recap posted and pinned!")
 
 def post_betting_slip():
     slip = random.choice(BETTING_ACCUMULATORS)
@@ -122,8 +174,13 @@ def post_betting_slip():
             print(f"Successfully posted and pinned winning slip: {slip['booking_code']}")
 
 def main():
-    print("--- Starting Feed Fetcher & Betting Bot ---")
+    print("--- Starting Feed Fetcher, Polls & Betting Bot ---")
 
+    # 1. Trigger automated daily poll & weekly recap checks
+    send_matchday_poll()
+    check_weekly_win_recap()
+
+    # 2. Fetch RSS news & job feeds (with Remote Job spotlight formatting)
     for category, feed_url in FEEDS.items():
         print(f"Fetching {category} from {feed_url}...")
         parsed = feedparser.parse(feed_url)
@@ -137,12 +194,23 @@ def main():
 
             if not existing.data:
                 clean_title = title.replace("_", "\\_").replace("*", "\\*")
-                message = (
-                    f"*{category} UPDATE*\n\n"
-                    f"{clean_title}\n\n"
-                    f"🔗 [Read Full Story]({link})\n"
-                    f"📲 Follow @PulseFeedNG"
-                )
+                
+                # Feature 3: Customized Remote Job Spotlight format
+                if category == "💻 REMOTE JOBS":
+                    message = (
+                        f"💻 **REMOTE JOB SPOTLIGHT**\n"
+                        f"━━━━━━━━━━━━━━━━━━━━\n"
+                        f"📌 **{clean_title}**\n\n"
+                        f"🔗 [Apply For This Role]({link})\n"
+                        f"📲 Follow @PulseFeedNG"
+                    )
+                else:
+                    message = (
+                        f"*{category} UPDATE*\n\n"
+                        f"{clean_title}\n\n"
+                        f"🔗 [Read Full Story]({link})\n"
+                        f"📲 Follow @PulseFeedNG"
+                    )
 
                 res = send_to_telegram(message, pin_message=False)
                 if res.status_code == 200:
@@ -153,6 +221,7 @@ def main():
                     }).execute()
                     print(f"Saved & Sent: {title}")
 
+    # 3. Check and post betting slips ONLY if they are full winners
     post_betting_slip()
 
 if __name__ == "__main__":

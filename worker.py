@@ -1,19 +1,16 @@
-   import os
+import os
 import random
 import feedparser
 import requests
 from supabase import create_client, Client
 
-# Load environment variables
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 
-# Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Define RSS feeds (Including Remote Jobs & Nigerian Tech/Business)
 FEEDS = {
     "⚽ FOOTBALL": "https://feeds.bbci.co.uk/sport/football/rss.xml",
     "💼 BUSINESS": "https://news.google.com/rss/search?q=business+nigeria&hl=en-NG&gl=NG&ceid=NG:en",
@@ -21,7 +18,6 @@ FEEDS = {
     "💻 REMOTE JOBS": "https://weworkremotely.com/remote-jobs.rss"
 }
 
-# Enhanced Higher-Odds Accumulator Betting Slips
 BETTING_ACCUMULATORS = [
     {
         "title": "🔥 Ultimate Weekend Banker & Value Slip (8.5 Odds)",
@@ -72,7 +68,6 @@ def send_to_telegram(text, pin_message=False):
     response = requests.post(url, json=payload)
     print(f"Telegram Status Code: {response.status_code}")
 
-    # Automatically pin winning messages
     if response.status_code == 200 and pin_message:
         try:
             msg_id = response.json()["result"]["message_id"]
@@ -90,7 +85,6 @@ def send_to_telegram(text, pin_message=False):
     return response
 
 def post_betting_slip():
-    # Pick a random slip
     slip = random.choice(BETTING_ACCUMULATORS)
     slip_id_key = f"betting_slip_{slip['booking_code']}"
 
@@ -98,18 +92,13 @@ def post_betting_slip():
 
     if not existing.data:
         games = slip["games"]
-        
-        # STRICT CHECK: Ensure EVERY game on this slip has a ✅ checkmark
         is_winning_ticket = len(games) > 0 and all("✅" in game for game in games)
 
-        # If it is NOT a winning ticket, completely skip posting it!
         if not is_winning_ticket:
             print(f"Skipping slip {slip['booking_code']} (Not a 100% win yet).")
             return
 
         games_text = "\n".join(games)
-        
-        # Formatted strictly for confirmed winning tickets
         message = (
             f"🏆✅ **WON TICKET — CASHED OUT!** ✅🏆\n"
             f"━━━━━━━━━━━━━━━━━━━━\n"
@@ -123,7 +112,6 @@ def post_betting_slip():
             f"📲 Follow @PulseFeedNG"
         )
 
-        # Post and automatically pin the winning ticket
         res = send_to_telegram(message, pin_message=True)
         if res.status_code == 200:
             supabase.table("articles").insert({
@@ -136,7 +124,6 @@ def post_betting_slip():
 def main():
     print("--- Starting Feed Fetcher & Betting Bot ---")
 
-    # 1. Fetch RSS news & job feeds
     for category, feed_url in FEEDS.items():
         print(f"Fetching {category} from {feed_url}...")
         parsed = feedparser.parse(feed_url)
@@ -166,7 +153,6 @@ def main():
                     }).execute()
                     print(f"Saved & Sent: {title}")
 
-    # 2. Check and post betting slips ONLY if they are full winners
     post_betting_slip()
 
 if __name__ == "__main__":

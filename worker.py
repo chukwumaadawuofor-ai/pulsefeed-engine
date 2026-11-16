@@ -427,3 +427,107 @@ if __name__ == "__main__":
     print("Worker execution started...")
     run_rss_news_feed()            # Runs your news updates
     broadcast_only_winning_tickets() # Runs your winning ticket check & pin
+import os
+import requests
+from supabase import create_client
+
+# 1. Load credentials from environment variables
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# ==========================================
+# PART 1: Your Existing RSS News Feed Logic
+# ==========================================
+def run_rss_news_feed():
+    """
+    Your current RSS fetching and news-posting logic.
+    """
+    print("Running RSS news feed check...")
+    # Keep your existing news feed code here
+
+
+# ==========================================
+# PART 2: Winning Ticket Filter & Auto-Pin Logic
+# ==========================================
+def broadcast_only_winning_tickets():
+    """
+    Checks Supabase, filters ONLY fully won slips, 
+    formats them with a bold WON banner, and pins them.
+    """
+    try:
+        response = supabase.table("slips").select("*").execute()
+        slips = response.data
+        
+        if not slips:
+            return
+
+        for slip in slips:
+            matches = slip.get("matches", [])
+            if not matches:
+                continue
+                
+            # Check if every single game won, and ensure it hasn't been posted yet
+            all_won = all(m.get("status") == "WON" for m in matches)
+            already_posted = slip.get("broadcasted", False)
+
+            if not all_won or already_posted:
+                continue
+
+            odds = slip.get("odds", "8.5")
+            booking_code = slip.get("booking_code", "N/A")
+            
+            matches_text = "\n".join([
+                f"{i+1}. {m.get('fixture', '')} — {m.get('market', '')} ✅" 
+                for i, m in enumerate(matches)
+            ])
+            
+            # Big bold [WON] header for easy recognition
+            text = (
+                f"🎯 **DAILY BOOKING CODE UPDATE**\n\n"
+                f"🔥 **[WON] — SUCCESSFUL TICKET ({odds} Odds)**\n\n"
+                f"{matches_text}\n\n"
+                f"🏷️ **Booking Code:** {booking_code}\n"
+                f"🏦 **Recommended App/Shop:** SportyBet / Bet9ja\n\n"
+                f"📌 **Pinned to top for easy access!**"
+            )
+
+            # Send message to Telegram
+            send_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+            payload = {
+                "chat_id": TELEGRAM_CHANNEL_ID,
+                "text": text,
+                "parse_mode": "Markdown"
+            }
+            
+            res = requests.post(send_url, json=payload).json()
+            
+            # Automatically pin ONLY the winning ticket message
+            if res.get("ok"):
+                message_id = res["result"]["message_id"]
+                
+                pin_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/pinChatMessage"
+                pin_payload = {
+                    "chat_id": TELEGRAM_CHANNEL_ID,
+                    "message_id": message_id
+                }
+                requests.post(pin_url, json=pin_payload)
+                
+                # Mark as broadcasted so it doesn't post twice
+                supabase.table("slips").update({"broadcasted": True}).eq("id", slip.get("id")).execute()
+                print(f"Successfully posted and pinned winning ticket: {booking_code}")
+
+    except Exception as e:
+        print(f"Error checking winning tickets: {e}")
+
+
+# ==========================================
+# MAIN EXECUTION
+# ==========================================
+if __name__ == "__main__":
+    print("Worker execution started...")
+    run_rss_news_feed()            
+    broadcast_only_winning_tickets() 

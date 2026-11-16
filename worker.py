@@ -2,6 +2,7 @@ import os
 import random
 import feedparser
 import requests
+import re
 from supabase import create_client, Client
 from datetime import datetime
 
@@ -14,7 +15,7 @@ TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 # Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Define RSS feeds (Including Remote Jobs & Nigerian Tech/Business)
+# Define RSS feeds
 FEEDS = {
     "⚽ FOOTBALL": "https://feeds.bbci.co.uk/sport/football/rss.xml",
     "💼 BUSINESS": "https://news.google.com/rss/search?q=business+nigeria&hl=en-NG&gl=NG&ceid=NG:en",
@@ -62,13 +63,13 @@ BETTING_ACCUMULATORS = [
     }
 ]
 
-def send_to_telegram(text, pin_message=False):
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+def send_photo_to_telegram(photo_url, caption, pin_message=False):
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
     payload = {
         "chat_id": TELEGRAM_CHANNEL_ID,
-        "text": text,
-        "parse_mode": "Markdown",
-        "disable_web_page_preview": True
+        "photo": photo_url,
+        "caption": caption,
+        "parse_mode": "Markdown"
     }
     response = requests.post(url, json=payload)
 
@@ -87,9 +88,28 @@ def send_to_telegram(text, pin_message=False):
 
     return response
 
-# 1. Feature: Send Interactive Matchday Poll
+def extract_image_url(entry):
+    if hasattr(entry, 'media_content'):
+        for media in entry.media_content:
+            if 'url' in media:
+                return media['url']
+    if hasattr(entry, 'media_thumbnail'):
+        for thumb in entry.media_thumbnail:
+            if 'url' in thumb:
+                return thumb['url']
+    if hasattr(entry, 'enclosures'):
+        for enc in entry.enclosures:
+            if enc.get('type', '').startswith('image/'):
+                return enc.get('href')
+                
+    summary = entry.get('summary', '') or entry.get('description', '')
+    img_match = re.search(r'<img[^>]+src="([^">]+)"', summary)
+    if img_match:
+        return img_match.group(1)
+
+    return "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800"
+
 def send_matchday_poll():
-    # Only triggers once a day based on a unique database check key
     today_key = f"poll_{datetime.utcnow().strftime('%Y-%m-%d')}"
     existing = supabase.table("articles").select("id").eq("link", today_key).execute()
 
@@ -110,10 +130,8 @@ def send_matchday_poll():
             }).execute()
             print("Matchday poll successfully sent!")
 
-# 2. Feature: Weekly Win Wall Recap (Triggers automatically every Sunday)
 def check_weekly_win_recap():
     today = datetime.utcnow()
-    # If today is Sunday (weekday == 6)
     if today.weekday() == 6:
         sunday_key = f"weekly_recap_{today.strftime('%Y-%m-%d')}"
         existing = supabase.table("articles").select("id").eq("link", sunday_key).execute()
@@ -127,7 +145,8 @@ def check_weekly_win_recap():
                 f"⚠️ *Play Responsibly (18+)*\n"
                 f"📲 Follow @PulseFeedNG"
             )
-            res = send_to_telegram(recap_message, pin_message=True)
+            banner_img = "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=800"
+            res = send_photo_to_telegram(banner_img, recap_message, pin_message=True)
             if res.status_code == 200:
                 supabase.table("articles").insert({
                     "title": "Weekly Win Recap",
@@ -163,8 +182,9 @@ def post_betting_slip():
             f"⚠️ *Play Responsibly (18+)*\n"
             f"📲 Follow @PulseFeedNG"
         )
-
-        res = send_to_telegram(message, pin_message=True)
+        
+        win_banner_img = "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800"
+        res = send_photo_to_telegram(win_banner_img, message, pin_message=True)
         if res.status_code == 200:
             supabase.table("articles").insert({
                 "title": slip["title"],
@@ -174,13 +194,11 @@ def post_betting_slip():
             print(f"Successfully posted and pinned winning slip: {slip['booking_code']}")
 
 def main():
-    print("--- Starting Feed Fetcher, Polls & Betting Bot ---")
+    print("--- Starting Feed Fetcher, Polls & Media Bot ---")
 
-    # 1. Trigger automated daily poll & weekly recap checks
     send_matchday_poll()
     check_weekly_win_recap()
 
-    # 2. Fetch RSS news & job feeds (with Remote Job spotlight formatting)
     for category, feed_url in FEEDS.items():
         print(f"Fetching {category} from {feed_url}...")
         parsed = feedparser.parse(feed_url)
@@ -194,8 +212,8 @@ def main():
 
             if not existing.data:
                 clean_title = title.replace("_", "\\_").replace("*", "\\*")
+                image_url = extract_image_url(entry)
                 
-                # Feature 3: Customized Remote Job Spotlight format
                 if category == "💻 REMOTE JOBS":
                     message = (
                         f"💻 **REMOTE JOB SPOTLIGHT**\n"
@@ -212,16 +230,15 @@ def main():
                         f"📲 Follow @PulseFeedNG"
                     )
 
-                res = send_to_telegram(message, pin_message=False)
+                res = send_photo_to_telegram(image_url, message, pin_message=False)
                 if res.status_code == 200:
                     supabase.table("articles").insert({
                         "title": title,
                         "link": link,
                         "category": category
                     }).execute()
-                    print(f"Saved & Sent: {title}")
+                    print(f"Saved & Sent with image: {title}")
 
-    # 3. Check and post betting slips ONLY if they are full winners
     post_betting_slip()
 
 if __name__ == "__main__":

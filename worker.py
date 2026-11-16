@@ -160,3 +160,90 @@ def main():
 
 if __name__ == "__main__":
     main()
+import os
+import requests
+from supabase import create_client, Client
+
+# 1. Load environment variables (Make sure these are added in your GitHub repository secrets / Railway environment)
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
+
+# Initialize Supabase client
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+def fetch_and_process_winning_tickets():
+    """
+    Fetches betting slips from Supabase, checks if they are 100% won, 
+    formats them with a bold [WON] header, sends them to Telegram, and pins them.
+    """
+    try:
+        # Fetch tickets from your Supabase table (adjust 'slips' to your actual table name if different)
+        response = supabase.table("slips").select("*").execute()
+        slips = response.data
+        
+        if not slips:
+            print("No slips found in database.")
+            return
+
+        for slip in slips:
+            matches = slip.get("matches", [])
+            
+            # Check if ALL matches in the slip have status == "WON"
+            all_won = all(m.get("status") == "WON" for m in matches)
+            
+            # Optional: Check a flag to make sure you don't broadcast the same winning ticket twice
+            already_broadcasted = slip.get("broadcasted", False)
+
+            if all_won and not already_broadcasted:
+                odds = slip.get("odds", "8.5")
+                booking_code = slip.get("booking_code", "N/A")
+                
+                # Format match lines with checkmarks
+                matches_text = "\n".join([
+                    f"{i+1}. {m.get('fixture', '')} — {m.get('market', '')} ✅" 
+                    for i, m in enumerate(matches)
+                ])
+                
+                # Build the message with a prominent WON label
+                text = (
+                    f"🎯 **DAILY BOOKING CODE UPDATE**\n\n"
+                    f"🔥 **[WON] — SUCCESSFUL SLIP ({odds} Odds)**\n\n"
+                    f"{matches_text}\n\n"
+                    f"🏷️ **Booking Code:** {booking_code}\n"
+                    f"🏦 **Recommended App/Shop:** SportyBet / Bet9ja\n\n"
+                    f"📌 **Pinned to top for easy access!**"
+                )
+
+                # Send message to Telegram channel
+                send_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+                payload = {
+                    "chat_id": TELEGRAM_CHANNEL_ID,
+                    "text": text,
+                    "parse_mode": "Markdown"
+                }
+                
+                res = requests.post(send_url, json=payload).json()
+                
+                if res.get("ok"):
+                    message_id = res["result"]["message_id"]
+                    
+                    # Automatically pin the winning message
+                    pin_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/pinChatMessage"
+                    pin_payload = {
+                        "chat_id": TELEGRAM_CHANNEL_ID,
+                        "message_id": message_id
+                    }
+                    requests.post(pin_url, json=pin_payload)
+                    
+                    # Mark as broadcasted in Supabase so it doesn't send again
+                    supabase.table("slips").update({"broadcasted": True}).eq("id", slip.get("id")).execute()
+                    print(f"Successfully broadcasted and pinned winning slip: {booking_code}")
+
+    except Exception as e:
+        print(f"Error processing winning tickets: {e}")
+
+if __name__ == "__main__":
+    print("Running worker to check for winning tickets...")
+    fetch_and_process_winning_tickets()

@@ -7,28 +7,13 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Curated high-paying recurring SaaS & marketing software catalog
-# (Replace these target links with your actual PartnerStack, JVZoo, or direct affiliate tracking links)
+# Curated high-paying SaaS & AI software catalog with your real JVZoo affiliate link
 CURATED_SAAS_OFFERS = [
     {
-        "title": "AI Marketing & Funnel Pro - SaaS Software",
-        "seller_contact": "https://partnerstack.com/your-affiliate-link-1",
-        "price_value": 49.00
-    },
-    {
-        "title": "Automated Email CRM & Sales Suite",
-        "seller_contact": "https://partnerstack.com/your-affiliate-link-2",
-        "price_value": 79.00
-    },
-    {
-        "title": "Advanced AI Copywriting & SEO Ranker",
-        "seller_contact": "https://jvzoo.com/your-affiliate-link-3",
-        "price_value": 39.00
-    },
-    {
-        "title": "Cloud Video & Webinar Automation SaaS",
-        "seller_contact": "https://partnerstack.com/your-affiliate-link-4",
-        "price_value": 99.00
+        "title": "EverPitch Bundle - AI Software Deal",
+        "seller_contact": "https://www.jvzoo.com/c/3659489/459729",
+        "price_value": 197.46,
+        "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800"
     }
 ]
 
@@ -39,6 +24,7 @@ def fetch_and_store_recurring_saas():
         title = offer["title"]
         seller_contact = offer["seller_contact"]
         price_value = offer["price_value"]
+        image_url = offer.get("image_url")
 
         # Check if this specific SaaS product already exists in Supabase
         existing = supabase.table("marketplace_products") \
@@ -55,6 +41,7 @@ def fetch_and_store_recurring_saas():
             "title": title,
             "seller_contact": seller_contact,
             "price_value": price_value,
+            "image_url": image_url,
             "broadcasted": False
         }
         

@@ -8,7 +8,7 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Curated high-paying recurring SaaS & marketing software catalog
-# (You can replace these target links with your actual PartnerStack, JVZoo, or direct affiliate tracking links)
+# (Replace these target links with your actual PartnerStack, JVZoo, or direct affiliate tracking links)
 CURATED_SAAS_OFFERS = [
     {
         "title": "AI Marketing & Funnel Pro - SaaS Software",
@@ -35,7 +35,7 @@ CURATED_SAAS_OFFERS = [
 def fetch_and_store_recurring_saas():
     print("Populating high-paying recurring SaaS & marketing software into Supabase...")
     
-    for offer in curated_offer := CURATED_SAAS_OFFERS:
+    for offer in CURATED_SAAS_OFFERS:
         title = offer["title"]
         seller_contact = offer["seller_contact"]
         price_value = offer["price_value"]

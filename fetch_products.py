@@ -7,42 +7,50 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def fetch_and_store_trending_software():
-    print("Fetching trending software products for the marketplace...")
-    
-    # Example using a public developer/tech dataset or API endpoint
-    # You can plug in Product Hunt API, RapidAPI, or an RSS tech feed parser here.
-    api_url = "https://api.github.com/search/repositories?q=topic:ai-tools+sort:stars&per_page=5"
-    headers = {"Accept": "application/vnd.github.v3+json"}
-    
-    response = requests.get(api_url, headers=headers)
-    if response.status_code != 200:
-        print(f"Failed to fetch data: {response.text}")
-        return
+# Curated high-paying recurring SaaS & marketing software catalog
+# (You can replace these target links with your actual PartnerStack, JVZoo, or direct affiliate tracking links)
+CURATED_SAAS_OFFERS = [
+    {
+        "title": "AI Marketing & Funnel Pro - SaaS Software",
+        "seller_contact": "https://partnerstack.com/your-affiliate-link-1",
+        "price_value": 49.00
+    },
+    {
+        "title": "Automated Email CRM & Sales Suite",
+        "seller_contact": "https://partnerstack.com/your-affiliate-link-2",
+        "price_value": 79.00
+    },
+    {
+        "title": "Advanced AI Copywriting & SEO Ranker",
+        "seller_contact": "https://jvzoo.com/your-affiliate-link-3",
+        "price_value": 39.00
+    },
+    {
+        "title": "Cloud Video & Webinar Automation SaaS",
+        "seller_contact": "https://partnerstack.com/your-affiliate-link-4",
+        "price_value": 99.00
+    }
+]
 
-    items = response.json().get("items", [])
+def fetch_and_store_recurring_saas():
+    print("Populating high-paying recurring SaaS & marketing software into Supabase...")
     
-    for item in items:
-        title = f"{item['name'].replace('-', ' ').title()} - AI Toolkit"
-        repo_url = item['html_url']
-        description = item.get('description', 'High-velocity digital software tool.')
-        
-        # Construct your affiliate or direct product landing page link
-        # (You can map this dynamically to your PartnerStack/JVZoo affiliate links)
-        seller_contact = repo_url 
-        price_value = 29.00  # Standard impulse-buy digital tier pricing
+    for offer in curated_offer := CURATED_SAAS_OFFERS:
+        title = offer["title"]
+        seller_contact = offer["seller_contact"]
+        price_value = offer["price_value"]
 
-        # Check if product already exists in Supabase to avoid duplicates
+        # Check if this specific SaaS product already exists in Supabase
         existing = supabase.table("marketplace_products") \
             .select("id") \
             .eq("title", title) \
             .execute()
         
         if existing.data:
-            print(f"Product already exists: {title}")
+            print(f"SaaS offer already exists: {title}")
             continue
 
-        # Insert new product into Supabase with broadcasted = False
+        # Insert new recurring software offer into Supabase with broadcasted = False
         new_product = {
             "title": title,
             "seller_contact": seller_contact,
@@ -50,8 +58,8 @@ def fetch_and_store_trending_software():
             "broadcasted": False
         }
         
-        insert_res = supabase.table("marketplace_products").insert(new_product).execute()
-        print(f"Successfully added new product to Supabase: {title}")
+        supabase.table("marketplace_products").insert(new_product).execute()
+        print(f"Successfully added recurring SaaS offer: {title}")
 
 if __name__ == "__main__":
-    fetch_and_store_trending_software()
+    fetch_and_store_recurring_saas()

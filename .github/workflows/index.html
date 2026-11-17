@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseFeed Digital Deals — Curated AI &amp; SaaS Tools</title>
+  <meta name="description" content="Exclusive discounts and instant digital access to top-rated AI software, marketing automation, and creator tools." />
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #131a2a;
+      --border: #1f2a44;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --price: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 20px 16px 60px;
+    }
+    header {
+      max-width: 1080px;
+      margin: 0 auto 32px;
+      text-align: center;
+      padding: 24px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { font-size: 1.75rem; margin-bottom: 8px; }
+    header p { color: var(--muted); max-width: 600px; margin: 0 auto 16px; font-size: 0.95rem; }
+    .tg-banner {
+      display: inline-block;
+      background: #1d283a;
+      color: #60a5fa;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid #2b3b55;
+    }
+    .grid {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s ease;
+    }
+    .card:hover { transform: translateY(-3px); }
+    .card img {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      background: #1e293b;
+    }
+    .card-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .badge {
+      align-self: flex-start;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .card h2 { font-size: 1.1rem; margin-bottom: 10px; }
+    .price {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--price);
+      margin-bottom: 14px;
+    }
+    .price span { font-size: 0.8rem; color: var(--muted); font-weight: 400; }
+    .btn {
+      margin-top: auto;
+      display: block;
+      text-align: center;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: 10px;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    #status { text-align: center; color: var(--muted); margin-top: 40px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🚀 Curated AI &amp; SaaS Software Deals</h1>
+    <p>Verified software bundles, AI automation tools, and marketing suites with instant digital delivery.</p>
+    <a class="tg-banner" href="https://t.me/PulseFeedNG" target="_blank" rel="noopener">📲 Join Our Telegram Channel for Instant Deal Alerts</a>
+  </header>
+
+  <div id="status">Loading live software deals...</div>
+  <main class="grid" id="product-grid"></main>
+
+  <script>
+    // REPLACE THESE TWO VALUES WITH YOUR SUPABASE PROJECT URL & ANON PUBLIC KEY
+    const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_PUBLIC_KEY";
+
+    async function loadProducts() {
+      const statusEl = document.getElementById("status");
+      const gridEl = document.getElementById("product-grid");
+
+      try {
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/marketplace_products?select=title,seller_contact,price_value,image_url&order=created_at.desc`,
+          {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          }
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch products");
+        const products = await res.json();
+
+        if (!products.length) {
+          statusEl.textContent = "New software drops arriving shortly. Check back soon!";
+          return;
+        }
+
+        statusEl.style.display = "none";
+
+        products.forEach((item) => {
+          const fallbackImg = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800";
+          const card = document.createElement("article");
+          card.className = "card";
+          card.innerHTML = `
+            <img src="${item.image_url || fallbackImg}" alt="${item.title}" loading="lazy" />
+            <div class="card-body">
+              <span class="badge">Instant Digital Access</span>
+              <h2>${item.title}</h2>
+              <div class="price">$${Number(item.price_value).toFixed(2)} <span>USD</span></div>
+              <a class="btn" href="${item.seller_contact}" target="_blank" rel="nofollow sponsored noopener">Get Instant Access →</a>
+            </div>
+          `;
+          gridEl.appendChild(card);
+        });
+      } catch (err) {
+        statusEl.textContent = "Unable to load deals right now. Please refresh.";
+        console.error(err);
+      }
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>

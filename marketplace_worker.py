@@ -1,5 +1,6 @@
 import os
 import requests
+from datetime import datetime, timezone, timedelta
 from supabase import create_client, Client
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
@@ -9,8 +10,30 @@ TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+def recycle_old_products():
+    """Automatically resets products broadcasted over 7 days ago back into the queue."""
+    seven_days_ago = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+    
+    # Find products broadcasted more than 7 days ago
+    expired_products = supabase.table("marketplace_products") \
+        .select("id") \
+        .eq("broadcasted", True) \
+        .lt("last_broadcasted_at", seven_days_ago) \
+        .execute()
+    
+    if expired_products.data:
+        for item in expired_products.data:
+            supabase.table("marketplace_products") \
+                .update({"broadcasted": False}) \
+                .eq("id", item["id"]) \
+                .execute()
+        print(f"Recycled {len(expired_products.data)} expired products back into rotation.")
+
 def broadcast_pending_products():
-    # Fetch unbroadcasted products from Supabase
+    # First, check and recycle any products older than 7 days
+    recycle_old_products()
+
+    # Fetch the next unbroadcasted product from Supabase
     response = supabase.table("marketplace_products") \
         .select("*") \
         .eq("broadcasted", False) \
@@ -59,12 +82,16 @@ def broadcast_pending_products():
     res = requests.post(telegram_url, json=payload)
     
     if res.status_code == 200:
-        # Mark product as broadcasted so it doesn't repeat
+        # Mark product as broadcasted and record the exact timestamp
+        current_time = datetime.now(timezone.utc).isoformat()
         supabase.table("marketplace_products") \
-            .update({"broadcasted": True}) \
+            .update({
+                "broadcasted": True,
+                "last_broadcasted_at": current_time
+            }) \
             .eq("id", prod_id) \
             .execute()
-        print(f"Successfully broadcasted product with image: {title}")
+        print(f"Successfully broadcasted and timestamped product: {title}")
     else:
         print(f"Failed to broadcast: {res.text}")
 

@@ -1,4 +1,5 @@
 import os
+import html
 import requests
 from datetime import datetime, timezone, timedelta
 from supabase import create_client, Client
@@ -14,7 +15,6 @@ def recycle_old_products():
     """Automatically resets products broadcasted over 7 days ago back into the queue."""
     seven_days_ago = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
     
-    # Find products broadcasted more than 7 days ago
     expired_products = supabase.table("marketplace_products") \
         .select("id") \
         .eq("broadcasted", True) \
@@ -30,10 +30,8 @@ def recycle_old_products():
         print(f"Recycled {len(expired_products.data)} expired products back into rotation.")
 
 def broadcast_pending_products():
-    # First, check and recycle any products older than 7 days
     recycle_old_products()
 
-    # Fetch the next unbroadcasted product from Supabase
     response = supabase.table("marketplace_products") \
         .select("*") \
         .eq("broadcasted", False) \
@@ -46,43 +44,41 @@ def broadcast_pending_products():
 
     product = response.data[0]
     prod_id = product["id"]
-    title = product["title"]
+    title = html.escape(product["title"])
     price = product["price_value"]
     link = product["seller_contact"]
     image_url = product.get("image_url")
 
-    # Format the high-converting Telegram caption
+    # HTML formatting prevents URL underscores or special characters from breaking the post
     caption = (
-        f"🚀 **NEW DIGITAL ASSET & SOFTWARE DROP** 🚀\n\n"
-        f"📦 **{title}**\n"
-        f"💰 **Price:** ${price:.2f} (Instant Digital Delivery)\n\n"
+        f"🚀 <b>NEW DIGITAL ASSET &amp; SOFTWARE DROP</b> 🚀\n\n"
+        f"📦 <b>{title}</b>\n"
+        f"💰 <b>Price:</b> ${price:.2f} (Instant Digital Delivery)\n\n"
         f"🔥 Instant digital delivery. Scale your workflow or business instantly.\n\n"
-        f"👉 **Get Access Here:** {link}\n\n"
+        f"👉 <b>Get Access Here:</b> {link}\n\n"
         f"#DigitalProducts #AITools #USDeals #PassiveIncome"
     )
 
-    # Send with Photo if image_url exists, otherwise fallback to text
     if image_url:
         telegram_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
         payload = {
             "chat_id": TELEGRAM_CHANNEL_ID,
             "photo": image_url,
             "caption": caption,
-            "parse_mode": "Markdown"
+            "parse_mode": "HTML"
         }
     else:
         telegram_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
         payload = {
             "chat_id": TELEGRAM_CHANNEL_ID,
             "text": caption,
-            "parse_mode": "Markdown",
+            "parse_mode": "HTML",
             "disable_web_page_preview": False
         }
 
     res = requests.post(telegram_url, json=payload)
     
     if res.status_code == 200:
-        # Mark product as broadcasted and record the exact timestamp
         current_time = datetime.now(timezone.utc).isoformat()
         supabase.table("marketplace_products") \
             .update({
@@ -91,7 +87,7 @@ def broadcast_pending_products():
             }) \
             .eq("id", prod_id) \
             .execute()
-        print(f"Successfully broadcasted and timestamped product: {title}")
+        print(f"Successfully broadcasted product: {product['title']}")
     else:
         print(f"Failed to broadcast: {res.text}")
 

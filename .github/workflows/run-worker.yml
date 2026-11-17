@@ -3,10 +3,10 @@ name: Automated Global Marketplace & News Engine
 on:
   schedule:
     - cron: '*/30 * * * *'  # Runs every 30 minutes
-  workflow_dispatch:        # Allows manual run from GitHub mobile/web
+  workflow_dispatch:        
 
 jobs:
-  run-engines:
+  run-pipeline:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -21,15 +21,13 @@ jobs:
         run: |
           pip install requests supabase
 
-      - name: Run News Feed Worker
+      - name: Step 1 - Fetch & Populate Trending Products
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
-        run: python worker.py
+        run: python fetch_products.py
 
-      - name: Run Marketplace Syndication Worker
+      - name: Step 2 - Broadcast Products to Telegram
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}

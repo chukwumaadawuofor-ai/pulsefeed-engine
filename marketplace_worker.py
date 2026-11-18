@@ -1,5 +1,4 @@
 import os
-import html
 import requests
 from datetime import datetime, timezone, timedelta
 from supabase import create_client, Client
@@ -13,50 +12,47 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 FALLBACK_IMAGE = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800"
 
-def broadcast_next_product():
-    seven_days_ago = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
-
-    response = supabase.table("marketplace_products") \
+def get_next_product():
+    # 1. Look for products that have NEVER been broadcasted
+    unbroadcasted = supabase.table("marketplace_products") \
         .select("*") \
         .eq("broadcasted", False) \
         .limit(1) \
         .execute()
 
-    products = response.data
+    if unbroadcasted.data:
+        return unbroadcasted.data[0]
 
-    if not products:
-        recycle_response = supabase.table("marketplace_products") \
-            .select("*") \
-            .lt("last_broadcasted_at", seven_days_ago) \
-            .order("last_broadcasted_at", desc=False) \
-            .limit(1) \
-            .execute()
-        products = recycle_response.data
+    # 2. If all products have been posted once, recycle the oldest one ONLY if > 7 days old
+    seven_days_ago = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+    recyclable = supabase.table("marketplace_products") \
+        .select("*") \
+        .lt("last_broadcasted", seven_days_ago) \
+        .order("last_broadcasted", desc=False) \
+        .limit(1) \
+        .execute()
 
-    if not products:
-        print("All active offers have been broadcasted within the last 7 days. Skipping.")
-        return
+    if recyclable.data:
+        return recyclable.data[0]
 
-    product = products[0]
-    product_id = product["id"]
-    title = html.escape(str(product.get("title", "AI & SaaS Software Deal")))
+    return None
+
+def send_telegram_drop(product):
+    title = product.get("title", "Premium AI & SaaS Tool")
     price = float(product.get("price_value", 0))
-    link = str(product.get("seller_contact", "")).strip()
-    
-    image_url = str(product.get("image_url") or "").strip()
-    if not image_url or "http" not in image_url:
-        image_url = FALLBACK_IMAGE
+    link = product.get("seller_contact", "")
+    image_url = product.get("image_url") or FALLBACK_IMAGE
 
     caption = (
-        f"🚀 <b>NEW DIGITAL ASSET &amp; SOFTWARE DROP</b> 🚀\n\n"
+        f"🚀 <b>NEW DIGITAL ASSET & SOFTWARE DROP</b> 🚀\n\n"
         f"📦 <b>{title}</b>\n"
-        f"💰 <b>Price: ${price:.2f} (Instant Digital Delivery)</b>\n\n"
+        f"💰 <b>Price:</b> ${price:,.2f} (Instant Digital Delivery)\n\n"
         f"🔥 Instant digital delivery. Scale your workflow or business instantly.\n\n"
         f"👉 <b>Get Access Here:</b> {link}\n\n"
-        f"#DigitalProducts #AITools #USDeals #PassiveIncome"
+        f"#DigitalProducts #AITools #USDeals #SaaS"
     )
 
-    tg_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
     payload = {
         "chat_id": TELEGRAM_CHANNEL_ID,
         "photo": image_url,
@@ -64,24 +60,40 @@ def broadcast_next_product():
         "parse_mode": "HTML"
     }
 
-    res = requests.post(tg_url, json=payload, timeout=20)
-    
-    # Fallback retry if custom image fails
-    if res.status_code != 200 and image_url != FALLBACK_IMAGE:
-        print(f"Custom image failed, retrying with fallback image...")
+    response = requests.post(url, json=payload, timeout=20)
+
+    # Fallback if image URL fails to load on Telegram servers
+    if not response.ok:
         payload["photo"] = FALLBACK_IMAGE
-        res = requests.post(tg_url, json=payload, timeout=20)
+        response = requests.post(url, json=payload, timeout=20)
 
-    if res.status_code != 200:
-        raise RuntimeError(f"Telegram API error ({res.status_code}): {res.text}")
+    response.raise_for_status()
+    return response.json()
 
+def run():
+    product = get_next_product()
+    if not product:
+        print("No eligible products due for broadcast right now (all active items posted within 7 days). Skipping.")
+        return
+
+    product_id = product["id"]
+    print(f"Broadcasting: {product['title']} (ID: {product_id})")
+
+    # Mark as broadcasted BEFORE/WITH strict verification
     now_iso = datetime.now(timezone.utc).isoformat()
-    supabase.table("marketplace_products") \
-        .update({"broadcasted": True, "last_broadcasted_at": now_iso}) \
+    update_res = supabase.table("marketplace_products") \
+        .update({
+            "broadcasted": True,
+            "last_broadcasted": now_iso
+        }) \
         .eq("id", product_id) \
         .execute()
 
-    print(f"Successfully broadcasted and locked product ID {product_id}: {title}")
+    if not update_res.data:
+        raise RuntimeError(f"CRITICAL: Failed to update broadcast status in Supabase for ID {product_id}. Aborting send to prevent duplicates.")
+
+    send_telegram_drop(product)
+    print("Broadcast sent and locked in Supabase successfully.")
 
 if __name__ == "__main__":
-    broadcast_next_product()
+    run()

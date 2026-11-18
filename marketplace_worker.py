@@ -11,10 +11,11 @@ TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+FALLBACK_IMAGE = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800"
+
 def broadcast_next_product():
     seven_days_ago = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
 
-    # 1. Look for any unbroadcasted product first
     response = supabase.table("marketplace_products") \
         .select("*") \
         .eq("broadcasted", False) \
@@ -23,7 +24,6 @@ def broadcast_next_product():
 
     products = response.data
 
-    # 2. If all products have been posted, recycle only offers older than 7 days
     if not products:
         recycle_response = supabase.table("marketplace_products") \
             .select("*") \
@@ -42,7 +42,10 @@ def broadcast_next_product():
     title = html.escape(str(product.get("title", "AI & SaaS Software Deal")))
     price = float(product.get("price_value", 0))
     link = str(product.get("seller_contact", "")).strip()
-    image_url = str(product.get("image_url") or "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800").strip()
+    
+    image_url = str(product.get("image_url") or "").strip()
+    if not image_url or "http" not in image_url:
+        image_url = FALLBACK_IMAGE
 
     caption = (
         f"🚀 <b>NEW DIGITAL ASSET &amp; SOFTWARE DROP</b> 🚀\n\n"
@@ -62,10 +65,16 @@ def broadcast_next_product():
     }
 
     res = requests.post(tg_url, json=payload, timeout=20)
+    
+    # Fallback retry if custom image fails
+    if res.status_code != 200 and image_url != FALLBACK_IMAGE:
+        print(f"Custom image failed, retrying with fallback image...")
+        payload["photo"] = FALLBACK_IMAGE
+        res = requests.post(tg_url, json=payload, timeout=20)
+
     if res.status_code != 200:
         raise RuntimeError(f"Telegram API error ({res.status_code}): {res.text}")
 
-    # Mark as broadcasted immediately so it never repeats on the next run
     now_iso = datetime.now(timezone.utc).isoformat()
     supabase.table("marketplace_products") \
         .update({"broadcasted": True, "last_broadcasted_at": now_iso}) \

@@ -2,8 +2,8 @@ name: Run Global Marketplace Worker
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Runs every 6 hours automatically (4 times a day)
-  workflow_dispatch:        # Allows manual trigger button on GitHub
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,6 +20,12 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install requests supabase
+
+      - name: Fetch New Products into Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python fetch_products.py
 
       - name: Run Marketplace Worker
         env:

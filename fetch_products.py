@@ -17,14 +17,26 @@ CURATED_SAAS_OFFERS = [
     {
         "title": "EverPitch Commercial — AI Business Presentation Creator",
         "price_value": 47.00,
-        "seller_contact": "https://www.jvzoo.com/c/3659489/4611",
+        "seller_contact": "https://www.jvzoo.com/c/3659489/461141",
         "image_url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800"
     },
     {
-        "title": "Quick Action AI Premium Bundle — All-in-One AI Automation Suite",
+        "title": "EverPitch Mega Bundle Gold — Enterprise AI Presentation & Agency Kit",
+        "price_value": 297.00,
+        "seller_contact": "https://www.jvzoo.com/c/3659489/462283",
+        "image_url": "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800"
+    },
+    {
+        "title": "Click Action AI Premium Bundle — All-in-One AI Automation Suite",
         "price_value": 97.00,
         "seller_contact": "https://www.jvzoo.com/c/3659489/458332",
         "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800"
+    },
+    {
+        "title": "ReferralNow Bundle — Automated Viral Referral & Growth Engine",
+        "price_value": 147.00,
+        "seller_contact": "https://www.jvzoo.com/c/3659489/461379",
+        "image_url": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800"
     }
 ]
 

@@ -6,31 +6,25 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Curated Tier-1 Software & AI Deals with your affiliate tracking
+# 100% Verified & Approved JVZoo Affiliate Offers (ID: 3659489)
 CURATED_SAAS_OFFERS = [
     {
         "title": "EverPitch Bundle — AI Pitch Deck & Sales Presentation Suite",
-        "price_value": 47.00,
+        "price_value": 197.00,
         "seller_contact": "https://www.jvzoo.com/c/3659489/459729",
         "image_url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800"
     },
     {
-        "title": "Social Media Traffic Bot & Scheduler Pro",
-        "price_value": 59.00,
-        "seller_contact": "https://www.jvzoo.com/c/3659489/459731",
+        "title": "EverPitch Commercial — AI Business Presentation Creator",
+        "price_value": 47.00,
+        "seller_contact": "https://www.jvzoo.com/c/3659489/4611",
         "image_url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800"
     },
     {
-        "title": "AI Voice & Video Automation Studio",
-        "price_value": 67.00,
-        "seller_contact": "https://www.jvzoo.com/c/3659489/459732",
-        "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800"
-    },
-    {
-        "title": "Omnichannel Lead Gen & Email Marketing Suite",
+        "title": "Quick Action AI Premium Bundle — All-in-One AI Automation Suite",
         "price_value": 97.00,
-        "seller_contact": "https://www.jvzoo.com/c/3659489/459733",
-        "image_url": "https://images.unsplash.com/photo-1533750349077-cdcd1ec5675f?w=800"
+        "seller_contact": "https://www.jvzoo.com/c/3659489/458332",
+        "image_url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800"
     }
 ]
 

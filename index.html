@@ -1,178 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PulseFeed Digital Deals — Curated AI &amp; SaaS Tools</title>
-  <meta name="description" content="Exclusive discounts and instant digital access to top-rated AI software, marketing automation, and creator tools." />
-  <style>
-    :root {
-      --bg: #0b0f19;
-      --card: #131a2a;
-      --border: #1f2a44;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --price: #10b981;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      padding: 20px 16px 60px;
-    }
-    header {
-      max-width: 1080px;
-      margin: 0 auto 32px;
-      text-align: center;
-      padding: 24px 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    header h1 { font-size: 1.75rem; margin-bottom: 8px; }
-    header p { color: var(--muted); max-width: 600px; margin: 0 auto 16px; font-size: 0.95rem; }
-    .tg-banner {
-      display: inline-block;
-      background: #1d283a;
-      color: #60a5fa;
-      text-decoration: none;
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border: 1px solid #2b3b55;
-    }
-    .grid {
-      max-width: 1080px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.15s ease;
-    }
-    .card:hover { transform: translateY(-3px); }
-    .card img {
-      width: 100%;
-      height: 175px;
-      object-fit: cover;
-      background: #1e293b;
-    }
-    .card-body {
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-    .badge {
-      align-self: flex-start;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      background: rgba(59, 130, 246, 0.15);
-      color: #60a5fa;
-      padding: 3px 8px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-    .card h2 { font-size: 1.1rem; margin-bottom: 10px; }
-    .price {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--price);
-      margin-bottom: 14px;
-    }
-    .price span { font-size: 0.8rem; color: var(--muted); font-weight: 400; }
-    .btn {
-      margin-top: auto;
-      display: block;
-      text-align: center;
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      padding: 12px;
-      border-radius: 10px;
-    }
-    .btn:hover { background: var(--accent-hover); }
-    #status { text-align: center; color: var(--muted); margin-top: 40px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curated AI &amp; SaaS Software Deals</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 14px;
+            color: #8b949e;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+        .tg-btn {
+            display: inline-block;
+            background-color: #21262d;
+            color: #58a6ff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid #30363d;
+            margin-top: 15px;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background-color: #21262d;
+        }
+        .card-content {
+            padding: 20px;
+        }
+        .badge {
+            display: inline-block;
+            background-color: rgba(31, 111, 235, 0.2);
+            color: #58a6ff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .card h3 {
+            font-size: 18px;
+            color: #ffffff;
+            margin: 0 0 10px 0;
+        }
+        .price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #3fb950;
+            margin-bottom: 20px;
+        }
+        .price span {
+            font-size: 12px;
+            color: #8b949e;
+            font-weight: normal;
+        }
+        .cta-btn {
+            display: block;
+            width: 100%;
+            background-color: #238636;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            box-sizing: border-box;
+        }
+        .cta-btn:hover {
+            background-color: #2ea043;
+        }
+    </style>
 </head>
 <body>
 
-  <header>
-    <h1>🚀 Curated AI &amp; SaaS Software Deals</h1>
-    <p>Verified software bundles, AI automation tools, and marketing suites with instant digital delivery.</p>
-    <a class="tg-banner" href="https://t.me/PulseFeedNG" target="_blank" rel="noopener">📲 Join Our Telegram Channel for Instant Deal Alerts</a>
-  </header>
+    <div class="header">
+        <h1>🚀 Curated AI &amp; SaaS Software Deals</h1>
+        <p>Verified software bundles, AI automation tools, and marketing suites with instant digital delivery.</p>
+        <a href="https://t.me/PulseFeedNG" class="tg-btn">📱 Join Our Telegram Channel for Instant Deal Alerts</a>
+    </div>
 
-  <div id="status">Loading live software deals...</div>
-  <main class="grid" id="product-grid"></main>
+    <div class="container" id="product-container">
+        <p style="text-align: center; color: #8b949e;">Loading verified deals...</p>
+    </div>
 
-  <script>
-    const SUPABASE_URL = "https://pzaavnfswisvosgdfbgl.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_He61GsY9EO5I6Pf8D8pUZw_jgscYPNp";
+    <script>
+        const SUPABASE_URL = 'https://pzaavnfswisvosgdfbgl.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_He61GsY9EO5I6Pf8D8pUZw_jgscYPNp';
 
-    async function loadProducts() {
-      const statusEl = document.getElementById("status");
-      const gridEl = document.getElementById("product-grid");
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      try {
-        const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/marketplace_products?select=title,seller_contact,price_value,image_url&order=created_at.desc`,
-          {
-            headers: {
-              apikey: SUPABASE_ANON_KEY
+        async function loadProducts() {
+            const container = document.getElementById('product-container');
+            
+            const { data, error } = await supabase
+                .from('marketplace_products')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching products:', error);
+                container.innerHTML = '<p style="text-align: center; color: #f85149;">Failed to load products. Check your keys.</p>';
+                return;
             }
-          }
-        );
 
-        if (!res.ok) {
-          const errText = await res.text();
-          throw new Error(`HTTP ${res.status}: ${errText}`);
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #8b949e;">No active deals available right now.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            data.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                card.innerHTML = `
+                    <img src="${product.image_url || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800'}" alt="${product.title}">
+                    <div class="card-content">
+                        <span class="badge">Instant Digital Access</span>
+                        <h3>${product.title}</h3>
+                        <div class="price">$${Number(product.price_value).toFixed(2)} <span>USD</span></div>
+                        <a href="${product.seller_contact}" target="_blank" class="cta-btn">Get Instant Access →</a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
 
-        const products = await res.json();
-
-        if (!products.length) {
-          statusEl.textContent = "New software drops arriving shortly. Check back soon!";
-          return;
-        }
-
-        statusEl.style.display = "none";
-
-        products.forEach((item) => {
-          const fallbackImg = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800";
-          const card = document.createElement("article");
-          card.className = "card";
-          card.innerHTML = `
-            <img src="${item.image_url || fallbackImg}" alt="${item.title}" loading="lazy" />
-            <div class="card-body">
-              <span class="badge">Instant Digital Access</span>
-              <h2>${item.title}</h2>
-              <div class="price">$${Number(item.price_value).toFixed(2)} <span>USD</span></div>
-              <a class="btn" href="${item.seller_contact}" target="_blank" rel="nofollow sponsored noopener">Get Instant Access →</a>
-            </div>
-          `;
-          gridEl.appendChild(card);
-        });
-      } catch (err) {
-        statusEl.textContent = `Error: ${err.message}`;
-        console.error(err);
-      }
-    }
-
-    loadProducts();
-  </script>
+        loadProducts();
+    </script>
 </body>
 </html>

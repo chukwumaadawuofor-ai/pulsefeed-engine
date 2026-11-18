@@ -11,85 +11,68 @@ TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def recycle_old_products():
-    """Automatically resets products broadcasted over 7 days ago back into the queue."""
+def broadcast_next_product():
     seven_days_ago = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
-    
-    expired_products = supabase.table("marketplace_products") \
-        .select("id") \
-        .eq("broadcasted", True) \
-        .lt("last_broadcasted_at", seven_days_ago) \
-        .execute()
-    
-    if expired_products.data:
-        for item in expired_products.data:
-            supabase.table("marketplace_products") \
-                .update({"broadcasted": False}) \
-                .eq("id", item["id"]) \
-                .execute()
-        print(f"Recycled {len(expired_products.data)} expired products back into rotation.")
 
-def broadcast_pending_products():
-    recycle_old_products()
-
+    # 1. Look for any unbroadcasted product first
     response = supabase.table("marketplace_products") \
         .select("*") \
         .eq("broadcasted", False) \
         .limit(1) \
         .execute()
-    
-    if not response.data:
-        print("No pending products to broadcast.")
+
+    products = response.data
+
+    # 2. If all products have been posted, recycle only offers older than 7 days
+    if not products:
+        recycle_response = supabase.table("marketplace_products") \
+            .select("*") \
+            .lt("last_broadcasted_at", seven_days_ago) \
+            .order("last_broadcasted_at", desc=False) \
+            .limit(1) \
+            .execute()
+        products = recycle_response.data
+
+    if not products:
+        print("All active offers have been broadcasted within the last 7 days. Skipping.")
         return
 
-    product = response.data[0]
-    prod_id = product["id"]
-    title = html.escape(product["title"])
-    price = product["price_value"]
-    link = product["seller_contact"]
-    image_url = product.get("image_url")
+    product = products[0]
+    product_id = product["id"]
+    title = html.escape(str(product.get("title", "AI & SaaS Software Deal")))
+    price = float(product.get("price_value", 0))
+    link = str(product.get("seller_contact", "")).strip()
+    image_url = str(product.get("image_url") or "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800").strip()
 
-    # HTML formatting prevents URL underscores or special characters from breaking the post
     caption = (
         f"🚀 <b>NEW DIGITAL ASSET &amp; SOFTWARE DROP</b> 🚀\n\n"
         f"📦 <b>{title}</b>\n"
-        f"💰 <b>Price:</b> ${price:.2f} (Instant Digital Delivery)\n\n"
+        f"💰 <b>Price: ${price:.2f} (Instant Digital Delivery)</b>\n\n"
         f"🔥 Instant digital delivery. Scale your workflow or business instantly.\n\n"
         f"👉 <b>Get Access Here:</b> {link}\n\n"
         f"#DigitalProducts #AITools #USDeals #PassiveIncome"
     )
 
-    if image_url:
-        telegram_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
-        payload = {
-            "chat_id": TELEGRAM_CHANNEL_ID,
-            "photo": image_url,
-            "caption": caption,
-            "parse_mode": "HTML"
-        }
-    else:
-        telegram_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-        payload = {
-            "chat_id": TELEGRAM_CHANNEL_ID,
-            "text": caption,
-            "parse_mode": "HTML",
-            "disable_web_page_preview": False
-        }
+    tg_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
+    payload = {
+        "chat_id": TELEGRAM_CHANNEL_ID,
+        "photo": image_url,
+        "caption": caption,
+        "parse_mode": "HTML"
+    }
 
-    res = requests.post(telegram_url, json=payload)
-    
-    if res.status_code == 200:
-        current_time = datetime.now(timezone.utc).isoformat()
-        supabase.table("marketplace_products") \
-            .update({
-                "broadcasted": True,
-                "last_broadcasted_at": current_time
-            }) \
-            .eq("id", prod_id) \
-            .execute()
-        print(f"Successfully broadcasted product: {product['title']}")
-    else:
-        print(f"Failed to broadcast: {res.text}")
+    res = requests.post(tg_url, json=payload, timeout=20)
+    if res.status_code != 200:
+        raise RuntimeError(f"Telegram API error ({res.status_code}): {res.text}")
+
+    # Mark as broadcasted immediately so it never repeats on the next run
+    now_iso = datetime.now(timezone.utc).isoformat()
+    supabase.table("marketplace_products") \
+        .update({"broadcasted": True, "last_broadcasted_at": now_iso}) \
+        .eq("id", product_id) \
+        .execute()
+
+    print(f"Successfully broadcasted and locked product ID {product_id}: {title}")
 
 if __name__ == "__main__":
-    broadcast_pending_products()
+    broadcast_next_product()

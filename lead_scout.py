@@ -9,83 +9,156 @@ from supabase import create_client, Client
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID") or os.environ.get("TELEGRAM_CHANNEL_ID")
+TELEGRAM_CHAT_ID = (
+    os.environ.get("TELEGRAM_ADMIN_CHAT_ID")
+    or os.environ.get("TELEGRAM_CHAT_ID")
+    or os.environ.get("TELEGRAM_CHANNEL_ID")
+    or "6540485008"
+)
 
 # Configure target region ("US", "UK", "EUROPE", or "AUSTRALIA") and niche
-TARGET_REGION = os.environ.get("TARGET_REGION", "US").upper()
-TARGET_NICHE = os.environ.get("TARGET_NICHE", "digital marketing agency")
+TARGET_REGION = os.environ.get("TARGET_REGION", "US").upper().strip()
+TARGET_NICHE = os.environ.get("TARGET_NICHE", "digital marketing agency").strip()
+
 REGION_CONFIG = {
     "US": {"kl": "us-en", "query_suffix": "United States"},
-    "UK": {"kl": "uk-en", "query_suffix": "United Kingdom OR London"},
-    "EUROPE": {"kl": "ie-en", "query_suffix": "Europe OR Germany OR Netherlands OR Ireland"},
-    "AUSTRALIA": {"kl": "au-en", "query_suffix": "Australia"}
+    "UK": {"kl": "uk-en", "query_suffix": "United Kingdom London"},
+    "EUROPE": {"kl": "ie-en", "query_suffix": "Europe Germany Netherlands Ireland"},
+    "AUSTRALIA": {"kl": "au-en", "query_suffix": "Australia"},
 }
 
 SKIP_DOMAINS = (
     "linkedin.com", "facebook.com", "instagram.com", "x.com", "twitter.com",
     "youtube.com", "tiktok.com", "wikipedia.org", "yelp.com", "clutch.co",
-    "upcity.com", "goodfirms.co", "trustpilot.com", "reddit.com", "medium.com"
+    "upcity.com", "goodfirms.co", "trustpilot.com", "reddit.com", "medium.com",
+    "duckduckgo.com", "bing.com", "google.com"
 )
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/128.0.0.0 Safari/537.36"
+    ),
+    "Accept-Language": "en-US,en;q=0.9",
 }
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
+def _extract_real_url(href: str) -> str:
+    if not href:
+        return ""
+    if "uddg=" in href:
+        parsed = parse_qs(urlparse(href).query)
+        real_url = unquote(parsed.get("uddg", [""])[0])
+    else:
+        real_url = href
+    if real_url.startswith("//"):
+        real_url = "https:" + real_url
+    return real_url
+
+
+def _add_candidate(results: list, title: str, raw_url: str, max_results: int) -> bool:
+    real_url = _extract_real_url(raw_url)
+    if not real_url.startswith(("http://", "https://")):
+        return False
+
+    parsed = urlparse(real_url)
+    domain = parsed.netloc.lower()
+    if domain.startswith("www."):
+        domain = domain[4:]
+    if not domain or any(skip in domain for skip in SKIP_DOMAINS):
+        return False
+
+    base_url = f"{parsed.scheme}://{parsed.netloc.lower()}"
+    if any(r["url"] == base_url for r in results):
+        return False
+
+    results.append({"title": title or domain, "url": base_url})
+    return len(results) >= max_results
+
+
 def search_duckduckgo_html(query: str, kl_code: str, max_results: int = 12):
-    url = "https://html.duckduckgo.com/html/"
-    resp = requests.post(url, data={"q": query, "kl": kl_code}, headers=HEADERS, timeout=15)
-    resp.raise_for_status()
-    soup = BeautifulSoup(resp.text, "html.parser")
     results = []
 
-    for a in soup.select("a.result__a"):
-        href = a.get("href", "")
-        if "uddg=" in href:
-            parsed = parse_qs(urlparse(href).query)
-            real_url = unquote(parsed.get("uddg", [""])[0])
-        else:
-            real_url = href
+    # Primary endpoint: DuckDuckGo HTML
+    try:
+        url = "https://html.duckduckgo.com/html/"
+        resp = requests.post(
+            url,
+            data={"q": query, "kl": kl_code},
+            headers=HEADERS,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        soup = BeautifulSoup(resp.text, "html.parser")
+        for a in soup.select("a.result__a"):
+            if _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
+                return results
+    except Exception as exc:
+        print(f"Primary search endpoint note: {exc}")
 
-        if not real_url.startswith("http"):
-            continue
-
-        domain = urlparse(real_url).netloc.lower()
-        if any(skip in domain for skip in SKIP_DOMAINS):
-            continue
-
-        base_url = f"{urlparse(real_url).scheme}://{domain}"
-        title = a.get_text(strip=True)
-        if base_url not in [r["url"] for r in results]:
-            results.append({"title": title, "url": base_url})
-
-        if len(results) >= max_results:
-            break
+    # Fallback endpoint: DuckDuckGo Lite
+    if len(results) < max_results:
+        try:
+            lite_url = "https://lite.duckduckgo.com/lite/"
+            resp = requests.post(
+                lite_url,
+                data={"q": query, "kl": kl_code},
+                headers=HEADERS,
+                timeout=15,
+            )
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
+            for a in soup.select("a.result-link"):
+                if _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
+                    return results
+        except Exception as exc:
+            print(f"Fallback search endpoint note: {exc}")
 
     return results
 
 
+def _find_emails_in_html(html: str) -> list:
+    emails = set(re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", html))
+    clean = []
+    for e in emails:
+        low = e.lower()
+        if low.endswith((".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".css", ".js")):
+            continue
+        if any(bad in low for bad in ("example.com", "sentry", "wixpress.com", "domain.com")):
+            continue
+        clean.append(e)
+    return clean
+
+
 def audit_public_site(url: str):
     start = time.time()
-    resp = requests.get(url, headers=HEADERS, timeout=12)
+    resp = requests.get(url, headers=HEADERS, timeout=12, allow_redirects=True)
+    resp.raise_for_status()
     load_time = round(time.time() - start, 2)
     html = resp.text
     lower_html = html.lower()
     soup = BeautifulSoup(html, "html.parser")
 
-    # Extract public email if visible on homepage
-    emails = set(re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", html))
-    clean_emails = [
-        e for e in emails
-        if not e.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".css", ".js"))
-        and "example.com" not in e.lower()
-        and "sentry" not in e.lower()
-    ]
+    clean_emails = _find_emails_in_html(html)
+
+    # Check /contact if no email found on homepage
+    if not clean_emails:
+        for path in ("/contact", "/contact-us"):
+            try:
+                c_resp = requests.get(f"{url.rstrip('/')}{path}", headers=HEADERS, timeout=8, allow_redirects=True)
+                if c_resp.status_code == 200:
+                    found = _find_emails_in_html(c_resp.text)
+                    if found:
+                        clean_emails = found
+                        break
+            except Exception:
+                pass
+
     contact_email = clean_emails[0] if clean_emails else ""
 
-    # Detect clear public conversion / automation gaps
     gaps = []
     if not soup.find("meta", attrs={"name": "viewport"}):
         gaps.append("Missing mobile viewport optimization")
@@ -103,13 +176,14 @@ def audit_public_site(url: str):
     return {
         "page_title": page_title[:120],
         "contact_email": contact_email,
-        "spotted_gap": " | ".join(gaps[:2])
+        "spotted_gap": " | ".join(gaps[:2]),
     }
 
 
 def build_outreach_draft(region: str, site_url: str, gap: str):
+    domain = urlparse(site_url).netloc
     return (
-        f"Subject: Quick idea for {urlparse(site_url).netloc}\n\n"
+        f"Subject: Quick idea for {domain}\n\n"
         f"Hi there,\n\n"
         f"I was reviewing your website ({site_url}) and noticed a quick conversion opportunity: {gap}.\n\n"
         f"At Curated AI & SaaS Software Deals, we build lightweight custom AI web tools and automated lead-capture workflows "
@@ -126,21 +200,38 @@ def build_outreach_draft(region: str, site_url: str, gap: str):
 def send_telegram_report(text: str):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram credentials missing; skipping notification.")
-        return
+        return False
     api_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    requests.post(
-        api_url,
-        json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "disable_web_page_preview": True},
-        timeout=15
-    )
+    try:
+        r = requests.post(
+            api_url,
+            json={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": text,
+                "disable_web_page_preview": True,
+            },
+            timeout=15,
+        )
+        if not r.ok:
+            print(f"Telegram API error ({r.status_code}): {r.text}")
+            return False
+        return True
+    except Exception as exc:
+        print(f"Telegram request failed: {exc}")
+        return False
 
 
 def run_scout():
-    cfg = REGION_CONFIG.get(TARGET_REGION, REGION_CONFIG["US"])
-    search_query = f'"{TARGET_NICHE}" "contact" {cfg["query_suffix"]}'
-    print(f"Running Phase 1 Lead Scout | Region: {TARGET_REGION} | Niche: {TARGET_NICHE}")
+    region = os.environ.get("TARGET_REGION") or TARGET_REGION
+    region = region.upper().strip()
+    niche = (os.environ.get("TARGET_NICHE") or TARGET_NICHE).strip()
 
-    candidates = search_duckduckgo_html(search_query, cfg["kl"], max_results=10)
+    cfg = REGION_CONFIG.get(region, REGION_CONFIG["US"])
+    search_query = f"{niche} {cfg['query_suffix']} contact email"
+    print(f"Running Phase 1 Lead Scout | Region: {region} | Niche: {niche} | Chat: {TELEGRAM_CHAT_ID}")
+
+    candidates = search_duckduckgo_html(search_query, cfg["kl"], max_results=12)
+    print(f"Candidate websites found: {len(candidates)}")
     new_leads_found = 0
 
     for item in candidates:
@@ -152,31 +243,31 @@ def run_scout():
 
         try:
             audit = audit_public_site(url)
-            draft = build_outreach_draft(TARGET_REGION, url, audit["spotted_gap"])
+            draft = build_outreach_draft(region, url, audit["spotted_gap"])
 
             supabase.table("prospect_leads").insert({
-                "region": TARGET_REGION,
-                "niche": TARGET_NICHE,
+                "region": region,
+                "niche": niche,
                 "business_url": url,
                 "business_title": audit["page_title"],
                 "contact_email": audit["contact_email"],
                 "spotted_gap": audit["spotted_gap"],
                 "outreach_draft": draft,
-                "status": "new"
+                "status": "new",
             }).execute()
 
-            email_line = audit["contact_email"] if audit["contact_email"] else "Not on homepage (check /contact)"
+            email_line = audit["contact_email"] if audit["contact_email"] else "Not found on site (check manually)"
             report_msg = (
-                f"🎯 NEW {TARGET_REGION} LEAD REPORT\n\n"
+                f"🎯 NEW {region} LEAD REPORT\n\n"
                 f"🏢 Site: {url}\n"
                 f"📧 Email: {email_line}\n"
                 f"🔍 Gap Spotted: {audit['spotted_gap']}\n\n"
                 f"--- READY-TO-SEND EMAIL (damiancuratedaideals@gmail.com) ---\n\n"
                 f"{draft}"
             )
-            send_telegram_report(report_msg)
+            sent = send_telegram_report(report_msg)
             new_leads_found += 1
-            print(f"Saved & reported new lead: {url}")
+            print(f"Saved new lead: {url} | Telegram sent: {sent}")
             time.sleep(2)
         except Exception as exc:
             print(f"Skipped {url} due to error: {exc}")

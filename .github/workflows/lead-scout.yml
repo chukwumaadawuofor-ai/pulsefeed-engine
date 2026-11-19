@@ -42,6 +42,7 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_ADMIN_CHAT_ID || secrets.TELEGRAM_CHANNEL_ID }}
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
           TARGET_REGION: ${{ github.event.inputs.target_region || 'UK' }}
           TARGET_NICHE: ${{ github.event.inputs.target_niche || 'digital marketing agency' }}
         run: python lead_scout.py

@@ -1,0 +1,47 @@
+name: Run Phase 1 Lead Scout
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_region:
+        description: "Target Region (US, UK, EUROPE, or AUSTRALIA)"
+        required: true
+        default: "UK"
+        type: choice
+        options:
+          - US
+          - UK
+          - EUROPE
+          - AUSTRALIA
+      target_niche:
+        description: "Business Niche to Audit"
+        required: true
+        default: "digital marketing agency"
+        type: string
+  schedule:
+    - cron: "0 14 * * *"
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: pip install requests beautifulsoup4 supabase
+
+      - name: Execute Region Lead Scout
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          TARGET_REGION: ${{ github.event.inputs.target_region || 'UK' }}
+          TARGET_NICHE: ${{ github.event.inputs.target_niche || 'digital marketing agency' }}
+        run: python lead_scout.py

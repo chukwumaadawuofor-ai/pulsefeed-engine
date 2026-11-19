@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViralHook AI — Faceless Shorts, Reels &amp; TikTok Studio</title>
+<style>
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { background: #090d16; color: #e2e8f0; margin: 0; padding: 18px; display: flex; justify-content: center; }
+  .app { max-width: 740px; width: 100%; background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 22px; box-shadow: 0 20px 40px rgba(0,0,0,0.45); }
+  .badge { display: inline-block; background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; letter-spacing: 0.4px; }
+  h1 { margin: 0 0 6px; font-size: 23px; color: #f8fafc; }
+  p.sub { margin: 0 0 20px; color: #94a3b8; font-size: 14px; line-height: 1.5; }
+  .row { margin-bottom: 15px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+  input, select, textarea { width: 100%; background: #0f172a; border: 1px solid #334155; color: #f8fafc; padding: 12px; border-radius: 10px; font-size: 14px; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: #38bdf8; }
+  textarea { min-height: 85px; resize: vertical; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 540px) { .grid-2 { grid-template-columns: 1fr; } }
+  .gen-btn { width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+  .gen-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .note { font-size: 12px; color: #64748b; margin-top: 6px; }
+  .result-wrap { margin-top: 22px; display: none; }
+  .output-box { background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 18px; white-space: pre-wrap; line-height: 1.65; font-size: 14px; color: #f1f5f9; }
+  .actions { display: flex; gap: 10px; margin-top: 12px; }
+  .sec-btn { flex: 1; background: #1e293b; color: #e2e8f0; border: 1px solid #475569; padding: 11px; border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .sec-btn:hover { border-color: #38bdf8; }
+</style>
+</head>
+<body>
+<div class="app">
+  <span class="badge">⚡ LIFETIME CREATOR EDITION</span>
+  <h1>🎬 ViralHook AI — Faceless Video &amp; Shorts Studio</h1>
+  <p class="sub">Turn any topic or product into scroll-stopping hooks, word-for-word scripts, scene-by-scene AI B-roll prompts, and viral captions in 15 seconds.</p>
+
+  <div class="row">
+    <label>Your Google Gemini API Key (Saved privately in your browser)</label>
+    <input type="password" id="apiKey" placeholder="Paste your AIza... key here (Free at aistudio.google.com)">
+    <div class="note">100% private BYOK architecture — your key stays strictly on your device.</div>
+  </div>
+
+  <div class="grid-2">
+    <div class="row">
+      <label>Platform &amp; Format</label>
+      <select id="platform">
+        <option value="TikTok / YouTube Shorts (45-60 sec high-retention)">TikTok / YouTube Shorts (45–60s)</option>
+        <option value="Instagram Reels (30 sec fast-paced visual hook)">Instagram Reels (30s Fast Hook)</option>
+        <option value="Faceless YouTube Mini-Documentary (2-3 min)">Faceless YouTube Story (2–3 min)</option>
+        <option value="Affiliate Product Promo Short (Problem -> Solution -> CTA)">Affiliate / SaaS Promo Short</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label>Tone &amp; Style</label>
+      <select id="tone">
+        <option value="Curiosity-driven, fast-paced, pattern-interrupt">Curiosity &amp; Pattern-Interrupt</option>
+        <option value="Bold, authoritative, high-energy">Bold &amp; High-Energy</option>
+        <option value="Storytelling, suspenseful, cinematic">Suspenseful Storytelling</option>
+        <option value="Practical, step-by-step, value-packed">Actionable Tutorial</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <label>Video Topic, Niche, or Offer to Promote</label>
+    <textarea id="topic" placeholder="e.g., 3 hidden AI tools that replace a $3,000/month marketing agency — promoting our AI software bundle at the end."></textarea>
+  </div>
+
+  <button id="genBtn" class="gen-btn" onclick="generatePack()">🚀 Generate Complete Viral Video Pack</button>
+
+  <div id="resultWrap" class="result-wrap">
+    <div id="output" class="output-box"></div>
+    <div class="actions">
+      <button type="button" class="sec-btn" id="copyBtn" onclick="copyPack()">📋 Copy Full Pack</button>
+      <button type="button" class="sec-btn" onclick="downloadTxt()">⬇️ Download .TXT</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const keyInput = document.getElementById("apiKey");
+  keyInput.value = localStorage.getItem("vh_gemini_key") || "";
+  keyInput.addEventListener("input", () => localStorage.setItem("vh_gemini_key", keyInput.value.trim()));
+
+  async function generatePack() {
+    const apiKey = keyInput.value.trim();
+    const platform = document.getElementById("platform").value;
+    const tone = document.getElementById("tone").value;
+    const topic = document.getElementById("topic").value.trim();
+    const btn = document.getElementById("genBtn");
+    const wrap = document.getElementById("resultWrap");
+    const out = document.getElementById("output");
+
+    if (!apiKey) return alert("Please paste your Google Gemini API key first.");
+    if (!topic) return alert("Please enter a video topic or offer.");
+
+    btn.disabled = true;
+    btn.textContent = "⏳ Building your viral script & scene prompts...";
+    wrap.style.display = "none";
+
+    const prompt = `You are an elite short-form viral video strategist and scriptwriter. Create a complete production-ready video pack for:
+Platform: ${platform}
+Tone: ${tone}
+Topic / Offer: ${topic}
+
+Structure the output cleanly into these 4 sections:
+1. THREE SCROLL-STOPPING OPENING HOOKS (first 3 seconds, visual + spoken)
+2. WORD-FOR-WORD VOICEOVER SCRIPT (with pacing cues and strong call-to-action)
+3. SCENE-BY-SCENE AI VISUAL / B-ROLL PROMPTS (5-7 detailed image/video prompts ready for Midjourney, Runway, or Kling)
+4. VIRAL CAPTION, TITLE IDEAS & SEO HASHTAGS`;
+
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || "API request failed");
+
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+      out.textContent = text;
+      wrap.style.display = "block";
+    } catch (err) {
+      alert("Error: " + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "🚀 Generate Complete Viral Video Pack";
+    }
+  }
+
+  function copyPack() {
+    navigator.clipboard.writeText(document.getElementById("output").textContent);
+    const btn = document.getElementById("copyBtn");
+    btn.textContent = "✅ Copied!";
+    setTimeout(() => btn.textContent = "📋 Copy Full Pack", 2000);
+  }
+
+  function downloadTxt() {
+    const text = document.getElementById("output").textContent;
+    const blob = new Blob([text], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "viralhook-video-pack.txt";
+    a.click();
+  }
+</script>
+</body>
+</html>

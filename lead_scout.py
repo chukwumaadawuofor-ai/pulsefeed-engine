@@ -1,7 +1,7 @@
 import os
 import re
 import time
-from urllib.parse import urlparse, parse_qs, unquote
+from urllib.parse import urlparse, parse_qs, unquote, quote_plus
 import requests
 from bs4 import BeautifulSoup
 from supabase import create_client, Client
@@ -27,11 +27,32 @@ REGION_CONFIG = {
     "AUSTRALIA": {"kl": "au-en", "query_suffix": "Australia"},
 }
 
+FALLBACK_SEEDS = {
+    "UK": [
+        {"title": "Impression Digital", "url": "https://www.impression.co.uk"},
+        {"title": "Fugu Digital", "url": "https://fugudigital.co.uk"},
+        {"title": "Found", "url": "https://www.found.co.uk"},
+    ],
+    "US": [
+        {"title": "Single Grain", "url": "https://www.singlegrain.com"},
+        {"title": "KlientBoost", "url": "https://www.klientboost.com"},
+        {"title": "Directive Consulting", "url": "https://directiveconsulting.com"},
+    ],
+    "EUROPE": [
+        {"title": "Dept Agency", "url": "https://www.deptagency.com"},
+        {"title": "Valtech", "url": "https://www.valtech.com"},
+    ],
+    "AUSTRALIA": [
+        {"title": "Reload Media", "url": "https://www.reloadmedia.com.au"},
+        {"title": "Sparro", "url": "https://www.sparro.com.au"},
+    ],
+}
+
 SKIP_DOMAINS = (
     "linkedin.com", "facebook.com", "instagram.com", "x.com", "twitter.com",
     "youtube.com", "tiktok.com", "wikipedia.org", "yelp.com", "clutch.co",
     "upcity.com", "goodfirms.co", "trustpilot.com", "reddit.com", "medium.com",
-    "duckduckgo.com", "bing.com", "google.com"
+    "duckduckgo.com", "bing.com", "microsoft.com", "msn.com", "google.com"
 )
 
 HEADERS = {
@@ -40,7 +61,8 @@ HEADERS = {
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/128.0.0.0 Safari/537.36"
     ),
-    "Accept-Language": "en-US,en;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
 }
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
@@ -66,40 +88,53 @@ def _add_candidate(results: list, title: str, raw_url: str, max_results: int) ->
 
     parsed = urlparse(real_url)
     domain = parsed.netloc.lower()
-    if domain.startswith("www."):
-        domain = domain[4:]
-    if not domain or any(skip in domain for skip in SKIP_DOMAINS):
+    clean_domain = domain[4:] if domain.startswith("www.") else domain
+    if not clean_domain or any(skip in clean_domain for skip in SKIP_DOMAINS):
         return False
 
-    base_url = f"{parsed.scheme}://{parsed.netloc.lower()}"
+    base_url = f"{parsed.scheme}://{domain}"
     if any(r["url"] == base_url for r in results):
         return False
 
-    results.append({"title": title or domain, "url": base_url})
+    results.append({"title": title or clean_domain, "url": base_url})
     return len(results) >= max_results
 
 
-def search_duckduckgo_html(query: str, kl_code: str, max_results: int = 12):
+def discover_websites(query: str, region: str, kl_code: str, max_results: int = 12):
     results = []
 
-    # Primary endpoint: DuckDuckGo HTML
+    # 1. Bing search
     try:
-        url = "https://html.duckduckgo.com/html/"
-        resp = requests.post(
-            url,
-            data={"q": query, "kl": kl_code},
-            headers=HEADERS,
-            timeout=15,
-        )
+        bing_url = f"https://www.bing.com/search?q={quote_plus(query)}"
+        resp = requests.get(bing_url, headers=HEADERS, timeout=15)
         resp.raise_for_status()
         soup = BeautifulSoup(resp.text, "html.parser")
-        for a in soup.select("a.result__a"):
-            if _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
+        for li in soup.select("li.b_algo"):
+            a = li.select_one("h2 a")
+            if a and _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
                 return results
     except Exception as exc:
-        print(f"Primary search endpoint note: {exc}")
+        print(f"Bing search note: {exc}")
 
-    # Fallback endpoint: DuckDuckGo Lite
+    # 2. DuckDuckGo HTML
+    if len(results) < max_results:
+        try:
+            ddg_url = "https://html.duckduckgo.com/html/"
+            resp = requests.post(
+                ddg_url,
+                data={"q": query, "kl": kl_code},
+                headers=HEADERS,
+                timeout=15,
+            )
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "html.parser")
+            for a in soup.select("a.result__a"):
+                if _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
+                    return results
+        except Exception as exc:
+            print(f"DDG HTML note: {exc}")
+
+    # 3. DuckDuckGo Lite
     if len(results) < max_results:
         try:
             lite_url = "https://lite.duckduckgo.com/lite/"
@@ -115,7 +150,13 @@ def search_duckduckgo_html(query: str, kl_code: str, max_results: int = 12):
                 if _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
                     return results
         except Exception as exc:
-            print(f"Fallback search endpoint note: {exc}")
+            print(f"DDG Lite note: {exc}")
+
+    # 4. Region seed fallback when live search returns 0 candidates
+    if not results:
+        for seed in FALLBACK_SEEDS.get(region, FALLBACK_SEEDS["US"]):
+            if _add_candidate(results, seed["title"], seed["url"], max_results):
+                break
 
     return results
 
@@ -144,7 +185,6 @@ def audit_public_site(url: str):
 
     clean_emails = _find_emails_in_html(html)
 
-    # Check /contact if no email found on homepage
     if not clean_emails:
         for path in ("/contact", "/contact-us"):
             try:
@@ -230,7 +270,7 @@ def run_scout():
     search_query = f"{niche} {cfg['query_suffix']} contact email"
     print(f"Running Phase 1 Lead Scout | Region: {region} | Niche: {niche} | Chat: {TELEGRAM_CHAT_ID}")
 
-    candidates = search_duckduckgo_html(search_query, cfg["kl"], max_results=12)
+    candidates = discover_websites(search_query, region, cfg["kl"], max_results=12)
     print(f"Candidate websites found: {len(candidates)}")
     new_leads_found = 0
 

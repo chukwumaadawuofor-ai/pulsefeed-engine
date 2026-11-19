@@ -6,8 +6,14 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# 100% Verified & Approved JVZoo Affiliate Offers (ID: 3659489)
+# 100% Verified & Approved Offers (Proprietary BYOK Software + JVZoo ID: 3659489)
 CURATED_SAAS_OFFERS = [
+    {
+        "title": "ViralHook AI — Faceless Shorts, Reels & TikTok Script Studio (Lifetime)",
+        "price_value": 39.00,
+        "seller_contact": "https://chukwuma448.gumroad.com/l/dvfhm",
+        "image_url": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800"
+    },
     {
         "title": "EverPitch Bundle — AI Pitch Deck & Sales Presentation Suite",
         "price_value": 197.00,

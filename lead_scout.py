@@ -13,6 +13,7 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID") or os.environ.get("TELEGRA
 
 # Configure target region ("US", "UK", "EUROPE", or "AUSTRALIA") and niche
 TARGET_REGION = os.environ.get("TARGET_REGION", "US").upper()
+TARGET_NICHE = os.environ.get("TARGET_NICHE", "digital marketing agency")
 REGION_CONFIG = {
     "US": {"kl": "us-en", "query_suffix": "United States"},
     "UK": {"kl": "uk-en", "query_suffix": "United Kingdom OR London"},

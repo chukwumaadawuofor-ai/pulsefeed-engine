@@ -196,6 +196,69 @@
         .item-share-btn:hover {
             color: #ffffff;
             border-color: #58a6ff;
+            /* Contact Buttons & Modal */
+.contact-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.contact-cta-btn:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+.floating-contact {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+}
+.contact-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 28, 0.78);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.contact-modal.open {
+  display: flex;
+}
+.contact-card {
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  max-width: 420px;
+  width: 100%;
+  padding: 22px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.contact-card input,
+.contact-card textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #f8fafc;
+  font-size: 14px;
+}
         }
     </style>
 </head>
@@ -366,5 +429,56 @@
 
         loadProducts();
     </script>
+    <!-- Floating Contact Button -->
+<div class="floating-contact">
+  <button type="button" class="contact-cta-btn" onclick="openContactModal()">
+    ✉️ Contact Us
+  </button>
+</div>
+
+<!-- Quick Contact Modal -->
+<div id="contactModal" class="contact-modal" onclick="if(event.target===this)closeContactModal()">
+  <div class="contact-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <h3 style="margin:0;font-size:18px;">Get a Custom AI Tool Quote</h3>
+      <button type="button" onclick="closeContactModal()" style="background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;">✕</button>
+    </div>
+    <p style="margin:0 0 14px;font-size:13px;color:#94a3b8;">
+      Curated AI &amp; SaaS Software Deals — zero recurring server fees.
+    </p>
+    <input id="leadName" type="text" placeholder="Your Name / Company" />
+    <input id="leadSite" type="text" placeholder="Your Website URL (optional)" />
+    <textarea id="leadMsg" rows="3" placeholder="What would you like to automate? (e.g., instant quote calculator, 24/7 lead capture)"></textarea>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button type="button" class="contact-cta-btn" style="flex:1;justify-content:center;" onclick="sendViaEmail()">
+        Send Email
+      </button>
+      <a class="contact-cta-btn" style="background:#1e293b;box-shadow:none;" href="mailto:damiancuratedaideals@gmail.com?subject=Custom%20AI%20Tool%20Inquiry">
+        Direct Email
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openContactModal() {
+    document.getElementById('contactModal').classList.add('open');
+  }
+  function closeContactModal() {
+    document.getElementById('contactModal').classList.remove('open');
+  }
+  function sendViaEmail() {
+    const name = document.getElementById('leadName').value.trim() || 'Prospect';
+    const site = document.getElementById('leadSite').value.trim() || 'Not provided';
+    const msg = document.getElementById('leadMsg').value.trim() || 'Interested in a custom AI web tool.';
+    const subject = encodeURIComponent('Custom AI Tool Inquiry from ' + name);
+    const body = encodeURIComponent(
+      'Name / Company: ' + name + '\n' +
+      'Website: ' + site + '\n\n' +
+      'Project Details:\n' + msg
+    );
+    window.location.href = 'mailto:damiancuratedaideals@gmail.com?subject=' + subject + '&body=' + body;
+  }
+</script>
 </body>
 </html>

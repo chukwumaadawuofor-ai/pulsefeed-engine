@@ -15,44 +15,26 @@ TELEGRAM_CHAT_ID = (
     or os.environ.get("TELEGRAM_CHANNEL_ID")
     or "6540485008"
 )
+SERPER_API_KEY = os.environ.get("SERPER_API_KEY", "").strip()
+TAVILY_API_KEY = os.environ.get("TAVILY_API_KEY", "").strip()
 
-# Configure target region ("US", "UK", "EUROPE", or "AUSTRALIA") and niche
 TARGET_REGION = os.environ.get("TARGET_REGION", "US").upper().strip()
-TARGET_NICHE = os.environ.get("TARGET_NICHE", "digital marketing agency").strip()
+TARGET_NICHE = os.environ.get("TARGET_NICHE", "solar installer").strip()
 
 REGION_CONFIG = {
-    "US": {"kl": "us-en", "query_suffix": "United States"},
-    "UK": {"kl": "uk-en", "query_suffix": "United Kingdom London"},
-    "EUROPE": {"kl": "ie-en", "query_suffix": "Europe Germany Netherlands Ireland"},
-    "AUSTRALIA": {"kl": "au-en", "query_suffix": "Australia"},
-}
-
-FALLBACK_SEEDS = {
-    "UK": [
-        {"title": "Impression Digital", "url": "https://www.impression.co.uk"},
-        {"title": "Fugu Digital", "url": "https://fugudigital.co.uk"},
-        {"title": "Found", "url": "https://www.found.co.uk"},
-    ],
-    "US": [
-        {"title": "Single Grain", "url": "https://www.singlegrain.com"},
-        {"title": "KlientBoost", "url": "https://www.klientboost.com"},
-        {"title": "Directive Consulting", "url": "https://directiveconsulting.com"},
-    ],
-    "EUROPE": [
-        {"title": "Dept Agency", "url": "https://www.deptagency.com"},
-        {"title": "Valtech", "url": "https://www.valtech.com"},
-    ],
-    "AUSTRALIA": [
-        {"title": "Reload Media", "url": "https://www.reloadmedia.com.au"},
-        {"title": "Sparro", "url": "https://www.sparro.com.au"},
-    ],
+    "US": {"kl": "us-en", "gl": "us", "query_suffix": "United States"},
+    "UK": {"kl": "uk-en", "gl": "uk", "query_suffix": "United Kingdom London"},
+    "EUROPE": {"kl": "ie-en", "gl": "de", "query_suffix": "Europe Germany Netherlands Ireland"},
+    "AUSTRALIA": {"kl": "au-en", "gl": "au", "query_suffix": "Australia"},
 }
 
 SKIP_DOMAINS = (
     "linkedin.com", "facebook.com", "instagram.com", "x.com", "twitter.com",
     "youtube.com", "tiktok.com", "wikipedia.org", "yelp.com", "clutch.co",
     "upcity.com", "goodfirms.co", "trustpilot.com", "reddit.com", "medium.com",
-    "duckduckgo.com", "bing.com", "microsoft.com", "msn.com", "google.com"
+    "duckduckgo.com", "bing.com", "microsoft.com", "msn.com", "google.com",
+    "yellowpages.com", "angi.com", "homeadvisor.com", "thumbtack.com",
+    "houzz.com", "bbb.org", "checkatrade.com", "bark.com", "yell.com"
 )
 
 HEADERS = {
@@ -100,10 +82,63 @@ def _add_candidate(results: list, title: str, raw_url: str, max_results: int) ->
     return len(results) >= max_results
 
 
-def discover_websites(query: str, region: str, kl_code: str, max_results: int = 12):
+def discover_websites(query: str, region: str, cfg: dict, max_results: int = 12):
     results = []
 
-    # 1. Bing search
+    # 1. Serper.dev Google Search API
+    if SERPER_API_KEY:
+        try:
+            resp = requests.post(
+                "https://google.serper.dev/search",
+                headers={
+                    "X-API-Key": SERPER_API_KEY,
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "q": query,
+                    "gl": cfg["gl"],
+                    "hl": "en",
+                    "num": 15,
+                },
+                timeout=15,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            for item in data.get("organic", []):
+                if _add_candidate(results, item.get("title", ""), item.get("link", ""), max_results):
+                    return results
+            print(f"Serper API returned {len(results)} usable domains.")
+            if results:
+                return results
+        except Exception as exc:
+            print(f"Serper API note: {exc}")
+
+    # 2. Tavily Search API
+    if TAVILY_API_KEY and len(results) < max_results:
+        try:
+            resp = requests.post(
+                "https://api.tavily.com/search",
+                headers={"Content-Type": "application/json"},
+                json={
+                    "api_key": TAVILY_API_KEY,
+                    "query": query,
+                    "search_depth": "basic",
+                    "max_results": 15,
+                },
+                timeout=15,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            for item in data.get("results", []):
+                if _add_candidate(results, item.get("title", ""), item.get("url", ""), max_results):
+                    return results
+            print(f"Tavily API returned {len(results)} usable domains.")
+            if results:
+                return results
+        except Exception as exc:
+            print(f"Tavily API note: {exc}")
+
+    # 3. HTML Fallback (Bing -> DuckDuckGo)
     try:
         bing_url = f"https://www.bing.com/search?q={quote_plus(query)}"
         resp = requests.get(bing_url, headers=HEADERS, timeout=15)
@@ -114,15 +149,13 @@ def discover_websites(query: str, region: str, kl_code: str, max_results: int = 
             if a and _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
                 return results
     except Exception as exc:
-        print(f"Bing search note: {exc}")
+        print(f"Bing fallback note: {exc}")
 
-    # 2. DuckDuckGo HTML
     if len(results) < max_results:
         try:
-            ddg_url = "https://html.duckduckgo.com/html/"
             resp = requests.post(
-                ddg_url,
-                data={"q": query, "kl": kl_code},
+                "https://html.duckduckgo.com/html/",
+                data={"q": query, "kl": cfg["kl"]},
                 headers=HEADERS,
                 timeout=15,
             )
@@ -132,46 +165,33 @@ def discover_websites(query: str, region: str, kl_code: str, max_results: int = 
                 if _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
                     return results
         except Exception as exc:
-            print(f"DDG HTML note: {exc}")
-
-    # 3. DuckDuckGo Lite
-    if len(results) < max_results:
-        try:
-            lite_url = "https://lite.duckduckgo.com/lite/"
-            resp = requests.post(
-                lite_url,
-                data={"q": query, "kl": kl_code},
-                headers=HEADERS,
-                timeout=15,
-            )
-            resp.raise_for_status()
-            soup = BeautifulSoup(resp.text, "html.parser")
-            for a in soup.select("a.result-link"):
-                if _add_candidate(results, a.get_text(strip=True), a.get("href", ""), max_results):
-                    return results
-        except Exception as exc:
-            print(f"DDG Lite note: {exc}")
-
-    # 4. Region seed fallback when live search returns 0 candidates
-    if not results:
-        for seed in FALLBACK_SEEDS.get(region, FALLBACK_SEEDS["US"]):
-            if _add_candidate(results, seed["title"], seed["url"], max_results):
-                break
+            print(f"DDG HTML fallback note: {exc}")
 
     return results
 
 
-def _find_emails_in_html(html: str) -> list:
+def _find_emails_in_html(html: str, site_url: str) -> list:
     emails = set(re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", html))
-    clean = []
+    site_host = urlparse(site_url).netloc.lower()
+    if site_host.startswith("www."):
+        site_host = site_host[4:]
+    brand_root = site_host.split(".")[0] if site_host else ""
+
+    same_domain = []
+    other_valid = []
     for e in emails:
         low = e.lower()
         if low.endswith((".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".css", ".js")):
             continue
-        if any(bad in low for bad in ("example.com", "sentry", "wixpress.com", "domain.com")):
+        if any(bad in low for bad in ("example.com", "sentry", "wixpress.com", "domain.com", "bang.in")):
             continue
-        clean.append(e)
-    return clean
+        email_domain = low.split("@")[-1]
+        if site_host and (email_domain == site_host or (brand_root and brand_root in email_domain)):
+            same_domain.append(e)
+        else:
+            other_valid.append(e)
+
+    return same_domain + other_valid
 
 
 def audit_public_site(url: str):
@@ -183,14 +203,14 @@ def audit_public_site(url: str):
     lower_html = html.lower()
     soup = BeautifulSoup(html, "html.parser")
 
-    clean_emails = _find_emails_in_html(html)
+    clean_emails = _find_emails_in_html(html, url)
 
     if not clean_emails:
         for path in ("/contact", "/contact-us"):
             try:
                 c_resp = requests.get(f"{url.rstrip('/')}{path}", headers=HEADERS, timeout=8, allow_redirects=True)
                 if c_resp.status_code == 200:
-                    found = _find_emails_in_html(c_resp.text)
+                    found = _find_emails_in_html(c_resp.text, url)
                     if found:
                         clean_emails = found
                         break
@@ -262,15 +282,15 @@ def send_telegram_report(text: str):
 
 
 def run_scout():
-    region = os.environ.get("TARGET_REGION") or TARGET_REGION
-    region = region.upper().strip()
+    region = (os.environ.get("TARGET_REGION") or TARGET_REGION).upper().strip()
     niche = (os.environ.get("TARGET_NICHE") or TARGET_NICHE).strip()
 
     cfg = REGION_CONFIG.get(region, REGION_CONFIG["US"])
     search_query = f"{niche} {cfg['query_suffix']} contact email"
-    print(f"Running Phase 1 Lead Scout | Region: {region} | Niche: {niche} | Chat: {TELEGRAM_CHAT_ID}")
+    source_mode = "Serper API" if SERPER_API_KEY else ("Tavily API" if TAVILY_API_KEY else "HTML Fallback")
+    print(f"Running Phase 1 Lead Scout | Region: {region} | Niche: {niche} | Source: {source_mode}")
 
-    candidates = discover_websites(search_query, region, cfg["kl"], max_results=12)
+    candidates = discover_websites(search_query, region, cfg, max_results=12)
     print(f"Candidate websites found: {len(candidates)}")
     new_leads_found = 0
 
@@ -298,7 +318,7 @@ def run_scout():
 
             email_line = audit["contact_email"] if audit["contact_email"] else "Not found on site (check manually)"
             report_msg = (
-                f"🎯 NEW {region} LEAD REPORT\n\n"
+                f"🎯 NEW {region} LEAD REPORT ({niche})\n\n"
                 f"🏢 Site: {url}\n"
                 f"📧 Email: {email_line}\n"
                 f"🔍 Gap Spotted: {audit['spotted_gap']}\n\n"

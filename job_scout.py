@@ -3,10 +3,20 @@ import re
 import xml.etree.ElementTree as ET
 import requests
 
-SUPABASE_URL = os.environ["SUPABASE_URL"].rstrip("/")
-SUPABASE_KEY = os.environ["SUPABASE_KEY"]
-BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-CHAT_ID = os.environ["TELEGRAM_ADMIN_CHAT_ID"]
+
+def _clean_url(raw: str) -> str:
+    val = (raw or "").strip().strip('"').strip("'").rstrip("/")
+    if "/rest/v1" in val:
+        val = val.split("/rest/v1", 1)[0].rstrip("/")
+    if val and not val.startswith("http"):
+        val = f"https://{val}"
+    return val
+
+
+SUPABASE_URL = _clean_url(os.environ["SUPABASE_URL"])
+SUPABASE_KEY = os.environ["SUPABASE_KEY"].strip()
+BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"].strip()
+CHAT_ID = os.environ["TELEGRAM_ADMIN_CHAT_ID"].strip()
 STOREFRONT_URL = "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/"
 
 # Public remote job feeds (no API keys required)
@@ -44,6 +54,8 @@ def fetch_existing_urls() -> set:
     url = f"{SUPABASE_URL}/rest/v1/job_leads?select=job_url&limit=1000"
     headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"}
     r = requests.get(url, headers=headers, timeout=20)
+    if not r.ok:
+        print("Supabase GET error:", r.status_code, r.text)
     r.raise_for_status()
     return {row["job_url"] for row in r.json()}
 
@@ -169,7 +181,7 @@ def main():
             existing.add(item["url"])
             notify_telegram(row)
             new_count += 1
-            if new_count >= 5:  # Cap at 5 alerts per run to prevent Telegram spam
+            if new_count >= 5:
                 break
 
     print(f"Job Scout completed. New matches sent: {new_count}")

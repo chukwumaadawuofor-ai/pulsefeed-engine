@@ -20,7 +20,7 @@ TELEGRAM_CHAT_ID = (
 
 MAX_ALERTS_PER_RUN = int(os.getenv("MAX_ALERTS_PER_RUN", "12"))
 MAX_ALERTS_PER_SOURCE = int(os.getenv("MAX_ALERTS_PER_SOURCE", "4"))
-MIN_JOB_SCORE = int(os.getenv("MIN_JOB_SCORE", "35"))
+MIN_JOB_SCORE = int(os.getenv("MIN_JOB_SCORE", "40"))
 REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "20"))
 
 FEED_SOURCES = [
@@ -87,6 +87,8 @@ RESTRICTED_LOCATION_TERMS = [
     "usa only",
     "us only",
     "united states only",
+    "us based",
+    "u.s. based",
     "eu only",
     "europe only",
     "uk only",
@@ -126,6 +128,11 @@ EXCLUDED_TITLE_TERMS = [
     "attorney",
     "legal",
     "manager",
+    "mgr",
+    "sr mgr",
+    "operations",
+    "p2p",
+    "performance lead",
     "recruiter",
     "account executive",
     "account manager",
@@ -343,14 +350,16 @@ def evaluate_job_fit(job: dict[str, Any], min_score: int = MIN_JOB_SCORE) -> dic
     has_worldwide = any(
         loc in location_raw or loc in combined for loc in PREFERRED_LOCATION_TERMS
     )
-    has_restricted = any(loc in location_raw for loc in RESTRICTED_LOCATION_TERMS)
+    has_restricted = any(
+        loc in location_raw or loc in title_raw for loc in RESTRICTED_LOCATION_TERMS
+    )
 
     if has_worldwide and not has_restricted:
         score += 25
         reasons.append("worldwide/global")
         region_flag = "worldwide"
     elif has_restricted and not has_worldwide:
-        score -= 25
+        score -= 40
         reasons.append("region_restricted")
         region_flag = "restricted"
     else:

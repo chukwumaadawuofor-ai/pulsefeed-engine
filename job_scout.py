@@ -49,6 +49,36 @@ FEED_SOURCES = [
 # ==============================================================================
 # TARGETING, EXCLUSIONS & SCORING RULES
 # ==============================================================================
+TITLE_BUILDER_TERMS = [
+    "engineer",
+    "developer",
+    "programmer",
+    "full-stack",
+    "full stack",
+    "fullstack",
+    "frontend",
+    "front-end",
+    "backend",
+    "back-end",
+    "next.js",
+    "nextjs",
+    "react",
+    "typescript",
+    "javascript",
+    "node.js",
+    "nodejs",
+    "python",
+    "automation",
+    "api",
+    "postgres",
+    "postgresql",
+    "supabase",
+    "convex",
+    "n8n",
+    "webhook",
+    "integration",
+]
+
 HIGH_DEMAND_STACK_KEYWORDS = [
     "full-stack",
     "full stack",
@@ -148,6 +178,13 @@ EXCLUDED_TITLE_TERMS = [
     "data entry",
     "customer support",
     "enablement",
+    "physician",
+    "nurse",
+    "clinical",
+    "health assessment",
+    "administrator",
+    "admininstrator",
+    "atlassian",
     "sap",
     "salesforce",
     "mainframe",
@@ -317,6 +354,11 @@ def is_excluded_title(title: str) -> bool:
     return any(term in norm_title for term in EXCLUDED_TITLE_TERMS)
 
 
+def has_builder_title(title: str) -> bool:
+    norm_title = _norm(title)
+    return any(term in norm_title for term in TITLE_BUILDER_TERMS)
+
+
 def evaluate_job_fit(job: dict[str, Any], min_score: int = MIN_JOB_SCORE) -> dict[str, Any]:
     title_raw = _norm(job.get("title"))
     location_raw = _norm(job.get("location"))
@@ -338,6 +380,14 @@ def evaluate_job_fit(job: dict[str, Any], min_score: int = MIN_JOB_SCORE) -> dic
             "score": -100,
             "reasons": ["excluded_title"],
             "region_flag": "excluded",
+        }
+
+    if not has_builder_title(title_raw):
+        return {
+            "qualified": False,
+            "score": -20,
+            "reasons": ["non_builder_title"],
+            "region_flag": "non_builder",
         }
 
     has_restricted = any(

@@ -1,12 +1,12 @@
 import hashlib
 import html
+import json
 import os
 import re
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from typing import Any
-import json
 
 # ==============================================================================
 # CONFIGURATION & ENVIRONMENT VARIABLES
@@ -14,7 +14,18 @@ import json
 SUPABASE_URL = (os.getenv("SUPABASE_URL") or "").strip().rstrip("/")
 SUPABASE_KEY = (os.getenv("SUPABASE_KEY") or "").strip()
 TELEGRAM_BOT_TOKEN = (os.getenv("TELEGRAM_BOT_TOKEN") or "").strip()
-TELEGRAM_CHAT_ID = (os.getenv("TELEGRAM_CHAT_ID") or "").strip()
+TELEGRAM_CHAT_ID = (
+    os.getenv("TELEGRAM_CHAT_ID") or os.getenv("TELEGRAM_ADMIN_CHAT_ID") or ""
+).strip()
+
+print(
+    "[DEBUG ENV]",
+    "has_sb_url=", bool(SUPABASE_URL),
+    "sb_url_starts_https=", SUPABASE_URL.startswith("https://"),
+    "has_sb_key=", bool(SUPABASE_KEY),
+    "has_tg_token=", bool(TELEGRAM_BOT_TOKEN),
+    "has_tg_chat=", bool(TELEGRAM_CHAT_ID),
+)
 
 MAX_ALERTS_PER_RUN = int(os.getenv("MAX_ALERTS_PER_RUN", "12"))
 MAX_ALERTS_PER_SOURCE = int(os.getenv("MAX_ALERTS_PER_SOURCE", "4"))

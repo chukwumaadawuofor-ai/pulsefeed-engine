@@ -1,5 +1,6 @@
 import os
 import re
+from itertools import zip_longest
 import xml.etree.ElementTree as ET
 import requests
 
@@ -19,14 +20,14 @@ BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"].strip()
 CHAT_ID = os.environ["TELEGRAM_ADMIN_CHAT_ID"].strip()
 STOREFRONT_URL = "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/"
 
-# Public remote job feeds (no API keys required)
 FEEDS = [
-    ("WeWorkRemotely-Programming", "https://weworkremotely.com/categories/remote-programming-jobs.rss"),
-    ("WeWorkRemotely-DevOpsSysAdmin", "https://weworkremotely.com/categories/remote-devops-sysadmin-jobs.rss"),
-    ("RemoteOK-API", "https://remoteok.com/api"),
+    ("Remotive", "https://remotive.com/api/remote-jobs?category=software-dev&limit=40"),
+    ("RemoteOK", "https://remoteok.com/api"),
+    ("Jobicy", "https://jobicy.com/api/v2/remote-jobs?count=40&industry=dev"),
+    ("WWR-Programming", "https://weworkremotely.com/categories/remote-programming-jobs.rss"),
+    ("WWR-DevOps", "https://weworkremotely.com/categories/remote-devops-sysadmin-jobs.rss"),
 ]
 
-# High-fit keywords mapped to your fast-execution templates (higher priority first)
 KEYWORDS = {
     "lead capture": "Lead-Capture & AI Intake",
     "ai intake": "Lead-Capture & AI Intake",
@@ -48,7 +49,19 @@ KEYWORDS = {
     "python": "Python Backend / Script",
 }
 
-# Skip obvious non-software/physical roles unless strong automation/AI/data terms appear
+CONTRACT_TERMS = [
+    "contract",
+    "contractor",
+    "freelance",
+    "consultant",
+    "consulting",
+    "part-time",
+    "part time",
+    "project-based",
+    "b2b",
+    "independent",
+]
+
 NOISE_TERMS = [
     "mechanical",
     "reliability",
@@ -62,6 +75,7 @@ NOISE_TERMS = [
     "recruiter",
     "account executive",
     "inside sales",
+    "broker dealer",
 ]
 
 STRONG_TECH_TERMS = [
@@ -77,7 +91,6 @@ STRONG_TECH_TERMS = [
     "etl",
     "data pipeline",
     "telegram",
-    "api",
 ]
 
 KEYWORD_PATTERNS = {
@@ -85,7 +98,15 @@ KEYWORD_PATTERNS = {
     for kw in KEYWORDS
 }
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; PulseFeedJobScout/1.1)"}
+CONTRACT_PATTERN = re.compile(
+    r"\b(" + "|".join(re.escape(t) for t in CONTRACT_TERMS) + r")\b",
+    re.IGNORECASE,
+)
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "application/json, application/xml, text/xml, */*",
+}
 
 
 def clean_html(text: str) -> str:
@@ -120,7 +141,6 @@ def build_proposal(title: str, category: str) -> str:
 def score_item(title: str, summary: str):
     haystack = f"{title} {summary}".lower()
 
-    # Filter out non-tech/physical roles unless explicit automation/AI/data/API terms are present
     if any(re.search(r"\b" + re.escape(term) + r"\b", haystack) for term in NOISE_TERMS):
         if not any(re.search(r"\b" + re.escape(tech) + r"\b", haystack) for tech in STRONG_TECH_TERMS):
             return None
@@ -129,8 +149,9 @@ def score_item(title: str, summary: str):
     if not matched:
         return None
 
+    is_contract = bool(CONTRACT_PATTERN.search(haystack))
     primary_category = KEYWORDS[matched[0]]
-    return matched, primary_category
+    return matched, primary_category, is_contract
 
 
 def parse_rss(source_name: str, feed_url: str) -> list:
@@ -138,7 +159,7 @@ def parse_rss(source_name: str, feed_url: str) -> list:
     r = requests.get(feed_url, headers=HEADERS, timeout=25)
     r.raise_for_status()
     root = ET.fromstring(r.text)
-    for item in root.findall(".//item")[:40]:
+    for item in root.findall(".//item")[:35]:
         title = (item.findtext("title") or "").strip()
         link = (item.findtext("link") or "").strip()
         desc = clean_html(item.findtext("description") or "")
@@ -152,7 +173,7 @@ def parse_remoteok(source_name: str, feed_url: str) -> list:
     r = requests.get(feed_url, headers=HEADERS, timeout=25)
     r.raise_for_status()
     data = r.json()
-    for entry in data[1:50]:
+    for entry in data[1:45]:
         title = (entry.get("position") or "").strip()
         company = (entry.get("company") or "").strip()
         link = (entry.get("url") or "").strip()
@@ -161,6 +182,39 @@ def parse_remoteok(source_name: str, feed_url: str) -> list:
         if title and link:
             full_title = f"{title} — {company}" if company else title
             items.append({"source": source_name, "title": full_title, "url": link, "summary": f"{tags} {desc}"})
+    return items
+
+
+def parse_remotive(source_name: str, feed_url: str) -> list:
+    items = []
+    r = requests.get(feed_url, headers=HEADERS, timeout=25)
+    r.raise_for_status()
+    for entry in r.json().get("jobs", [])[:40]:
+        title = (entry.get("title") or "").strip()
+        company = (entry.get("company_name") or "").strip()
+        link = (entry.get("url") or "").strip()
+        job_type = (entry.get("job_type") or "").strip()
+        desc = clean_html(entry.get("description") or "")
+        if title and link:
+            full_title = f"{title} — {company}" if company else title
+            items.append({"source": source_name, "title": full_title, "url": link, "summary": f"{job_type} {desc}"})
+    return items
+
+
+def parse_jobicy(source_name: str, feed_url: str) -> list:
+    items = []
+    r = requests.get(feed_url, headers=HEADERS, timeout=25)
+    r.raise_for_status()
+    for entry in r.json().get("jobs", [])[:40]:
+        title = (entry.get("jobTitle") or "").strip()
+        company = (entry.get("companyName") or "").strip()
+        link = (entry.get("url") or "").strip()
+        raw_type = entry.get("jobType") or ""
+        job_type = " ".join(raw_type) if isinstance(raw_type, list) else str(raw_type)
+        desc = clean_html(entry.get("jobExcerpt") or entry.get("jobDescription") or "")
+        if title and link:
+            full_title = f"{title} — {company}" if company else title
+            items.append({"source": source_name, "title": full_title, "url": link, "summary": f"{job_type} {desc}"})
     return items
 
 
@@ -181,6 +235,7 @@ def notify_telegram(row: dict):
     msg = (
         f"💼 *New High-Fit Remote Gig*\n"
         f"*Role:* {row['title']}\n"
+        f"*Type:* {row['budget_hint']}\n"
         f"*Track:* {row['category']}\n"
         f"*Source:* {row['source']}\n"
         f"*Keywords:* `{row['matched_keywords']}`\n"
@@ -197,43 +252,81 @@ def notify_telegram(row: dict):
 
 def main():
     existing = fetch_existing_urls()
-    candidates = []
+    source_buckets = []
+
     for source_name, feed_url in FEEDS:
         try:
             if "remoteok.com" in feed_url:
-                candidates.extend(parse_remoteok(source_name, feed_url))
+                items = parse_remoteok(source_name, feed_url)
+            elif "remotive.com" in feed_url:
+                items = parse_remotive(source_name, feed_url)
+            elif "jobicy.com" in feed_url:
+                items = parse_jobicy(source_name, feed_url)
             else:
-                candidates.extend(parse_rss(source_name, feed_url))
+                items = parse_rss(source_name, feed_url)
+            print(f"[INFO] {source_name}: fetched {len(items)} raw items")
+            source_buckets.append(items)
         except Exception as exc:
             print(f"[WARN] Failed {source_name}: {exc}")
 
-    new_count = 0
-    for item in candidates:
+    interleaved = [
+        item
+        for group in zip_longest(*source_buckets)
+        for item in group
+        if item is not None
+    ]
+
+    by_source = {}
+    for item in interleaved:
         if item["url"] in existing:
             continue
         scored = score_item(item["title"], item["summary"])
         if not scored:
             continue
-        matched, category = scored
+        matched, category, is_contract = scored
+        by_source.setdefault(item["source"], []).append((is_contract, item, matched, category))
+
+    for src in by_source:
+        by_source[src].sort(key=lambda x: x[0], reverse=True)
+
+    diverse_queue = [
+        entry
+        for group in zip_longest(*by_source.values())
+        for entry in group
+        if entry is not None
+    ]
+
+    per_source_count = {}
+    max_per_source = 2
+    new_count = 0
+
+    for is_contract, item, matched, category in diverse_queue:
+        if item["url"] in existing:
+            continue
+        src = item["source"]
+        if per_source_count.get(src, 0) >= max_per_source:
+            continue
+
         row = {
             "job_url": item["url"],
             "title": item["title"],
-            "source": item["source"],
+            "source": src,
             "category": category,
             "matched_keywords": ", ".join(matched[:5]),
-            "budget_hint": "Remote / Contract",
+            "budget_hint": "🔥 Contract / Freelance" if is_contract else "Remote Role",
             "proposal_draft": build_proposal(item["title"], category),
             "status": "new",
         }
         saved = save_lead(row)
         if saved:
             existing.add(item["url"])
+            per_source_count[src] = per_source_count.get(src, 0) + 1
             notify_telegram(row)
             new_count += 1
             if new_count >= 5:
                 break
 
-    print(f"Job Scout completed. New matches sent: {new_count}")
+    print(f"Job Scout completed. New matches sent: {new_count} | By source: {per_source_count}")
 
 
 if __name__ == "__main__":

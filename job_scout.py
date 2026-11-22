@@ -89,6 +89,7 @@ RESTRICTED_LOCATION_TERMS = [
     "united states only",
     "us based",
     "u.s. based",
+    "canada only",
     "eu only",
     "europe only",
     "uk only",
@@ -133,6 +134,10 @@ EXCLUDED_TITLE_TERMS = [
     "operations",
     "p2p",
     "performance lead",
+    "screenwriter",
+    "copywriter",
+    "writer",
+    "editor",
     "recruiter",
     "account executive",
     "account manager",
@@ -335,6 +340,17 @@ def evaluate_job_fit(job: dict[str, Any], min_score: int = MIN_JOB_SCORE) -> dic
             "region_flag": "excluded",
         }
 
+    has_restricted = any(
+        loc in location_raw or loc in title_raw for loc in RESTRICTED_LOCATION_TERMS
+    )
+    if has_restricted:
+        return {
+            "qualified": False,
+            "score": -50,
+            "reasons": ["region_restricted"],
+            "region_flag": "restricted",
+        }
+
     matched_keywords = [kw for kw in HIGH_DEMAND_STACK_KEYWORDS if kw in combined]
     if not matched_keywords:
         return {
@@ -347,21 +363,11 @@ def evaluate_job_fit(job: dict[str, Any], min_score: int = MIN_JOB_SCORE) -> dic
     score = min(len(matched_keywords) * 15, 60)
     reasons: list[str] = [f"stack/role ({', '.join(matched_keywords[:5])})"]
 
-    has_worldwide = any(
-        loc in location_raw or loc in combined for loc in PREFERRED_LOCATION_TERMS
-    )
-    has_restricted = any(
-        loc in location_raw or loc in title_raw for loc in RESTRICTED_LOCATION_TERMS
-    )
-
-    if has_worldwide and not has_restricted:
+    has_worldwide = any(loc in location_raw for loc in PREFERRED_LOCATION_TERMS)
+    if has_worldwide:
         score += 25
         reasons.append("worldwide/global")
         region_flag = "worldwide"
-    elif has_restricted and not has_worldwide:
-        score -= 40
-        reasons.append("region_restricted")
-        region_flag = "restricted"
     else:
         region_flag = "unspecified"
 

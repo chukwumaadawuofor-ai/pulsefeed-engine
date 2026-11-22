@@ -18,18 +18,9 @@ TELEGRAM_CHAT_ID = (
     os.getenv("TELEGRAM_CHAT_ID") or os.getenv("TELEGRAM_ADMIN_CHAT_ID") or ""
 ).strip()
 
-print(
-    "[DEBUG ENV]",
-    "has_sb_url=", bool(SUPABASE_URL),
-    "sb_url_starts_https=", SUPABASE_URL.startswith("https://"),
-    "has_sb_key=", bool(SUPABASE_KEY),
-    "has_tg_token=", bool(TELEGRAM_BOT_TOKEN),
-    "has_tg_chat=", bool(TELEGRAM_CHAT_ID),
-)
-
 MAX_ALERTS_PER_RUN = int(os.getenv("MAX_ALERTS_PER_RUN", "12"))
 MAX_ALERTS_PER_SOURCE = int(os.getenv("MAX_ALERTS_PER_SOURCE", "4"))
-MIN_JOB_SCORE = int(os.getenv("MIN_JOB_SCORE", "15"))
+MIN_JOB_SCORE = int(os.getenv("MIN_JOB_SCORE", "35"))
 REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "20"))
 
 FEED_SOURCES = [
@@ -58,7 +49,7 @@ FEED_SOURCES = [
 # ==============================================================================
 # TARGETING, EXCLUSIONS & SCORING RULES
 # ==============================================================================
-TARGET_KEYWORDS = [
+HIGH_DEMAND_STACK_KEYWORDS = [
     "full-stack",
     "full stack",
     "fullstack",
@@ -67,6 +58,9 @@ TARGET_KEYWORDS = [
     "typescript",
     "javascript",
     "react",
+    "node.js",
+    "nodejs",
+    "python",
     "webhook",
     "webhooks",
     "n8n",
@@ -79,6 +73,7 @@ TARGET_KEYWORDS = [
     "postgresql",
     "bot",
     "scraper",
+    "integration",
 ]
 
 PREFERRED_LOCATION_TERMS = [
@@ -99,7 +94,7 @@ RESTRICTED_LOCATION_TERMS = [
     "apac",
 ]
 
-CONTRACT_RATE_TERMS = [
+CONTRACT_AND_COMP_TERMS = [
     "contract",
     "contractor",
     "freelance",
@@ -109,6 +104,13 @@ CONTRACT_RATE_TERMS = [
     "$3k",
     "$4k",
     "$5k",
+    "$6k",
+    "$7k",
+    "$8k",
+    "$10k",
+    "$100k",
+    "$120k",
+    "$150k",
     "take-home",
 ]
 
@@ -120,6 +122,20 @@ EXCLUDED_TITLE_TERMS = [
     "phd",
     "principal",
     "staff",
+    "counsel",
+    "attorney",
+    "legal",
+    "manager",
+    "recruiter",
+    "account executive",
+    "account manager",
+    "sales",
+    "marketing",
+    "annotation",
+    "annotator",
+    "data entry",
+    "customer support",
+    "enablement",
     "sap",
     "salesforce",
     "mainframe",
@@ -312,15 +328,21 @@ def evaluate_job_fit(job: dict[str, Any], min_score: int = MIN_JOB_SCORE) -> dic
             "region_flag": "excluded",
         }
 
-    score = 0
-    reasons: list[str] = []
+    matched_keywords = [kw for kw in HIGH_DEMAND_STACK_KEYWORDS if kw in combined]
+    if not matched_keywords:
+        return {
+            "qualified": False,
+            "score": 0,
+            "reasons": ["no_target_stack_match"],
+            "region_flag": "unmatched",
+        }
 
-    matched_keywords = [kw for kw in TARGET_KEYWORDS if kw in combined]
-    if matched_keywords:
-        score += min(len(matched_keywords) * 10, 50)
-        reasons.append(f"stack/role ({', '.join(matched_keywords[:5])})")
+    score = min(len(matched_keywords) * 15, 60)
+    reasons: list[str] = [f"stack/role ({', '.join(matched_keywords[:5])})"]
 
-    has_worldwide = any(loc in location_raw or loc in combined for loc in PREFERRED_LOCATION_TERMS)
+    has_worldwide = any(
+        loc in location_raw or loc in combined for loc in PREFERRED_LOCATION_TERMS
+    )
     has_restricted = any(loc in location_raw for loc in RESTRICTED_LOCATION_TERMS)
 
     if has_worldwide and not has_restricted:
@@ -334,9 +356,9 @@ def evaluate_job_fit(job: dict[str, Any], min_score: int = MIN_JOB_SCORE) -> dic
     else:
         region_flag = "unspecified"
 
-    if any(term in combined for term in CONTRACT_RATE_TERMS):
+    if any(term in combined for term in CONTRACT_AND_COMP_TERMS):
         score += 15
-        reasons.append("contract/rate signal")
+        reasons.append("contract/comp signal")
 
     return {
         "qualified": score >= min_score,
@@ -429,7 +451,7 @@ def supabase_record_lead(job: dict[str, Any], evaluation: dict[str, Any], finger
 
 def format_job_alert(job: dict[str, Any], evaluation: dict[str, Any]) -> str:
     score = evaluation.get("score", 0)
-    badge = "🔥 High-Fit Lead" if score >= 50 else "⚡ Contract/Stack Match"
+    badge = "🔥 High-Fit Lead" if score >= 65 else "⚡ Strong Stack Match"
     title = (job.get("title") or "Untitled Role").strip()
     company = (job.get("company") or "Unknown Company").strip()
     location = (job.get("location") or "Remote / Unspecified").strip()

@@ -26,28 +26,70 @@ FEEDS = [
     ("RemoteOK-API", "https://remoteok.com/api"),
 ]
 
-# High-fit keywords mapped to your fast-execution templates
+# High-fit keywords mapped to your fast-execution templates (higher priority first)
 KEYWORDS = {
     "lead capture": "Lead-Capture & AI Intake",
+    "ai intake": "Lead-Capture & AI Intake",
     "intake": "Lead-Capture & AI Intake",
     "chatbot": "Lead-Capture & AI Intake",
     "ai agent": "Lead-Capture & AI Intake",
-    "scraper": "Automated Web Monitor & Scraper",
-    "scraping": "Automated Web Monitor & Scraper",
     "web scraping": "Automated Web Monitor & Scraper",
-    "automation": "Workflow & API Automation",
+    "scraping": "Automated Web Monitor & Scraper",
+    "scraper": "Automated Web Monitor & Scraper",
     "webhook": "Workflow & API Automation",
+    "webhooks": "Workflow & API Automation",
+    "workflow automation": "Workflow & API Automation",
+    "automation": "Workflow & API Automation",
     "telegram": "Telegram / Operations Bot",
+    "discord bot": "Telegram / Operations Bot",
     "bot": "Telegram / Operations Bot",
-    "python": "Python Backend / Script",
     "etl": "Automated Data Pipeline",
+    "data pipeline": "Automated Data Pipeline",
+    "python": "Python Backend / Script",
 }
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; PulseFeedJobScout/1.0)"}
+# Skip obvious non-software/physical roles unless strong automation/AI/data terms appear
+NOISE_TERMS = [
+    "mechanical",
+    "reliability",
+    "machinist",
+    "hvac",
+    "warehouse",
+    "truck driver",
+    "delivery driver",
+    "nurse",
+    "dental",
+    "recruiter",
+    "account executive",
+    "inside sales",
+]
+
+STRONG_TECH_TERMS = [
+    "python",
+    "scraper",
+    "scraping",
+    "webhook",
+    "webhooks",
+    "automation",
+    "chatbot",
+    "ai agent",
+    "lead capture",
+    "etl",
+    "data pipeline",
+    "telegram",
+    "api",
+]
+
+KEYWORD_PATTERNS = {
+    kw: re.compile(r"\b" + re.escape(kw) + r"\b", re.IGNORECASE)
+    for kw in KEYWORDS
+}
+
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; PulseFeedJobScout/1.1)"}
 
 
 def clean_html(text: str) -> str:
-    return re.sub(r"<[^>]+>", " ", text or "").strip()
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text or "")).strip()
 
 
 def fetch_existing_urls() -> set:
@@ -77,9 +119,16 @@ def build_proposal(title: str, category: str) -> str:
 
 def score_item(title: str, summary: str):
     haystack = f"{title} {summary}".lower()
-    matched = [kw for kw in KEYWORDS if kw in haystack]
+
+    # Filter out non-tech/physical roles unless explicit automation/AI/data/API terms are present
+    if any(re.search(r"\b" + re.escape(term) + r"\b", haystack) for term in NOISE_TERMS):
+        if not any(re.search(r"\b" + re.escape(tech) + r"\b", haystack) for tech in STRONG_TECH_TERMS):
+            return None
+
+    matched = [kw for kw, pat in KEYWORD_PATTERNS.items() if pat.search(haystack)]
     if not matched:
         return None
+
     primary_category = KEYWORDS[matched[0]]
     return matched, primary_category
 

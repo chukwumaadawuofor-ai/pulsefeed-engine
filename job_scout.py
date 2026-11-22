@@ -177,6 +177,8 @@ EXCLUDED_TITLE_TERMS = [
     "annotator",
     "data entry",
     "customer support",
+    "service desk",
+    "help desk",
     "enablement",
     "physician",
     "nurse",

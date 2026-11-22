@@ -1,333 +1,512 @@
+import hashlib
+import html
 import os
 import re
-from itertools import zip_longest
+import urllib.parse
+import urllib.request
 import xml.etree.ElementTree as ET
-import requests
+from typing import Any
+import json
 
+# ==============================================================================
+# CONFIGURATION & ENVIRONMENT VARIABLES
+# ==============================================================================
+SUPABASE_URL = (os.getenv("SUPABASE_URL") or "").strip().rstrip("/")
+SUPABASE_KEY = (os.getenv("SUPABASE_KEY") or "").strip()
+TELEGRAM_BOT_TOKEN = (os.getenv("TELEGRAM_BOT_TOKEN") or "").strip()
+TELEGRAM_CHAT_ID = (os.getenv("TELEGRAM_CHAT_ID") or "").strip()
 
-def _clean_url(raw: str) -> str:
-    val = (raw or "").strip().strip('"').strip("'").rstrip("/")
-    if "/rest/v1" in val:
-        val = val.split("/rest/v1", 1)[0].rstrip("/")
-    if val and not val.startswith("http"):
-        val = f"https://{val}"
-    return val
+MAX_ALERTS_PER_RUN = int(os.getenv("MAX_ALERTS_PER_RUN", "12"))
+MAX_ALERTS_PER_SOURCE = int(os.getenv("MAX_ALERTS_PER_SOURCE", "4"))
+MIN_JOB_SCORE = int(os.getenv("MIN_JOB_SCORE", "15"))
+REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "20"))
 
-
-SUPABASE_URL = _clean_url(os.environ["SUPABASE_URL"])
-SUPABASE_KEY = os.environ["SUPABASE_KEY"].strip()
-BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"].strip()
-CHAT_ID = os.environ["TELEGRAM_ADMIN_CHAT_ID"].strip()
-STOREFRONT_URL = "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/"
-
-FEEDS = [
-    ("Remotive", "https://remotive.com/api/remote-jobs?category=software-dev&limit=40"),
-    ("RemoteOK", "https://remoteok.com/api"),
-    ("Jobicy", "https://jobicy.com/api/v2/remote-jobs?count=40&industry=dev"),
-    ("WWR-Programming", "https://weworkremotely.com/categories/remote-programming-jobs.rss"),
-    ("WWR-DevOps", "https://weworkremotely.com/categories/remote-devops-sysadmin-jobs.rss"),
+FEED_SOURCES = [
+    {
+        "name": "remotive",
+        "url": "https://remotive.com/api/remote-jobs",
+        "type": "remotive_json",
+    },
+    {
+        "name": "remoteok",
+        "url": "https://remoteok.com/api",
+        "type": "remoteok_json",
+    },
+    {
+        "name": "jobicy",
+        "url": "https://jobicy.com/api/v2/remote-jobs?count=50",
+        "type": "jobicy_json",
+    },
+    {
+        "name": "weworkremotely",
+        "url": "https://weworkremotely.com/categories/remote-programming-jobs.rss",
+        "type": "rss_xml",
+    },
 ]
 
-KEYWORDS = {
-    "lead capture": "Lead-Capture & AI Intake",
-    "ai intake": "Lead-Capture & AI Intake",
-    "intake": "Lead-Capture & AI Intake",
-    "chatbot": "Lead-Capture & AI Intake",
-    "ai agent": "Lead-Capture & AI Intake",
-    "web scraping": "Automated Web Monitor & Scraper",
-    "scraping": "Automated Web Monitor & Scraper",
-    "scraper": "Automated Web Monitor & Scraper",
-    "webhook": "Workflow & API Automation",
-    "webhooks": "Workflow & API Automation",
-    "workflow automation": "Workflow & API Automation",
-    "automation": "Workflow & API Automation",
-    "telegram": "Telegram / Operations Bot",
-    "discord bot": "Telegram / Operations Bot",
-    "bot": "Telegram / Operations Bot",
-    "etl": "Automated Data Pipeline",
-    "data pipeline": "Automated Data Pipeline",
-    "python": "Python Backend / Script",
-}
+# ==============================================================================
+# TARGETING, EXCLUSIONS & SCORING RULES
+# ==============================================================================
+TARGET_KEYWORDS = [
+    "full-stack",
+    "full stack",
+    "fullstack",
+    "next.js",
+    "nextjs",
+    "typescript",
+    "javascript",
+    "react",
+    "webhook",
+    "webhooks",
+    "n8n",
+    "automation",
+    "workflow",
+    "api",
+    "convex",
+    "supabase",
+    "postgres",
+    "postgresql",
+    "bot",
+    "scraper",
+]
 
-CONTRACT_TERMS = [
+PREFERRED_LOCATION_TERMS = [
+    "worldwide",
+    "anywhere",
+    "global",
+    "remote - worldwide",
+]
+
+RESTRICTED_LOCATION_TERMS = [
+    "usa only",
+    "us only",
+    "united states only",
+    "eu only",
+    "europe only",
+    "uk only",
+    "latam",
+    "apac",
+]
+
+CONTRACT_RATE_TERMS = [
     "contract",
     "contractor",
     "freelance",
-    "consultant",
-    "consulting",
-    "part-time",
-    "part time",
-    "project-based",
-    "b2b",
-    "independent",
+    "/month",
+    "per month",
+    "monthly",
+    "$3k",
+    "$4k",
+    "$5k",
+    "take-home",
 ]
 
-NOISE_TERMS = [
-    "mechanical",
-    "reliability",
-    "machinist",
-    "hvac",
-    "warehouse",
-    "truck driver",
-    "delivery driver",
-    "nurse",
-    "dental",
-    "recruiter",
-    "account executive",
-    "inside sales",
-    "broker dealer",
+EXCLUDED_TITLE_TERMS = [
+    "director",
+    "vp",
+    "chief",
+    "professor",
+    "phd",
+    "principal",
+    "staff",
+    "sap",
+    "salesforce",
+    "mainframe",
 ]
 
-STRONG_TECH_TERMS = [
-    "python",
-    "scraper",
-    "scraping",
-    "webhook",
-    "webhooks",
-    "automation",
-    "chatbot",
-    "ai agent",
-    "lead capture",
-    "etl",
-    "data pipeline",
-    "telegram",
-]
 
-KEYWORD_PATTERNS = {
-    kw: re.compile(r"\b" + re.escape(kw) + r"\b", re.IGNORECASE)
-    for kw in KEYWORDS
-}
-
-CONTRACT_PATTERN = re.compile(
-    r"\b(" + "|".join(re.escape(t) for t in CONTRACT_TERMS) + r")\b",
-    re.IGNORECASE,
-)
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept": "application/json, application/xml, text/xml, */*",
-}
+# ==============================================================================
+# TEXT & NETWORK HELPERS
+# ==============================================================================
+def _clean_text(value: Any) -> str:
+    if not value:
+        return ""
+    text = re.sub(r"<[^>]+>", " ", str(value))
+    text = html.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
 
 
-def clean_html(text: str) -> str:
-    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text or "")).strip()
+def _norm(value: Any) -> str:
+    return _clean_text(value).lower()
 
 
-def fetch_existing_urls() -> set:
-    url = f"{SUPABASE_URL}/rest/v1/job_leads?select=job_url&limit=1000"
-    headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"}
-    r = requests.get(url, headers=headers, timeout=20)
-    if not r.ok:
-        print("Supabase GET error:", r.status_code, r.text)
-    r.raise_for_status()
-    return {row["job_url"] for row in r.json()}
+def _http_get_text(url: str) -> str:
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0 (compatible; PulseFeedJobScout/1.0; +https://github.com/chukwumaadawuofor-ai)",
+            "Accept": "application/json, application/xml, text/xml, */*",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
+        raw = resp.read()
+        return raw.decode("utf-8", errors="replace")
 
 
-def build_proposal(title: str, category: str) -> str:
-    if "Scraper" in category or "Pipeline" in category:
-        return (
-            f"Hi — I can build a clean, automated Python monitoring/extraction pipeline for '{title}' "
-            f"with scheduled runs, deduplicated database storage, and instant Telegram/email alerts—"
-            f"designed with zero recurring monthly server bloat.\n\n"
-            f"Live examples & flat-rate packages ($450 / $950 / $1,850+): {STOREFRONT_URL}"
+def compute_job_fingerprint(job: dict[str, Any]) -> str:
+    seed = f"{_norm(job.get('title'))}|{_norm(job.get('company'))}|{_norm(job.get('url'))}"
+    return hashlib.sha256(seed.encode("utf-8")).hexdigest()[:24]
+
+
+# ==============================================================================
+# FEED PARSERS
+# ==============================================================================
+def _parse_remotive(payload_text: str) -> list[dict[str, Any]]:
+    data = json.loads(payload_text)
+    jobs = []
+    for item in data.get("jobs", []):
+        jobs.append(
+            {
+                "source": "remotive",
+                "title": _clean_text(item.get("title")),
+                "company": _clean_text(item.get("company_name")),
+                "location": _clean_text(item.get("candidate_required_location") or "Remote"),
+                "url": _clean_text(item.get("url")),
+                "salary": _clean_text(item.get("salary")),
+                "description": _clean_text(item.get("description")),
+            }
         )
-    return (
-        f"Hi — I build fast, lightweight AI intake, lead-routing, and workflow automation systems "
-        f"that capture inquiries, qualify intent, and trigger instant alerts without bloated monthly software fees.\n\n"
-        f"Live interactive preview & flat-rate packages ($450 / $950 / $1,850+): {STOREFRONT_URL}"
-    )
+    return jobs
 
 
-def score_item(title: str, summary: str):
-    haystack = f"{title} {summary}".lower()
-
-    if any(re.search(r"\b" + re.escape(term) + r"\b", haystack) for term in NOISE_TERMS):
-        if not any(re.search(r"\b" + re.escape(tech) + r"\b", haystack) for tech in STRONG_TECH_TERMS):
-            return None
-
-    matched = [kw for kw, pat in KEYWORD_PATTERNS.items() if pat.search(haystack)]
-    if not matched:
-        return None
-
-    is_contract = bool(CONTRACT_PATTERN.search(haystack))
-    primary_category = KEYWORDS[matched[0]]
-    return matched, primary_category, is_contract
-
-
-def parse_rss(source_name: str, feed_url: str) -> list:
-    items = []
-    r = requests.get(feed_url, headers=HEADERS, timeout=25)
-    r.raise_for_status()
-    root = ET.fromstring(r.text)
-    for item in root.findall(".//item")[:35]:
-        title = (item.findtext("title") or "").strip()
-        link = (item.findtext("link") or "").strip()
-        desc = clean_html(item.findtext("description") or "")
-        if title and link:
-            items.append({"source": source_name, "title": title, "url": link, "summary": desc})
-    return items
-
-
-def parse_remoteok(source_name: str, feed_url: str) -> list:
-    items = []
-    r = requests.get(feed_url, headers=HEADERS, timeout=25)
-    r.raise_for_status()
-    data = r.json()
-    for entry in data[1:45]:
-        title = (entry.get("position") or "").strip()
-        company = (entry.get("company") or "").strip()
-        link = (entry.get("url") or "").strip()
-        tags = " ".join(entry.get("tags") or [])
-        desc = clean_html(entry.get("description") or "")
-        if title and link:
-            full_title = f"{title} — {company}" if company else title
-            items.append({"source": source_name, "title": full_title, "url": link, "summary": f"{tags} {desc}"})
-    return items
-
-
-def parse_remotive(source_name: str, feed_url: str) -> list:
-    items = []
-    r = requests.get(feed_url, headers=HEADERS, timeout=25)
-    r.raise_for_status()
-    for entry in r.json().get("jobs", [])[:40]:
-        title = (entry.get("title") or "").strip()
-        company = (entry.get("company_name") or "").strip()
-        link = (entry.get("url") or "").strip()
-        job_type = (entry.get("job_type") or "").strip()
-        desc = clean_html(entry.get("description") or "")
-        if title and link:
-            full_title = f"{title} — {company}" if company else title
-            items.append({"source": source_name, "title": full_title, "url": link, "summary": f"{job_type} {desc}"})
-    return items
-
-
-def parse_jobicy(source_name: str, feed_url: str) -> list:
-    items = []
-    r = requests.get(feed_url, headers=HEADERS, timeout=25)
-    r.raise_for_status()
-    for entry in r.json().get("jobs", [])[:40]:
-        title = (entry.get("jobTitle") or "").strip()
-        company = (entry.get("companyName") or "").strip()
-        link = (entry.get("url") or "").strip()
-        raw_type = entry.get("jobType") or ""
-        job_type = " ".join(raw_type) if isinstance(raw_type, list) else str(raw_type)
-        desc = clean_html(entry.get("jobExcerpt") or entry.get("jobDescription") or "")
-        if title and link:
-            full_title = f"{title} — {company}" if company else title
-            items.append({"source": source_name, "title": full_title, "url": link, "summary": f"{job_type} {desc}"})
-    return items
-
-
-def save_lead(row: dict):
-    url = f"{SUPABASE_URL}/rest/v1/job_leads?on_conflict=job_url"
-    headers = {
-        "apikey": SUPABASE_KEY,
-        "Authorization": f"Bearer {SUPABASE_KEY}",
-        "Content-Type": "application/json",
-        "Prefer": "resolution=ignore-duplicates,return=representation",
-    }
-    r = requests.post(url, headers=headers, json=[row], timeout=20)
-    r.raise_for_status()
-    return r.json()
-
-
-def notify_telegram(row: dict):
-    msg = (
-        f"💼 *New High-Fit Remote Gig*\n"
-        f"*Role:* {row['title']}\n"
-        f"*Type:* {row['budget_hint']}\n"
-        f"*Track:* {row['category']}\n"
-        f"*Source:* {row['source']}\n"
-        f"*Keywords:* `{row['matched_keywords']}`\n"
-        f"*Apply:* {row['job_url']}\n\n"
-        f"📋 *Ready-to-Send Pitch:*\n`{row['proposal_draft']}`"
-    )
-    tg_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    requests.post(
-        tg_url,
-        json={"chat_id": CHAT_ID, "text": msg, "parse_mode": "Markdown", "disable_web_page_preview": True},
-        timeout=20,
-    ).raise_for_status()
-
-
-def main():
-    existing = fetch_existing_urls()
-    source_buckets = []
-
-    for source_name, feed_url in FEEDS:
-        try:
-            if "remoteok.com" in feed_url:
-                items = parse_remoteok(source_name, feed_url)
-            elif "remotive.com" in feed_url:
-                items = parse_remotive(source_name, feed_url)
-            elif "jobicy.com" in feed_url:
-                items = parse_jobicy(source_name, feed_url)
-            else:
-                items = parse_rss(source_name, feed_url)
-            print(f"[INFO] {source_name}: fetched {len(items)} raw items")
-            source_buckets.append(items)
-        except Exception as exc:
-            print(f"[WARN] Failed {source_name}: {exc}")
-
-    interleaved = [
-        item
-        for group in zip_longest(*source_buckets)
-        for item in group
-        if item is not None
-    ]
-
-    by_source = {}
-    for item in interleaved:
-        if item["url"] in existing:
+def _parse_remoteok(payload_text: str) -> list[dict[str, Any]]:
+    data = json.loads(payload_text)
+    if not isinstance(data, list):
+        return []
+    jobs = []
+    for item in data:
+        if not isinstance(item, dict) or not item.get("position"):
             continue
-        scored = score_item(item["title"], item["summary"])
-        if not scored:
-            continue
-        matched, category, is_contract = scored
-        by_source.setdefault(item["source"], []).append((is_contract, item, matched, category))
+        tags = item.get("tags") or []
+        tag_str = ", ".join(str(t) for t in tags if t)
+        jobs.append(
+            {
+                "source": "remoteok",
+                "title": _clean_text(item.get("position")),
+                "company": _clean_text(item.get("company")),
+                "location": _clean_text(item.get("location") or "Remote"),
+                "url": _clean_text(item.get("url") or item.get("apply_url")),
+                "salary": _clean_text(item.get("salary")),
+                "description": _clean_text(f"{tag_str} {item.get('description') or ''}"),
+            }
+        )
+    return jobs
 
-    for src in by_source:
-        by_source[src].sort(key=lambda x: x[0], reverse=True)
 
-    diverse_queue = [
-        entry
-        for group in zip_longest(*by_source.values())
-        for entry in group
-        if entry is not None
-    ]
+def _parse_jobicy(payload_text: str) -> list[dict[str, Any]]:
+    data = json.loads(payload_text)
+    jobs = []
+    for item in data.get("jobs", []):
+        geo = item.get("jobGeo") or "Remote"
+        if isinstance(geo, list):
+            geo = ", ".join(str(g) for g in geo)
+        jobs.append(
+            {
+                "source": "jobicy",
+                "title": _clean_text(item.get("jobTitle")),
+                "company": _clean_text(item.get("companyName")),
+                "location": _clean_text(geo),
+                "url": _clean_text(item.get("url")),
+                "salary": _clean_text(item.get("annualSalaryMin") or item.get("salaryCurrency") or ""),
+                "description": _clean_text(
+                    f"{item.get('jobExcerpt') or ''} {item.get('jobDescription') or ''}"
+                ),
+            }
+        )
+    return jobs
 
-    per_source_count = {}
-    max_per_source = 2
-    new_count = 0
 
-    for is_contract, item, matched, category in diverse_queue:
-        if item["url"] in existing:
-            continue
-        src = item["source"]
-        if per_source_count.get(src, 0) >= max_per_source:
-            continue
+def _parse_rss(source_name: str, xml_text: str) -> list[dict[str, Any]]:
+    root = ET.fromstring(xml_text)
+    jobs = []
+    for item in root.findall(".//item"):
+        raw_title = _clean_text(item.findtext("title"))
+        link = _clean_text(item.findtext("link"))
+        desc = _clean_text(item.findtext("description"))
 
-        row = {
-            "job_url": item["url"],
-            "title": item["title"],
-            "source": src,
-            "category": category,
-            "matched_keywords": ", ".join(matched[:5]),
-            "budget_hint": "🔥 Contract / Freelance" if is_contract else "Remote Role",
-            "proposal_draft": build_proposal(item["title"], category),
-            "status": "new",
+        company = ""
+        title = raw_title
+        if ":" in raw_title:
+            maybe_company, rest = raw_title.split(":", 1)
+            if len(maybe_company) <= 60:
+                company = maybe_company.strip()
+                title = rest.strip()
+
+        region_match = re.search(
+            r"(worldwide|anywhere|usa only|us only|eu only|europe only|uk only|latam|apac)",
+            f"{title} {desc}".lower(),
+        )
+        location = region_match.group(1) if region_match else "Remote"
+
+        jobs.append(
+            {
+                "source": source_name,
+                "title": title,
+                "company": company,
+                "location": location,
+                "url": link,
+                "salary": "",
+                "description": desc,
+            }
+        )
+    return jobs
+
+
+def fetch_source_jobs(source: dict[str, str]) -> list[dict[str, Any]]:
+    try:
+        raw_text = _http_get_text(source["url"])
+        kind = source["type"]
+        if kind == "remotive_json":
+            return _parse_remotive(raw_text)
+        if kind == "remoteok_json":
+            return _parse_remoteok(raw_text)
+        if kind == "jobicy_json":
+            return _parse_jobicy(raw_text)
+        if kind == "rss_xml":
+            return _parse_rss(source["name"], raw_text)
+        return []
+    except Exception as exc:
+        print(f"[WARN] Failed fetching {source['name']}: {exc}")
+        return []
+
+
+# ==============================================================================
+# FILTERING, SCORING & ROUND-ROBIN QUEUEING
+# ==============================================================================
+def is_excluded_title(title: str) -> bool:
+    norm_title = _norm(title)
+    return any(term in norm_title for term in EXCLUDED_TITLE_TERMS)
+
+
+def evaluate_job_fit(job: dict[str, Any], min_score: int = MIN_JOB_SCORE) -> dict[str, Any]:
+    title_raw = _norm(job.get("title"))
+    location_raw = _norm(job.get("location"))
+    salary_raw = _norm(job.get("salary"))
+    desc_raw = _norm(job.get("description"))
+    combined = f"{title_raw} {location_raw} {salary_raw} {desc_raw}"
+
+    if not title_raw or not job.get("url"):
+        return {
+            "qualified": False,
+            "score": -100,
+            "reasons": ["missing_title_or_url"],
+            "region_flag": "invalid",
         }
-        saved = save_lead(row)
-        if saved:
-            existing.add(item["url"])
-            per_source_count[src] = per_source_count.get(src, 0) + 1
-            notify_telegram(row)
-            new_count += 1
-            if new_count >= 5:
-                break
 
-    print(f"Job Scout completed. New matches sent: {new_count} | By source: {per_source_count}")
+    if is_excluded_title(title_raw):
+        return {
+            "qualified": False,
+            "score": -100,
+            "reasons": ["excluded_title"],
+            "region_flag": "excluded",
+        }
+
+    score = 0
+    reasons: list[str] = []
+
+    matched_keywords = [kw for kw in TARGET_KEYWORDS if kw in combined]
+    if matched_keywords:
+        score += min(len(matched_keywords) * 10, 50)
+        reasons.append(f"stack/role ({', '.join(matched_keywords[:5])})")
+
+    has_worldwide = any(loc in location_raw or loc in combined for loc in PREFERRED_LOCATION_TERMS)
+    has_restricted = any(loc in location_raw for loc in RESTRICTED_LOCATION_TERMS)
+
+    if has_worldwide and not has_restricted:
+        score += 25
+        reasons.append("worldwide/global")
+        region_flag = "worldwide"
+    elif has_restricted and not has_worldwide:
+        score -= 25
+        reasons.append("region_restricted")
+        region_flag = "restricted"
+    else:
+        region_flag = "unspecified"
+
+    if any(term in combined for term in CONTRACT_RATE_TERMS):
+        score += 15
+        reasons.append("contract/rate signal")
+
+    return {
+        "qualified": score >= min_score,
+        "score": score,
+        "reasons": reasons,
+        "region_flag": region_flag,
+    }
+
+
+def interleave_by_source(scored_jobs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    buckets: dict[str, list[dict[str, Any]]] = {}
+    for item in scored_jobs:
+        src = item["job"].get("source", "unknown")
+        buckets.setdefault(src, []).append(item)
+
+    for src in buckets:
+        buckets[src].sort(key=lambda x: x["evaluation"]["score"], reverse=True)
+
+    ordered: list[dict[str, Any]] = []
+    source_names = list(buckets.keys())
+    idx = 0
+    while True:
+        added_in_round = False
+        for src in source_names:
+            if idx < len(buckets[src]):
+                ordered.append(buckets[src][idx])
+                added_in_round = True
+        if not added_in_round:
+            break
+        idx += 1
+    return ordered
+
+
+# ==============================================================================
+# SUPABASE DEDUPLICATION & TELEGRAM ALERTS
+# ==============================================================================
+def supabase_is_seen(fingerprint: str) -> bool:
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        return False
+    encoded_fp = urllib.parse.quote(fingerprint)
+    url = f"{SUPABASE_URL}/rest/v1/job_leads?fingerprint=eq.{encoded_fp}&select=id&limit=1"
+    req = urllib.request.Request(
+        url,
+        headers={
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
+            rows = json.loads(resp.read().decode("utf-8", errors="replace"))
+            return bool(rows)
+    except Exception as exc:
+        print(f"[WARN] Supabase lookup failed: {exc}")
+        return False
+
+
+def supabase_record_lead(job: dict[str, Any], evaluation: dict[str, Any], fingerprint: str) -> None:
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        return
+    url = f"{SUPABASE_URL}/rest/v1/job_leads"
+    payload = {
+        "fingerprint": fingerprint,
+        "source": job.get("source"),
+        "title": job.get("title"),
+        "company": job.get("company"),
+        "location": job.get("location"),
+        "url": job.get("url"),
+        "score": evaluation.get("score"),
+        "region_flag": evaluation.get("region_flag"),
+        "reasons": ", ".join(evaluation.get("reasons") or []),
+    }
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        method="POST",
+        headers={
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json",
+            "Prefer": "resolution=ignore-duplicates,return=minimal",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT):
+            pass
+    except Exception as exc:
+        print(f"[WARN] Supabase insert failed: {exc}")
+
+
+def format_job_alert(job: dict[str, Any], evaluation: dict[str, Any]) -> str:
+    score = evaluation.get("score", 0)
+    badge = "🔥 High-Fit Lead" if score >= 50 else "⚡ Contract/Stack Match"
+    title = (job.get("title") or "Untitled Role").strip()
+    company = (job.get("company") or "Unknown Company").strip()
+    location = (job.get("location") or "Remote / Unspecified").strip()
+    source = (job.get("source") or "feed").strip()
+    url = (job.get("url") or "").strip()
+    reasons = " | ".join(evaluation.get("reasons") or []) or "general match"
+
+    lines = [
+        f"{badge} (Score: {score}) [{source}]",
+        f"*{title}* @ *{company}*",
+        f"📍 {location} ({evaluation.get('region_flag', 'unspecified')})",
+        f"🧩 {reasons}",
+    ]
+    if job.get("salary"):
+        lines.append(f"💸 {job['salary']}")
+    if url:
+        lines.append(f"🔗 {url}")
+    return "\n".join(lines)
+
+
+def send_telegram_message(text: str) -> bool:
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("[INFO] Telegram env vars not set; printing alert locally:\n" + text + "\n")
+        return True
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": text,
+        "parse_mode": "Markdown",
+        "disable_web_page_preview": False,
+    }
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
+            return resp.status == 200
+    except Exception as exc:
+        print(f"[WARN] Telegram send failed: {exc}")
+        return False
+
+
+# ==============================================================================
+# MAIN RUNNER
+# ==============================================================================
+def run_job_scout() -> None:
+    all_raw_jobs: list[dict[str, Any]] = []
+    for src in FEED_SOURCES:
+        fetched = fetch_source_jobs(src)
+        print(f"[INFO] {src['name']}: fetched {len(fetched)} raw listings")
+        all_raw_jobs.extend(fetched)
+
+    qualified_items: list[dict[str, Any]] = []
+    for job in all_raw_jobs:
+        evaluation = evaluate_job_fit(job, min_score=MIN_JOB_SCORE)
+        if evaluation["qualified"]:
+            qualified_items.append({"job": job, "evaluation": evaluation})
+
+    queued_items = interleave_by_source(qualified_items)
+    per_source_sent: dict[str, int] = {}
+    total_sent = 0
+
+    for item in queued_items:
+        if total_sent >= MAX_ALERTS_PER_RUN:
+            break
+
+        job = item["job"]
+        evaluation = item["evaluation"]
+        source_name = job.get("source", "unknown")
+
+        if per_source_sent.get(source_name, 0) >= MAX_ALERTS_PER_SOURCE:
+            continue
+
+        fp = compute_job_fingerprint(job)
+        if supabase_is_seen(fp):
+            continue
+
+        msg = format_job_alert(job, evaluation)
+        if send_telegram_message(msg):
+            supabase_record_lead(job, evaluation, fp)
+            per_source_sent[source_name] = per_source_sent.get(source_name, 0) + 1
+            total_sent += 1
+
+    print(f"[DONE] Sent {total_sent} new job alerts across {len(per_source_sent)} sources.")
 
 
 if __name__ == "__main__":
-    main()
+    run_job_scout()

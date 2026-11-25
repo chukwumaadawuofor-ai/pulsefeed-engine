@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseFeed Jobs & Marketplace</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #131a2a;
+      --border: #232d45;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --accent-dark: #16a34a;
+      --gold: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    h1 { font-size: 1.35rem; font-weight: 800; }
+    .nav-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    .market-banner {
+      background: linear-gradient(135deg, #172033, #1e1b2e);
+      border: 1px solid var(--gold);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(245, 158, 11, 0.18);
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .market-banner h2 { font-size: 1.05rem; margin-bottom: 4px; }
+    .market-banner p { font-size: 0.88rem; color: var(--muted); margin-bottom: 12px; }
+    .market-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-gold { background: var(--gold); color: #0b0f19; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-green { background: var(--accent); color: #052e16; }
+    .search-bar {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+    .job-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .job-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+    .job-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; }
+    .job-summary { font-size: 0.88rem; color: var(--muted); margin-bottom: 12px; }
+    .job-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .comments-box {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      display: none;
+    }
+    .comments-box.open { display: block; }
+    .comment-item {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+    .comment-author { font-weight: 700; color: var(--accent); margin-right: 6px; }
+    .comment-form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .comment-form input, .comment-form textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+    .status-msg { text-align: center; color: var(--muted); padding: 24px 0; font-size: 0.92rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>PulseFeed Jobs & Market</h1>
+      <a class="nav-link" href="./index.html">← Main Feed</a>
+    </header>
+
+    <!-- Featured Buy / Sell Card -->
+    <section class="market-banner">
+      <span class="badge">Digital Store & Services</span>
+      <h2 id="storeTitle">Automation Templates, E-Books & Custom Bots</h2>
+      <p id="storeDesc">Grab ready-to-deploy scripts, digital guides, or list your own skill/service below.</p>
+      <div class="market-actions">
+        <a id="selarBtn" class="btn btn-gold" href="https://selar.co" target="_blank" rel="noopener">Browse on Selar →</a>
+        <a id="sellBtn" class="btn btn-outline" href="#feed">Discuss / Post Offer in Comments</a>
+      </div>
+    </section>
+
+    <input id="searchInput" class="search-bar" type="search" placeholder="Filter remote jobs by title, keyword, or source..." />
+
+    <main id="feed">
+      <div class="status-msg">Loading live job drops...</div>
+    </main>
+  </div>
+
+  <script>
+    const CONFIG = {
+      SUPABASE_URL: "YOUR_SUPABASE_PROJECT_URL",
+      SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY",
+      SELAR_URL: "https://selar.co"
+    };
+
+    document.getElementById("selarBtn").href = CONFIG.SELAR_URL;
+
+    let allJobs = [];
+    let commentsByJob = {};
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function sbFetch(path, options = {}) {
+      const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/${path}`, {
+        ...options,
+        headers: {
+          apikey: CONFIG.SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.status === 204 ? null : res.json();
+    }
+
+    async function loadData() {
+      try {
+        const [jobs, comments] = await Promise.all([
+          sbFetch("job_drops?status=eq.published&order=created_at.desc&limit=50"),
+          sbFetch("job_comments?status=eq.approved&order=created_at.asc&limit=500")
+        ]);
+        allJobs = jobs || [];
+        commentsByJob = {};
+        for (const c of comments || []) {
+          if (!commentsByJob[c.job_id]) commentsByJob[c.job_id] = [];
+          commentsByJob[c.job_id].push(c);
+        }
+        renderJobs(allJobs);
+      } catch (err) {
+        document.getElementById("feed").innerHTML =
+          `<div class="status-msg">Add your Supabase URL & Anon Key in <code>jobs.html</code> to load live drops.</div>`;
+      }
+    }
+
+    function renderJobs(jobs) {
+      const feed = document.getElementById("feed");
+      if (!jobs.length) {
+        feed.innerHTML = `<div class="status-msg">No matching jobs found right now.</div>`;
+        return;
+      }
+      feed.innerHTML = jobs.map(job => {
+        const jobComments = commentsByJob[job.id] || [];
+        const commentsHtml = jobComments.length
+          ? jobComments.map(c => `
+              <div class="comment-item">
+                <span class="comment-author">${escapeHtml(c.author_name)}:</span>
+                <span>${escapeHtml(c.comment_text)}</span>
+              </div>
+            `).join("")
+          : `<div style="font-size:0.82rem;color:var(--muted);">No comments yet. Ask a question or drop your pitch below.</div>`;
+
+        return `
+          <article class="job-card">
+            <div class="job-meta">
+              <span>${escapeHtml(job.source_name)} • ${escapeHtml(job.location_or_type)}</span>
+              <span>${new Date(job.created_at).toLocaleDateString()}</span>
+            </div>
+            <div class="job-title">${escapeHtml(job.title)}</div>
+            <p class="job-summary">${escapeHtml(job.summary)}</p>
+            <div class="job-actions">
+              <a class="btn btn-green" href="${escapeHtml(job.apply_url)}" target="_blank" rel="noopener">Apply Now ↗</a>
+              <button class="btn btn-outline" onclick="toggleComments('${job.id}')">
+                Comments (${jobComments.length})
+              </button>
+            </div>
+            <div id="comments-${job.id}" class="comments-box">
+              <div id="list-${job.id}">${commentsHtml}</div>
+              <form class="comment-form" onsubmit="submitComment(event, '${job.id}')">
+                <input type="text" name="author" placeholder="Your name (optional)" maxlength="50" />
+                <textarea name="text" rows="2" placeholder="Leave a comment, tip, or service offer..." required maxlength="1000"></textarea>
+                <button class="btn btn-gold" type="submit">Post Comment</button>
+              </form>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    window.toggleComments = function(jobId) {
+      document.getElementById(`comments-${jobId}`).classList.toggle("open");
+    };
+
+    window.submitComment = async function(e, jobId) {
+      e.preventDefault();
+      const form = e.target;
+      const author_name = form.author.value.trim() || "Visitor";
+      const comment_text = form.text.value.trim();
+      if (!comment_text) return;
+
+      const btn = form.querySelector("button");
+      btn.disabled = true;
+      btn.textContent = "Posting...";
+
+      try {
+        await sbFetch("job_comments", {
+          method: "POST",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({ job_id: jobId, author_name, comment_text, status: "approved" })
+        });
+        if (!commentsByJob[jobId]) commentsByJob[jobId] = [];
+        commentsByJob[jobId].push({ author_name, comment_text });
+        form.reset();
+        renderJobs(allJobs);
+        document.getElementById(`comments-${jobId}`).classList.add("open");
+      } catch (err) {
+        alert("Could not post comment. Check Supabase URL/Anon key.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Post Comment";
+      }
+    };
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = allJobs.filter(j =>
+        (j.title || "").toLowerCase().includes(q) ||
+        (j.summary || "").toLowerCase().includes(q) ||
+        (j.source_name || "").toLowerCase().includes(q)
+      );
+      renderJobs(filtered);
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

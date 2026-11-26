@@ -353,7 +353,7 @@
       <h2>Digital Templates, E-Books &amp; Automation Kits</h2>
       <p>Instant digital downloads on Gumroad — plus browse or list community offers and remote jobs below.</p>
       <div class="market-actions">
-        <a id="gumroadBtn" class="btn btn-gumroad" href="https://chukwuma448.gumroad.com/" target="_blank" rel="noopener noreferrer">Get It on Gumroad →</a>
+        <a id="gumroadBtn" class="btn btn-gumroad" href="https://chukwuma448.gumroad.com/?utm_source=pulsefeed&utm_medium=jobs_hub&utm_campaign=job_seekers&utm_content=jobs_hub_banner" target="_blank" rel="noopener noreferrer">Get It on Gumroad →</a>
         <button id="openSellTabBtn" type="button" class="btn btn-outline">+ Sell / List Offer</button>
       </div>
     </section>
@@ -419,13 +419,45 @@
     const CONFIG = {
       SUPABASE_URL: "https://pzaavnfswisvosgdfbgl.supabase.co",
       SUPABASE_ANON_KEY: "sb_publishable_He61GsY9EO5I6Pf8D8pUZw_jgscYPNp",
-      GUMROAD_URL: "https://chukwuma448.gumroad.com/"
+      GUMROAD_URL: "https://chukwuma448.gumroad.com/?utm_source=pulsefeed&utm_medium=jobs_hub&utm_campaign=job_seekers&utm_content=jobs_hub_banner"
     };
 
     const CACHE_JOBS_KEY = "pulsefeed_cached_jobs_v2";
     const CACHE_COMMENTS_KEY = "pulsefeed_cached_comments_v2";
 
-    document.getElementById("gumroadBtn").href = CONFIG.GUMROAD_URL;
+    function appendUtmParams(rawUrl, utmOverrides = {}) {
+      const fallback = CONFIG.GUMROAD_URL;
+      const candidate = typeof rawUrl === "string" && /^https:\/\//i.test(rawUrl.trim())
+        ? rawUrl.trim()
+        : fallback;
+      try {
+        const parsed = new URL(candidate);
+        if (/gumroad\.com$/i.test(parsed.hostname) || /\.gumroad\.com$/i.test(parsed.hostname)) {
+          const defaults = {
+            utm_source: "pulsefeed",
+            utm_medium: "jobs_hub",
+            utm_campaign: "job_seekers",
+            utm_content: "marketplace_card"
+          };
+          const merged = { ...defaults, ...utmOverrides };
+          Object.entries(merged).forEach(([k, v]) => {
+            if (v && !parsed.searchParams.has(k)) {
+              parsed.searchParams.set(k, v);
+            }
+          });
+        }
+        return parsed.toString();
+      } catch {
+        return fallback;
+      }
+    }
+
+    document.getElementById("gumroadBtn").href = appendUtmParams(CONFIG.GUMROAD_URL, {
+      utm_source: "pulsefeed",
+      utm_medium: "jobs_hub",
+      utm_campaign: "job_seekers",
+      utm_content: "jobs_hub_banner"
+    });
 
     function makeArtworkDataUri(tag, label, c1, c2, accent) {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="320" viewBox="0 0 800 320">
@@ -774,8 +806,17 @@
         return;
       }
       feed.innerHTML = items.map((item) => {
-        const safeUrl = /^https:\/\//i.test(item.checkout_url || "") ? item.checkout_url : CONFIG.GUMROAD_URL;
-        const isCreatorStore = /chukwuma448\.gumroad\.com/i.test(safeUrl);
+        const rawSafeUrl = /^https:\/\//i.test(item.checkout_url || "") ? item.checkout_url.trim() : CONFIG.GUMROAD_URL;
+        const isCreatorStore = /chukwuma448\.gumroad\.com/i.test(rawSafeUrl);
+        const trackedUrl = isCreatorStore
+          ? appendUtmParams(rawSafeUrl, {
+              utm_source: "pulsefeed",
+              utm_medium: "community_market",
+              utm_campaign: "job_seekers",
+              utm_content: "market_listing"
+            })
+          : rawSafeUrl;
+
         return `
           <article class="market-item-card">
             <div class="job-meta">
@@ -788,8 +829,8 @@
             <div class="job-title">${escapeHtml(item.title)}</div>
             <p class="job-summary">${escapeHtml(item.description)}</p>
             <div class="job-actions">
-              <a class="btn btn-gumroad" href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">Buy / View Offer ↗</a>
-              <button type="button" class="btn btn-outline" onclick="shareItem(this, '${escapeJsAttr(item.title)}', '${escapeJsAttr(safeUrl)}')">Share</button>
+              <a class="btn btn-gumroad" href="${escapeHtml(trackedUrl)}" target="_blank" rel="noopener noreferrer">Buy / View Offer ↗</a>
+              <button type="button" class="btn btn-outline" onclick="shareItem(this, '${escapeJsAttr(item.title)}', '${escapeJsAttr(trackedUrl)}')">Share</button>
             </div>
           </article>
         `;

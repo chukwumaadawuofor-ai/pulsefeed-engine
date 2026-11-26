@@ -305,6 +305,35 @@
       border: 1px solid var(--border);
       border-radius: 12px;
     }
+    .embed-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 18px;
+    }
+    .embed-box h3 {
+      font-size: 0.98rem;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .embed-box p {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .embed-code {
+      width: 100%;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #79c0ff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.78rem;
+      padding: 10px;
+      resize: none;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -373,6 +402,17 @@
     <main id="feed">
       <div class="status-msg">Loading live job drops...</div>
     </main>
+
+    <section class="embed-box">
+      <h3>🌐 Own a Blog, Forum, or Community Page?</h3>
+      <p>Paste this 2-line widget to show live remote jobs automatically and drive visitors to your site:</p>
+      <textarea id="embedSnippet" class="embed-code" rows="2" readonly>&lt;div id="pulsefeed-jobs-widget" data-limit="6"&gt;&lt;/div&gt;
+&lt;script src="https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/widget.js" async&gt;&lt;/script&gt;</textarea>
+      <div class="market-actions">
+        <button id="copyEmbedBtn" type="button" class="btn btn-green">Copy Embed Code</button>
+        <a class="btn btn-outline" href="./jobs.xml" target="_blank" rel="noopener noreferrer">RSS Feed (jobs.xml)</a>
+      </div>
+    </section>
   </div>
 
   <script>
@@ -969,6 +1009,27 @@
     document.getElementById("searchInput").addEventListener("input", () => {
       renderCurrentTab();
     });
+
+    const copyEmbedBtn = document.getElementById("copyEmbedBtn");
+    const embedSnippet = document.getElementById("embedSnippet");
+    if (copyEmbedBtn && embedSnippet) {
+      copyEmbedBtn.addEventListener("click", async () => {
+        const text = embedSnippet.value;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            embedSnippet.select();
+            document.execCommand("copy");
+          }
+          const prev = copyEmbedBtn.textContent;
+          copyEmbedBtn.textContent = "✓ Copied!";
+          setTimeout(() => { copyEmbedBtn.textContent = prev; }, 1600);
+        } catch {
+          embedSnippet.select();
+        }
+      });
+    }
 
     loadData();
     setInterval(() => loadData(true), 5 * 60 * 1000);

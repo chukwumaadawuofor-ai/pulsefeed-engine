@@ -775,29 +775,68 @@
       return JSON.parse(rawText);
     }
 
-    async function compressImageToJpeg(file, maxWidth = 800, quality = 0.78) {
-      const bitmap = await createImageBitmap(file);
-      const scale = Math.min(1, maxWidth / bitmap.width);
-      const width = Math.max(1, Math.round(bitmap.width * scale));
-      const height = Math.max(1, Math.round(bitmap.height * scale));
-
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(bitmap, 0, 0, width, height);
-      if (typeof bitmap.close === "function") {
-        bitmap.close();
+    async function loadDrawableImage(file) {
+      try {
+        const bitmap = await createImageBitmap(file);
+        return {
+          source: bitmap,
+          width: bitmap.width,
+          height: bitmap.height,
+          cleanup: () => {
+            if (typeof bitmap.close === "function") bitmap.close();
+          }
+        };
+      } catch {
+        const objectUrl = URL.createObjectURL(file);
+        try {
+          const img = await new Promise((resolve, reject) => {
+            const el = new Image();
+            el.onload = () => resolve(el);
+            el.onerror = () => reject(new Error("The source image could not be decoded."));
+            el.src = objectUrl;
+          });
+          const width = img.naturalWidth || img.width;
+          const height = img.naturalHeight || img.height;
+          if (!width || !height) {
+            throw new Error("The source image could not be decoded.");
+          }
+          return {
+            source: img,
+            width,
+            height,
+            cleanup: () => URL.revokeObjectURL(objectUrl)
+          };
+        } catch (err) {
+          URL.revokeObjectURL(objectUrl);
+          throw err;
+        }
       }
+    }
 
-      return new Promise((resolve, reject) => {
-        canvas.toBlob(
-          (blob) => (blob ? resolve(blob) : reject(new Error("Could not compress selected image."))),
-          "image/jpeg",
-          quality
-        );
-      });
+    async function compressImageToJpeg(file, maxWidth = 800, quality = 0.78) {
+      const drawable = await loadDrawableImage(file);
+      try {
+        const scale = Math.min(1, maxWidth / drawable.width);
+        const width = Math.max(1, Math.round(drawable.width * scale));
+        const height = Math.max(1, Math.round(drawable.height * scale));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(drawable.source, 0, 0, width, height);
+
+        return await new Promise((resolve, reject) => {
+          canvas.toBlob(
+            (blob) => (blob ? resolve(blob) : reject(new Error("Could not compress selected image."))),
+            "image/jpeg",
+            quality
+          );
+        });
+      } finally {
+        drawable.cleanup();
+      }
     }
 
     async function uploadListingImage(file) {

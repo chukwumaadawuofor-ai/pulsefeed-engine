@@ -370,8 +370,8 @@
       GUMROAD_URL: "https://chukwuma448.gumroad.com/"
     };
 
-    const CACHE_JOBS_KEY = "pulsefeed_cached_jobs_v1";
-    const CACHE_COMMENTS_KEY = "pulsefeed_cached_comments_v1";
+    const CACHE_JOBS_KEY = "pulsefeed_cached_jobs_v2";
+    const CACHE_COMMENTS_KEY = "pulsefeed_cached_comments_v2";
 
     document.getElementById("gumroadBtn").href = CONFIG.GUMROAD_URL;
 
@@ -455,7 +455,7 @@
     let swRegistration = null;
 
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("./sw.js").then((reg) => {
+      navigator.serviceWorker.register("./sw.js?v=2").then((reg) => {
         swRegistration = reg;
       }).catch((err) => console.warn("SW registration skipped:", err));
     }
@@ -600,9 +600,8 @@
     function sanitizeDisplayText(str) {
       return String(str || "")
         .replace(/\uFFFD/g, " ")
-        .replace(/â[^\sA-Za-z0-9]{1,3}/g, "—")
-        .replace(/\bâ\b/g, "—")
-        .replace(/Â(?=\s|$)/g, "")
+        .replace(/\u00E2[\u0000-\u024F\uFFFD]{0,3}/g, " — ")
+        .replace(/\u00C2(?=\s|$)/g, "")
         .replace(/\s*—\s*/g, " — ")
         .replace(/\s{2,}/g, " ")
         .trim();

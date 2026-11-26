@@ -1,7 +1,18 @@
 {
-  "updated_at": "2026-11-26T18:16:13Z",
+  "updated_at": "2026-11-26T19:33:44Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "10771718-efde-48c1-9af0-915558492520",
+      "dedupe_key": "d06b67609e3be54c12336759",
+      "title": "Regional Director",
+      "summary": "Fivetran — Headquarters: Remote, Washington, United States, AMER From Fivetran’s founding until now, our mission has remained the same: to make access to data as simple and reliable as electricity. With Fivetran…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/regional-director-d06b6760.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/fivetran-regional-director",
+      "date_posted": "2026-11-26"
+    },
     {
       "id": "288c85d1-61ec-489d-a24d-a3e1d94d143d",
       "dedupe_key": "ecb5d83954752ecc19c64e17",
@@ -33,39 +44,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/manager-account-managment-aa1b048c.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-manager-account-managment-agiloft-1138147",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "f26a5440-a5ef-4994-bae9-f0d443f795fa",
-      "dedupe_key": "ac8c24d90934b8f2b8c3c549",
-      "title": "Enterprise Account Executive - Southeast",
-      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-southeast-ac8c24d9.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-southeast-agiloft-1138139",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "fc82226c-3f89-4715-a4fe-55d388acc9d1",
-      "dedupe_key": "b4776ff67fbb775d1227c74d",
-      "title": "Sr. Manager, Revenue Enablement",
-      "summary": "Secure Code Warrior — Software development is changing fast, and code is no longer written by humans alone. Secure Code Warrior is the AI Software Governance platform that gives organizations visibility into how their…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sr-manager-revenue-enablement-b4776ff6.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-sr-manager-revenue-enablement-secure-code-warrior-1138138",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "9fb5da7f-7ef0-4d2d-840b-82bbd9511120",
-      "dedupe_key": "50592b25ab17494382d48d1e",
-      "title": "Lifecycle Marketing Manager",
-      "summary": "Lifeforce — Employment type: Full-time Experience: 4+ years Reports to: Chris Stella, VP Growth About Lifeforce We are in the early stages of a generational shift in how people approach their health. No longer satisfied…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/lifecycle-marketing-manager-50592b25.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-lifecycle-marketing-manager-lifeforce-1138144",
       "date_posted": "2026-11-26"
     },
     {
@@ -121,6 +99,39 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/channel-manager-north-america-midwest-with-latam-partner-coverage-777f70c8.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-channel-manager-north-america-midwest-with-latam-partner-coverage-secure-code-warrior-1138137",
+      "date_posted": "2026-11-26"
+    },
+    {
+      "id": "f26a5440-a5ef-4994-bae9-f0d443f795fa",
+      "dedupe_key": "ac8c24d90934b8f2b8c3c549",
+      "title": "Enterprise Account Executive - Southeast",
+      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-southeast-ac8c24d9.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-southeast-agiloft-1138139",
+      "date_posted": "2026-11-26"
+    },
+    {
+      "id": "fc82226c-3f89-4715-a4fe-55d388acc9d1",
+      "dedupe_key": "b4776ff67fbb775d1227c74d",
+      "title": "Sr. Manager, Revenue Enablement",
+      "summary": "Secure Code Warrior — Software development is changing fast, and code is no longer written by humans alone. Secure Code Warrior is the AI Software Governance platform that gives organizations visibility into how their…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sr-manager-revenue-enablement-b4776ff6.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-sr-manager-revenue-enablement-secure-code-warrior-1138138",
+      "date_posted": "2026-11-26"
+    },
+    {
+      "id": "9fb5da7f-7ef0-4d2d-840b-82bbd9511120",
+      "dedupe_key": "50592b25ab17494382d48d1e",
+      "title": "Lifecycle Marketing Manager",
+      "summary": "Lifeforce — Employment type: Full-time Experience: 4+ years Reports to: Chris Stella, VP Growth About Lifeforce We are in the early stages of a generational shift in how people approach their health. No longer satisfied…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/lifecycle-marketing-manager-50592b25.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-lifecycle-marketing-manager-lifeforce-1138144",
       "date_posted": "2026-11-26"
     },
     {
@@ -319,17 +330,6 @@
       "location_or_type": "UK Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/associate-director-of-field-marketing-quality-cloud-europe-7966f36b.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-associate-director-of-field-marketing-quality-cloud-europe-veeva-systems-1138121",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "3222c771-a981-425a-90f4-4c8ae2c29204",
-      "dedupe_key": "ee9bc8832f950ad1f5b8434d",
-      "title": "Senior Sales Engineer - Atlanta",
-      "summary": "Saviynt — Saviynt's AI-powered identity platform manages and governs human and non-human access to all of an organization's applications, data, and business processes. Customers trust Saviynt to safeguard their digital…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-sales-engineer-atlanta-ee9bc883.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-sales-engineer-atlanta-saviynt-1138120",
       "date_posted": "2026-11-26"
     }
   ]

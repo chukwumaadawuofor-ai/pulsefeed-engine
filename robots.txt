@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/sitemap.xml

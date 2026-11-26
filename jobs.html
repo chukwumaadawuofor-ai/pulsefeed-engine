@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="manifest" href="./manifest.json" />
   <title>PulseFeed Jobs &amp; Gumroad Marketplace</title>
   <style>
     :root {
@@ -30,22 +32,33 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 18px;
       flex-wrap: wrap;
     }
     h1 { font-size: 1.35rem; font-weight: 800; color: #ffffff; }
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
     .nav-link {
       color: var(--text);
       text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.82rem;
+      font-weight: 700;
       background: var(--card);
       border: 1px solid var(--border);
-      padding: 7px 13px;
+      padding: 7px 12px;
       border-radius: 8px;
+      cursor: pointer;
     }
     .nav-link:hover { border-color: #58a6ff; }
+    .nav-link.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
     .market-banner {
       background: linear-gradient(155deg, #1b1629 0%, var(--card) 100%);
       border: 1px solid var(--gumroad);
@@ -165,7 +178,11 @@
   <div class="container">
     <header>
       <h1>PulseFeed Jobs &amp; Market</h1>
-      <a class="nav-link" href="./index.html">← Main Feed</a>
+      <div class="header-actions">
+        <button id="installBtn" type="button" class="nav-link" style="display:none;">📲 Install App</button>
+        <button id="notifyBtn" type="button" class="nav-link">🔔 Enable Job Alerts</button>
+        <a class="nav-link" href="./index.html">← Main Feed</a>
+      </div>
     </header>
 
     <!-- Gumroad Store & Offer Card -->
@@ -198,6 +215,109 @@
     let allJobs = [];
     let commentsByJob = {};
     let openJobIds = new Set();
+    let deferredInstallPrompt = null;
+    let swRegistration = null;
+
+    // 1. Register Service Worker for Offline App + Notifications
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").then((reg) => {
+        swRegistration = reg;
+      }).catch((err) => console.warn("SW registration skipped:", err));
+    }
+
+    // 2. Handle "Install App" Prompt on Android / Desktop Chrome
+    const installBtn = document.getElementById("installBtn");
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      installBtn.style.display = "inline-block";
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      if (outcome === "accepted") {
+        installBtn.style.display = "none";
+      }
+      deferredInstallPrompt = null;
+    });
+
+    window.addEventListener("appinstalled", () => {
+      installBtn.style.display = "none";
+    });
+
+    // 3. Handle Job Drop Notifications
+    const notifyBtn = document.getElementById("notifyBtn");
+    function updateNotifyButton() {
+      if (!("Notification" in window)) {
+        notifyBtn.style.display = "none";
+        return;
+      }
+      if (Notification.permission === "granted") {
+        notifyBtn.textContent = "🔔 Job Alerts On";
+        notifyBtn.classList.add("active");
+      } else if (Notification.permission === "denied") {
+        notifyBtn.textContent = "🔕 Alerts Blocked";
+      } else {
+        notifyBtn.textContent = "🔔 Enable Job Alerts";
+      }
+    }
+
+    async function sendJobNotification(title, body) {
+      if (!("Notification" in window) || Notification.permission !== "granted") return;
+      const options = {
+        body,
+        tag: "pulsefeed-new-job",
+        renotify: true
+      };
+      if (swRegistration && swRegistration.showNotification) {
+        await swRegistration.showNotification(title, options);
+      } else {
+        new Notification(title, options);
+      }
+    }
+
+    notifyBtn.addEventListener("click", async () => {
+      if (!("Notification" in window)) {
+        alert("Notifications are not supported in this browser.");
+        return;
+      }
+      if (Notification.permission === "granted") {
+        await sendJobNotification("PulseFeed Job Alerts Active", "You will be notified whenever new remote jobs drop.");
+        return;
+      }
+      const perm = await Notification.requestPermission();
+      updateNotifyButton();
+      if (perm === "granted") {
+        if (allJobs.length) {
+          localStorage.setItem("pulsefeed_seen_job_ids", JSON.stringify(allJobs.map((j) => j.id)));
+        }
+        await sendJobNotification("PulseFeed Job Alerts Enabled!", "You will receive alerts when new remote jobs drop.");
+      }
+    });
+
+    updateNotifyButton();
+
+    function checkForNewJobs(latestJobs) {
+      if (!latestJobs || !latestJobs.length) return;
+      const seenRaw = localStorage.getItem("pulsefeed_seen_job_ids");
+      const currentIds = latestJobs.map((j) => j.id);
+      if (!seenRaw) {
+        localStorage.setItem("pulsefeed_seen_job_ids", JSON.stringify(currentIds));
+        return;
+      }
+      const seenSet = new Set(JSON.parse(seenRaw));
+      const brandNew = latestJobs.filter((j) => !seenSet.has(j.id));
+      if (brandNew.length > 0) {
+        localStorage.setItem("pulsefeed_seen_job_ids", JSON.stringify(currentIds));
+        const top = brandNew[0];
+        const msg = brandNew.length === 1
+          ? `${top.title} (${top.source_name})`
+          : `${top.title} + ${brandNew.length - 1} more new remote jobs!`;
+        sendJobNotification("🚀 New Remote Job Drop!", msg);
+      }
+    }
 
     function escapeHtml(str) {
       return String(str || "")
@@ -228,7 +348,7 @@
       return JSON.parse(rawText);
     }
 
-    async function loadData() {
+    async function loadData(isBackgroundPoll = false) {
       const feed = document.getElementById("feed");
       try {
         const [jobs, comments] = await Promise.all([
@@ -236,14 +356,29 @@
           sbFetch("job_comments?status=eq.approved&order=created_at.asc&limit=500")
         ]);
         allJobs = jobs || [];
+        checkForNewJobs(allJobs);
+
         commentsByJob = {};
         for (const c of comments || []) {
           if (!commentsByJob[c.job_id]) commentsByJob[c.job_id] = [];
           commentsByJob[c.job_id].push(c);
         }
-        renderJobs(allJobs);
+
+        const q = document.getElementById("searchInput").value.toLowerCase();
+        if (q) {
+          const filtered = allJobs.filter((j) =>
+            (j.title || "").toLowerCase().includes(q) ||
+            (j.summary || "").toLowerCase().includes(q) ||
+            (j.source_name || "").toLowerCase().includes(q)
+          );
+          renderJobs(filtered);
+        } else {
+          renderJobs(allJobs);
+        }
       } catch (err) {
-        feed.innerHTML = `<div class="status-msg">Could not load jobs: ${escapeHtml(err.message)}</div>`;
+        if (!isBackgroundPoll) {
+          feed.innerHTML = `<div class="status-msg">Could not load jobs: ${escapeHtml(err.message)}</div>`;
+        }
       }
     }
 
@@ -253,11 +388,11 @@
         feed.innerHTML = `<div class="status-msg">No jobs found yet. Run <strong>Sync Job Drops</strong> in GitHub Actions to pull fresh listings.</div>`;
         return;
       }
-      feed.innerHTML = jobs.map(job => {
+      feed.innerHTML = jobs.map((job) => {
         const jobComments = commentsByJob[job.id] || [];
         const isOpen = openJobIds.has(job.id);
         const commentsHtml = jobComments.length
-          ? jobComments.map(c => `
+          ? jobComments.map((c) => `
               <div class="comment-item">
                 <span class="comment-author">${escapeHtml(c.author_name)}:</span>
                 <span>${escapeHtml(c.comment_text || c.message || "")}</span>
@@ -352,7 +487,7 @@
 
     document.getElementById("searchInput").addEventListener("input", (e) => {
       const q = e.target.value.toLowerCase();
-      const filtered = allJobs.filter(j =>
+      const filtered = allJobs.filter((j) =>
         (j.title || "").toLowerCase().includes(q) ||
         (j.summary || "").toLowerCase().includes(q) ||
         (j.source_name || "").toLowerCase().includes(q)
@@ -361,6 +496,8 @@
     });
 
     loadData();
+    // Auto-check every 5 minutes for new job drops
+    setInterval(() => loadData(true), 5 * 60 * 1000);
   </script>
 </body>
 </html>

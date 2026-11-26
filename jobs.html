@@ -79,6 +79,17 @@
       color: var(--gumroad);
       margin-bottom: 8px;
     }
+    .seller-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(88, 166, 255, 0.14);
+      color: #58a6ff;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
     .market-banner h2 { font-size: 1.1rem; color: #ffffff; margin-bottom: 5px; }
     .market-banner p { font-size: 0.9rem; color: var(--muted); margin-bottom: 14px; }
     .market-actions { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -230,6 +241,7 @@
       margin-bottom: 6px;
       gap: 8px;
       flex-wrap: wrap;
+      align-items: center;
     }
     .price-pill {
       background: rgba(63, 185, 80, 0.16);
@@ -389,15 +401,48 @@
       remote: makeArtworkDataUri("REMOTE WORK", "Global & Flexible Positions", "#161b22", "#222936", "#d29922")
     };
 
-    function getJobImageUrl(job) {
-      if (job && typeof job.image_url === "string" && /^https:\/\//i.test(job.image_url.trim())) {
-        return job.image_url.trim();
-      }
+    function getFallbackJobArtwork(job) {
       if (matchesCategory(job, "tech")) return JOB_ARTWORK.tech;
       if (matchesCategory(job, "support")) return JOB_ARTWORK.support;
       if (matchesCategory(job, "writing")) return JOB_ARTWORK.writing;
       return JOB_ARTWORK.remote;
     }
+
+    function getJobImageUrl(job) {
+      if (job && typeof job.image_url === "string" && /^https:\/\//i.test(job.image_url.trim())) {
+        return job.image_url.trim();
+      }
+      return getFallbackJobArtwork(job);
+    }
+
+    window.handleJobImgError = function(imgEl, catKey) {
+      if (!imgEl || imgEl.dataset.fallbackApplied) return;
+      imgEl.dataset.fallbackApplied = "1";
+      imgEl.src = JOB_ARTWORK[catKey] || JOB_ARTWORK.remote;
+    };
+
+    window.shareItem = async function(btnEl, title, url) {
+      const shareUrl = url || window.location.href;
+      const shareText = `${title} — via PulseFeed`;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: shareText, text: shareText, url: shareUrl });
+          return;
+        } catch (err) {
+          if (err && err.name === "AbortError") return;
+        }
+      }
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+        }
+        const orig = btnEl.textContent;
+        btnEl.textContent = "✓ Copied";
+        setTimeout(() => { btnEl.textContent = orig; }, 1600);
+      } catch {
+        alert(shareUrl);
+      }
+    };
 
     let allJobs = [];
     let allListings = [];
@@ -559,6 +604,10 @@
         .replace(/"/g, "&quot;");
     }
 
+    function escapeJsAttr(str) {
+      return escapeHtml(str).replace(/'/g, "&#39;");
+    }
+
     async function sbFetch(path, options = {}) {
       const baseUrl = CONFIG.SUPABASE_URL.trim().replace(/\/+$/, "");
       const res = await fetch(`${baseUrl}/rest/v1/${path}`, {
@@ -645,17 +694,22 @@
         return;
       }
       feed.innerHTML = items.map((item) => {
-        const safeUrl = /^https:\/\//i.test(item.checkout_url || "") ? item.checkout_url : "https://gumroad.com";
+        const safeUrl = /^https:\/\//i.test(item.checkout_url || "") ? item.checkout_url : CONFIG.GUMROAD_URL;
+        const isCreatorStore = /chukwuma448\.gumroad\.com/i.test(safeUrl);
         return `
           <article class="market-item-card">
             <div class="job-meta">
-              <span>${escapeHtml(item.category)} • Sold by <strong>${escapeHtml(item.seller_name)}</strong></span>
+              <span>
+                ${escapeHtml(item.category)} • Sold by <strong>${escapeHtml(item.seller_name)}</strong>
+                <span class="seller-badge">${isCreatorStore ? "★ Creator Store" : "✓ Community Seller"}</span>
+              </span>
               <span class="price-pill">${escapeHtml(item.price_label)}</span>
             </div>
             <div class="job-title">${escapeHtml(item.title)}</div>
             <p class="job-summary">${escapeHtml(item.description)}</p>
             <div class="job-actions">
               <a class="btn btn-gumroad" href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">Buy / View Offer ↗</a>
+              <button type="button" class="btn btn-outline" onclick="shareItem(this, '${escapeJsAttr(item.title)}', '${escapeJsAttr(safeUrl)}')">Share</button>
             </div>
           </article>
         `;
@@ -672,6 +726,14 @@
         const jobComments = commentsByJob[job.id] || [];
         const isOpen = openJobIds.has(job.id);
         const imgSrc = getJobImageUrl(job);
+        const fallbackKey = matchesCategory(job, "tech")
+          ? "tech"
+          : matchesCategory(job, "support")
+          ? "support"
+          : matchesCategory(job, "writing")
+          ? "writing"
+          : "remote";
+
         const commentsHtml = jobComments.length
           ? jobComments.map((c) => `
               <div class="comment-item">
@@ -683,7 +745,7 @@
 
         return `
           <article id="job-${job.id}" class="job-card">
-            <img class="job-thumb" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(job.title)}" loading="lazy" />
+            <img class="job-thumb" src="${escapeHtml(imgSrc)}" alt="${escapeHtml(job.title)}" loading="lazy" onerror="handleJobImgError(this, '${fallbackKey}')" />
             <div class="job-meta">
               <span>${escapeHtml(job.source_name)} • ${escapeHtml(job.location_or_type)}</span>
               <span>${job.created_at ? new Date(job.created_at).toLocaleDateString() : ""}</span>
@@ -695,6 +757,7 @@
               <button type="button" class="btn btn-outline" onclick="toggleComments('${job.id}')">
                 Comments (${jobComments.length})
               </button>
+              <button type="button" class="btn btn-outline" onclick="shareItem(this, '${escapeJsAttr(job.title)}', '${escapeJsAttr(job.apply_url)}')">Share</button>
             </div>
             <div id="comments-${job.id}" class="comments-box ${isOpen ? "open" : ""}">
               <div id="list-${job.id}">${commentsHtml}</div>

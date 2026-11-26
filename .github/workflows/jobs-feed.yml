@@ -2,19 +2,41 @@ name: Sync Job Drops
 
 on:
   schedule:
-    - cron: "17,47 * * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   sync-jobs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      - run: pip install requests
-      - env:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run jobs_worker.py
+        env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
         run: python jobs_worker.py
+
+      - name: Auto-commit updated feeds and SEO job pages
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add jobs.json jobs.xml sitemap.xml robots.txt jobs/
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update remote jobs, RSS feed, and SEO pages"
+            git push
+          fi

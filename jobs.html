@@ -179,6 +179,16 @@
       margin-bottom: 14px;
       display: none;
     }
+    .feed-toast {
+      display: none;
+      font-size: 0.82rem;
+      color: var(--accent);
+      background: rgba(63, 185, 80, 0.12);
+      border: 1px solid rgba(63, 185, 80, 0.35);
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
     .seller-form-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -358,6 +368,7 @@
     </section>
 
     <div id="offlineNote" class="offline-note">Showing cached jobs offline — reconnect to sync the latest drops.</div>
+    <div id="feedToast" class="feed-toast"></div>
 
     <main id="feed">
       <div class="status-msg">Loading live job drops...</div>
@@ -626,6 +637,17 @@
       return escapeHtml(str).replace(/'/g, "&#39;");
     }
 
+    function showFeedToast(msg) {
+      const toast = document.getElementById("feedToast");
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.style.display = "block";
+      clearTimeout(window._feedToastTimer);
+      window._feedToastTimer = setTimeout(() => {
+        toast.style.display = "none";
+      }, 1800);
+    }
+
     async function sbFetch(path, options = {}) {
       const baseUrl = CONFIG.SUPABASE_URL.trim().replace(/\/+$/, "");
       const res = await fetch(`${baseUrl}/rest/v1/${path}`, {
@@ -830,7 +852,11 @@
 
     document.getElementById("tabJobs").addEventListener("click", () => {
       setActiveTab("jobs", false, true);
-      document.getElementById("feed").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      showFeedToast("✓ Remote jobs feed synced");
+      const feedEl = document.getElementById("feed");
+      if (feedEl) {
+        feedEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
 
     document.getElementById("tabMarket").addEventListener("click", () => setActiveTab("market", false, false));

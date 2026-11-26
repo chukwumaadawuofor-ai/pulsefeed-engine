@@ -222,6 +222,27 @@
       font-size: 0.88rem;
       font-family: inherit;
     }
+    .form-grid input[type="file"] {
+      padding: 7px 10px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .upload-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .listing-preview {
+      display: none;
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0d1117;
+    }
     .form-grid input:focus, .form-grid select:focus, .form-grid textarea:focus {
       outline: none;
       border-color: #58a6ff;
@@ -391,6 +412,11 @@
           </select>
         </div>
         <input type="url" name="checkout_url" placeholder="https://your-checkout-or-contact-link" required maxlength="300" />
+        <div>
+          <label for="listingImageInput" class="upload-label">Product / Service Photo (Optional, max 5 MB)</label>
+          <input id="listingImageInput" name="listing_image" type="file" accept="image/jpeg,image/png,image/webp" />
+        </div>
+        <img id="listingImagePreview" class="listing-preview" alt="Selected listing photo preview" />
         <textarea name="description" rows="2" placeholder="Describe what buyers get (10–600 characters) *" required minlength="10" maxlength="600"></textarea>
         <button id="publishListingBtn" type="submit" class="btn btn-green">Publish Listing</button>
       </form>
@@ -419,7 +445,9 @@
     const CONFIG = {
       SUPABASE_URL: "https://pzaavnfswisvosgdfbgl.supabase.co",
       SUPABASE_ANON_KEY: "sb_publishable_He61GsY9EO5I6Pf8D8pUZw_jgscYPNp",
-      GUMROAD_URL: "https://chukwuma448.gumroad.com/?utm_source=pulsefeed&utm_medium=jobs_hub&utm_campaign=job_seekers&utm_content=jobs_hub_banner"
+      GUMROAD_URL: "https://chukwuma448.gumroad.com/?utm_source=pulsefeed&utm_medium=jobs_hub&utm_campaign=job_seekers&utm_content=jobs_hub_banner",
+      STORAGE_BUCKET: "marketplace-images",
+      MAX_IMAGE_BYTES: 5 * 1024 * 1024
     };
 
     const CACHE_JOBS_KEY = "pulsefeed_cached_jobs_v2";
@@ -543,6 +571,7 @@
     let activeTab = "jobs";
     let deferredInstallPrompt = null;
     let swRegistration = null;
+    let previewObjectUrl = null;
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js?v=3").then((reg) => {
@@ -741,6 +770,92 @@
       return JSON.parse(rawText);
     }
 
+    async function compressImageToJpeg(file, maxWidth = 800, quality = 0.78) {
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, maxWidth / bitmap.width);
+      const width = Math.max(1, Math.round(bitmap.width * scale));
+      const height = Math.max(1, Math.round(bitmap.height * scale));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(bitmap, 0, 0, width, height);
+      if (typeof bitmap.close === "function") {
+        bitmap.close();
+      }
+
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(
+          (blob) => (blob ? resolve(blob) : reject(new Error("Could not compress selected image."))),
+          "image/jpeg",
+          quality
+        );
+      });
+    }
+
+    async function uploadListingImage(file) {
+      if (!file) return null;
+      if (!file.type || !file.type.startsWith("image/")) {
+        throw new Error("Please select a valid image file (JPG, PNG, or WebP).");
+      }
+      if (file.size > CONFIG.MAX_IMAGE_BYTES) {
+        throw new Error("Image must be 5 MB or smaller.");
+      }
+
+      const compressedBlob = await compressImageToJpeg(file);
+      const baseUrl = CONFIG.SUPABASE_URL.trim().replace(/\/+$/, "");
+      const bucket = CONFIG.STORAGE_BUCKET;
+      const objectPath = `listings/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+
+      const uploadRes = await fetch(`${baseUrl}/storage/v1/object/${bucket}/${objectPath}`, {
+        method: "POST",
+        headers: {
+          apikey: CONFIG.SUPABASE_ANON_KEY.trim(),
+          Authorization: `Bearer ${CONFIG.SUPABASE_ANON_KEY.trim()}`,
+          "Content-Type": "image/jpeg",
+          "x-upsert": "false"
+        },
+        body: compressedBlob
+      });
+
+      if (!uploadRes.ok) {
+        const errText = await uploadRes.text();
+        throw new Error(errText || `Upload failed (HTTP ${uploadRes.status})`);
+      }
+
+      return `${baseUrl}/storage/v1/object/public/${bucket}/${objectPath}`;
+    }
+
+    const listingImageInput = document.getElementById("listingImageInput");
+    const listingImagePreview = document.getElementById("listingImagePreview");
+
+    function clearListingImagePreview() {
+      if (previewObjectUrl) {
+        URL.revokeObjectURL(previewObjectUrl);
+        previewObjectUrl = null;
+      }
+      if (listingImagePreview) {
+        listingImagePreview.src = "";
+        listingImagePreview.style.display = "none";
+      }
+    }
+
+    listingImageInput.addEventListener("change", () => {
+      clearListingImagePreview();
+      const file = listingImageInput.files && listingImageInput.files[0];
+      if (!file) return;
+      if (file.size > CONFIG.MAX_IMAGE_BYTES) {
+        alert("Please choose an image smaller than 5 MB.");
+        listingImageInput.value = "";
+        return;
+      }
+      previewObjectUrl = URL.createObjectURL(file);
+      listingImagePreview.src = previewObjectUrl;
+      listingImagePreview.style.display = "block";
+    });
+
     function loadCachedFallback() {
       try {
         const cachedJobsRaw = localStorage.getItem(CACHE_JOBS_KEY);
@@ -817,8 +932,14 @@
             })
           : rawSafeUrl;
 
+        const hasImage = typeof item.image_url === "string" && /^https:\/\//i.test(item.image_url.trim());
+        const marketImageHtml = hasImage
+          ? `<img class="job-thumb" src="${escapeHtml(item.image_url.trim())}" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.style.display='none'" />`
+          : "";
+
         return `
           <article class="market-item-card">
+            ${marketImageHtml}
             <div class="job-meta">
               <span>
                 ${escapeHtml(item.category)} • Sold by <strong>${escapeHtml(item.seller_name)}</strong>
@@ -957,6 +1078,7 @@
       const category = form.category.value;
       const checkout_url = form.checkout_url.value.trim();
       const description = form.description.value.trim();
+      const selectedFile = listingImageInput.files && listingImageInput.files[0] ? listingImageInput.files[0] : null;
 
       if (!/^https:\/\//i.test(checkout_url)) {
         alert("Please enter a valid link starting with https://");
@@ -964,9 +1086,12 @@
       }
 
       btn.disabled = true;
-      btn.textContent = "Publishing...";
+      btn.textContent = selectedFile ? "Uploading Photo..." : "Publishing...";
 
       try {
+        const image_url = await uploadListingImage(selectedFile);
+        btn.textContent = "Publishing...";
+
         await sbFetch("market_listings", {
           method: "POST",
           headers: { Prefer: "return=minimal" },
@@ -977,10 +1102,12 @@
             category,
             checkout_url,
             description,
+            image_url,
             status: "published"
           })
         });
         form.reset();
+        clearListingImagePreview();
         document.getElementById("sellerFormCard").classList.remove("open");
         await loadData(true);
       } catch (err) {

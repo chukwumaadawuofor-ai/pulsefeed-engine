@@ -110,9 +110,41 @@
       background: var(--card);
       color: var(--text);
       font-size: 0.95rem;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     .search-bar:focus { outline: none; border-color: #58a6ff; }
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .pill:hover { border-color: #58a6ff; color: var(--text); }
+    .pill.active {
+      background: var(--accent-dark);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+    .offline-note {
+      font-size: 0.8rem;
+      color: #d29922;
+      background: rgba(210, 153, 34, 0.12);
+      border: 1px solid rgba(210, 153, 34, 0.4);
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      display: none;
+    }
     .job-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -198,6 +230,16 @@
 
     <input id="searchInput" class="search-bar" type="search" placeholder="Filter remote jobs by title, keyword, or source..." />
 
+    <div id="filterPills" class="filter-pills">
+      <button type="button" class="pill active" data-cat="all">All</button>
+      <button type="button" class="pill" data-cat="tech">Tech &amp; Dev</button>
+      <button type="button" class="pill" data-cat="support">Support &amp; Ops</button>
+      <button type="button" class="pill" data-cat="writing">Writing &amp; Design</button>
+      <button type="button" class="pill" data-cat="worldwide">Worldwide</button>
+    </div>
+
+    <div id="offlineNote" class="offline-note">Showing cached jobs offline — reconnect to sync the latest drops.</div>
+
     <main id="feed">
       <div class="status-msg">Loading live job drops...</div>
     </main>
@@ -210,22 +252,24 @@
       GUMROAD_URL: "https://gumroad.com"
     };
 
+    const CACHE_JOBS_KEY = "pulsefeed_cached_jobs_v1";
+    const CACHE_COMMENTS_KEY = "pulsefeed_cached_comments_v1";
+
     document.getElementById("gumroadBtn").href = CONFIG.GUMROAD_URL;
 
     let allJobs = [];
     let commentsByJob = {};
     let openJobIds = new Set();
+    let activeCategory = "all";
     let deferredInstallPrompt = null;
     let swRegistration = null;
 
-    // 1. Register Service Worker for Offline App + Notifications
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js").then((reg) => {
         swRegistration = reg;
       }).catch((err) => console.warn("SW registration skipped:", err));
     }
 
-    // 2. Handle "Install App" Prompt on Android / Desktop Chrome
     const installBtn = document.getElementById("installBtn");
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
@@ -247,7 +291,6 @@
       installBtn.style.display = "none";
     });
 
-    // 3. Handle Job Drop Notifications
     const notifyBtn = document.getElementById("notifyBtn");
     function updateNotifyButton() {
       if (!("Notification" in window)) {
@@ -319,6 +362,38 @@
       }
     }
 
+    function matchesCategory(job, cat) {
+      if (cat === "all") return true;
+      const hay = `${job.title || ""} ${job.summary || ""} ${job.location_or_type || ""}`.toLowerCase();
+      if (cat === "tech") {
+        return /\b(engineer|developer|software|python|react|devops|cloud|data|qa|full[- ]?stack|backend|frontend|ai|ml|security)\b/.test(hay);
+      }
+      if (cat === "support") {
+        return /\b(support|customer|assistant|operations|ops|accountant|tax|coordinator|administrator|sales|success)\b/.test(hay);
+      }
+      if (cat === "writing") {
+        return /\b(writer|writing|content|copywriter|editor|design|designer|ui|ux|marketing|social media)\b/.test(hay);
+      }
+      if (cat === "worldwide") {
+        return /\b(worldwide|global|anywhere|international|remote)\b/.test(hay) && !/\bus only\b/.test(hay);
+      }
+      return true;
+    }
+
+    function getFilteredJobs() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      return allJobs.filter((j) => {
+        if (!matchesCategory(j, activeCategory)) return false;
+        if (!q) return true;
+        return (
+          (j.title || "").toLowerCase().includes(q) ||
+          (j.summary || "").toLowerCase().includes(q) ||
+          (j.source_name || "").toLowerCase().includes(q) ||
+          (j.location_or_type || "").toLowerCase().includes(q)
+        );
+      });
+    }
+
     function escapeHtml(str) {
       return String(str || "")
         .replace(/&/g, "&amp;")
@@ -348,8 +423,24 @@
       return JSON.parse(rawText);
     }
 
+    function loadCachedFallback() {
+      try {
+        const cachedJobsRaw = localStorage.getItem(CACHE_JOBS_KEY);
+        if (!cachedJobsRaw) return false;
+        allJobs = JSON.parse(cachedJobsRaw) || [];
+        const cachedCommentsRaw = localStorage.getItem(CACHE_COMMENTS_KEY);
+        commentsByJob = cachedCommentsRaw ? JSON.parse(cachedCommentsRaw) : {};
+        document.getElementById("offlineNote").style.display = "block";
+        renderJobs(getFilteredJobs());
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
     async function loadData(isBackgroundPoll = false) {
       const feed = document.getElementById("feed");
+      const offlineNote = document.getElementById("offlineNote");
       try {
         const [jobs, comments] = await Promise.all([
           sbFetch("job_drops?status=eq.published&order=created_at.desc&limit=50"),
@@ -358,26 +449,24 @@
         allJobs = jobs || [];
         checkForNewJobs(allJobs);
 
-        commentsByJob = {};
+        const grouped = {};
         for (const c of comments || []) {
-          if (!commentsByJob[c.job_id]) commentsByJob[c.job_id] = [];
-          commentsByJob[c.job_id].push(c);
+          if (!grouped[c.job_id]) grouped[c.job_id] = [];
+          grouped[c.job_id].push(c);
         }
+        commentsByJob = grouped;
 
-        const q = document.getElementById("searchInput").value.toLowerCase();
-        if (q) {
-          const filtered = allJobs.filter((j) =>
-            (j.title || "").toLowerCase().includes(q) ||
-            (j.summary || "").toLowerCase().includes(q) ||
-            (j.source_name || "").toLowerCase().includes(q)
-          );
-          renderJobs(filtered);
-        } else {
-          renderJobs(allJobs);
-        }
+        localStorage.setItem(CACHE_JOBS_KEY, JSON.stringify(allJobs));
+        localStorage.setItem(CACHE_COMMENTS_KEY, JSON.stringify(commentsByJob));
+        offlineNote.style.display = "none";
+
+        renderJobs(getFilteredJobs());
       } catch (err) {
         if (!isBackgroundPoll) {
-          feed.innerHTML = `<div class="status-msg">Could not load jobs: ${escapeHtml(err.message)}</div>`;
+          const hadCache = loadCachedFallback();
+          if (!hadCache) {
+            feed.innerHTML = `<div class="status-msg">Could not load jobs: ${escapeHtml(err.message)}</div>`;
+          }
         }
       }
     }
@@ -385,7 +474,7 @@
     function renderJobs(jobs) {
       const feed = document.getElementById("feed");
       if (!jobs.length) {
-        feed.innerHTML = `<div class="status-msg">No jobs found yet. Run <strong>Sync Job Drops</strong> in GitHub Actions to pull fresh listings.</div>`;
+        feed.innerHTML = `<div class="status-msg">No matching jobs found. Try another filter or clear your search.</div>`;
         return;
       }
       feed.innerHTML = jobs.map((job) => {
@@ -463,8 +552,9 @@
         openJobIds.add(jobId);
         if (!commentsByJob[jobId]) commentsByJob[jobId] = [];
         commentsByJob[jobId].push({ author_name, comment_text, message: comment_text });
+        localStorage.setItem(CACHE_COMMENTS_KEY, JSON.stringify(commentsByJob));
         form.reset();
-        renderJobs(allJobs);
+        renderJobs(getFilteredJobs());
       } catch (err) {
         alert("Could not post comment: " + err.message);
       } finally {
@@ -474,10 +564,11 @@
     };
 
     document.getElementById("jumpCommentBtn").addEventListener("click", () => {
-      if (allJobs.length) {
-        const firstId = allJobs[0].id;
+      const list = getFilteredJobs();
+      if (list.length) {
+        const firstId = list[0].id;
         openJobIds.add(firstId);
-        renderJobs(allJobs);
+        renderJobs(list);
         const target = document.getElementById(`comments-${firstId}`);
         if (target) {
           setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "nearest" }), 80);
@@ -485,18 +576,20 @@
       }
     });
 
-    document.getElementById("searchInput").addEventListener("input", (e) => {
-      const q = e.target.value.toLowerCase();
-      const filtered = allJobs.filter((j) =>
-        (j.title || "").toLowerCase().includes(q) ||
-        (j.summary || "").toLowerCase().includes(q) ||
-        (j.source_name || "").toLowerCase().includes(q)
-      );
-      renderJobs(filtered);
+    document.querySelectorAll("#filterPills .pill").forEach((pill) => {
+      pill.addEventListener("click", () => {
+        document.querySelectorAll("#filterPills .pill").forEach((p) => p.classList.remove("active"));
+        pill.classList.add("active");
+        activeCategory = pill.dataset.cat;
+        renderJobs(getFilteredJobs());
+      });
+    });
+
+    document.getElementById("searchInput").addEventListener("input", () => {
+      renderJobs(getFilteredJobs());
     });
 
     loadData();
-    // Auto-check every 5 minutes for new job drops
     setInterval(() => loadData(true), 5 * 60 * 1000);
   </script>
 </body>

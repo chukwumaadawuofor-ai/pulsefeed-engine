@@ -395,8 +395,8 @@
     </div>
 
     <section id="sellerFormCard" class="seller-form-card">
-      <h3 style="font-size:1rem;color:#ffffff;">List a Product or Service</h3>
-      <p style="font-size:0.82rem;color:var(--muted);margin-top:2px;">Share your Gumroad, Selar, Paystack, or WhatsApp link (must start with https://).</p>
+      <h3 id="listingFormHeading" style="font-size:1rem;color:#ffffff;">List a Product or Service</h3>
+      <p id="listingFormSubtext" style="font-size:0.82rem;color:var(--muted);margin-top:2px;">Share your Gumroad, Selar, Paystack, or WhatsApp link (must start with https://).</p>
       <form id="listingForm" class="form-grid">
         <div class="form-row">
           <input type="text" name="seller_name" placeholder="Your name or brand *" required maxlength="60" />
@@ -418,7 +418,10 @@
         </div>
         <img id="listingImagePreview" class="listing-preview" alt="Selected listing photo preview" />
         <textarea name="description" rows="2" placeholder="Describe what buyers get (10–600 characters) *" required minlength="10" maxlength="600"></textarea>
-        <button id="publishListingBtn" type="submit" class="btn btn-green">Publish Listing</button>
+        <div class="market-actions">
+          <button id="publishListingBtn" type="submit" class="btn btn-green">Publish Listing</button>
+          <button id="cancelEditBtn" type="button" class="btn btn-outline" style="display:none;">Cancel</button>
+        </div>
       </form>
     </section>
 
@@ -569,6 +572,8 @@
     let openJobIds = new Set();
     let activeCategory = "all";
     let activeTab = "jobs";
+    let editingListingId = null;
+    let editingExistingImageUrl = null;
     let deferredInstallPrompt = null;
     let swRegistration = null;
     let previewObjectUrl = null;
@@ -830,6 +835,11 @@
 
     const listingImageInput = document.getElementById("listingImageInput");
     const listingImagePreview = document.getElementById("listingImagePreview");
+    const listingForm = document.getElementById("listingForm");
+    const listingFormHeading = document.getElementById("listingFormHeading");
+    const listingFormSubtext = document.getElementById("listingFormSubtext");
+    const publishListingBtn = document.getElementById("publishListingBtn");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
 
     function clearListingImagePreview() {
       if (previewObjectUrl) {
@@ -842,10 +852,69 @@
       }
     }
 
+    function resetListingFormMode(closeCard = false) {
+      editingListingId = null;
+      editingExistingImageUrl = null;
+      listingForm.reset();
+      clearListingImagePreview();
+      listingFormHeading.textContent = "List a Product or Service";
+      listingFormSubtext.textContent = "Share your Gumroad, Selar, Paystack, or WhatsApp link (must start with https://).";
+      publishListingBtn.textContent = "Publish Listing";
+      cancelEditBtn.style.display = "none";
+      if (closeCard) {
+        document.getElementById("sellerFormCard").classList.remove("open");
+      }
+    }
+
+    window.startEditListing = function(listingId) {
+      const target = allListings.find((item) => String(item.id) === String(listingId));
+      if (!target) {
+        alert("Could not find that listing to edit.");
+        return;
+      }
+
+      setActiveTab("market", true, false);
+      editingListingId = target.id;
+      editingExistingImageUrl = typeof target.image_url === "string" && /^https:\/\//i.test(target.image_url.trim())
+        ? target.image_url.trim()
+        : null;
+
+      listingForm.seller_name.value = target.seller_name || "";
+      listingForm.price_label.value = target.price_label || "";
+      listingForm.title.value = target.title || "";
+      listingForm.category.value = target.category || "Digital Product";
+      listingForm.checkout_url.value = target.checkout_url || "";
+      listingForm.description.value = target.description || "";
+      listingImageInput.value = "";
+
+      clearListingImagePreview();
+      if (editingExistingImageUrl) {
+        listingImagePreview.src = editingExistingImageUrl;
+        listingImagePreview.style.display = "block";
+      }
+
+      listingFormHeading.textContent = "Edit Listing";
+      listingFormSubtext.textContent = "Update your details or attach a new photo, then save changes.";
+      publishListingBtn.textContent = "Save Changes";
+      cancelEditBtn.style.display = "inline-block";
+
+      document.getElementById("sellerFormCard").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+
+    cancelEditBtn.addEventListener("click", () => {
+      resetListingFormMode(true);
+    });
+
     listingImageInput.addEventListener("change", () => {
       clearListingImagePreview();
       const file = listingImageInput.files && listingImageInput.files[0];
-      if (!file) return;
+      if (!file) {
+        if (editingExistingImageUrl) {
+          listingImagePreview.src = editingExistingImageUrl;
+          listingImagePreview.style.display = "block";
+        }
+        return;
+      }
       if (file.size > CONFIG.MAX_IMAGE_BYTES) {
         alert("Please choose an image smaller than 5 MB.");
         listingImageInput.value = "";
@@ -951,6 +1020,7 @@
             <p class="job-summary">${escapeHtml(item.description)}</p>
             <div class="job-actions">
               <a class="btn btn-gumroad" href="${escapeHtml(trackedUrl)}" target="_blank" rel="noopener noreferrer">Buy / View Offer ↗</a>
+              <button type="button" class="btn btn-outline" onclick="startEditListing('${escapeJsAttr(item.id)}')">✎ Edit</button>
               <button type="button" class="btn btn-outline" onclick="shareItem(this, '${escapeJsAttr(item.title)}', '${escapeJsAttr(trackedUrl)}')">Share</button>
             </div>
           </article>
@@ -1031,7 +1101,7 @@
       if (openSellerForm) {
         sellerCard.classList.add("open");
       } else if (!isMarket) {
-        sellerCard.classList.remove("open");
+        resetListingFormMode(true);
       }
 
       if (!isMarket) {
@@ -1064,14 +1134,14 @@
     document.getElementById("tabMarket").addEventListener("click", () => setActiveTab("market", false, false));
 
     document.getElementById("openSellTabBtn").addEventListener("click", () => {
+      resetListingFormMode(false);
       setActiveTab("market", true, false);
       document.getElementById("sellerFormCard").scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
 
-    document.getElementById("listingForm").addEventListener("submit", async (e) => {
+    listingForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const form = e.target;
-      const btn = document.getElementById("publishListingBtn");
       const seller_name = form.seller_name.value.trim();
       const price_label = form.price_label.value.trim();
       const title = form.title.value.trim();
@@ -1079,42 +1149,62 @@
       const checkout_url = form.checkout_url.value.trim();
       const description = form.description.value.trim();
       const selectedFile = listingImageInput.files && listingImageInput.files[0] ? listingImageInput.files[0] : null;
+      const isEditing = Boolean(editingListingId);
 
       if (!/^https:\/\//i.test(checkout_url)) {
         alert("Please enter a valid link starting with https://");
         return;
       }
 
-      btn.disabled = true;
-      btn.textContent = selectedFile ? "Uploading Photo..." : "Publishing...";
+      publishListingBtn.disabled = true;
+      cancelEditBtn.disabled = true;
+      publishListingBtn.textContent = selectedFile
+        ? "Uploading Photo..."
+        : (isEditing ? "Saving..." : "Publishing...");
 
       try {
-        const image_url = await uploadListingImage(selectedFile);
-        btn.textContent = "Publishing...";
+        let image_url = editingExistingImageUrl;
+        if (selectedFile) {
+          image_url = await uploadListingImage(selectedFile);
+        }
 
-        await sbFetch("market_listings", {
-          method: "POST",
-          headers: { Prefer: "return=minimal" },
-          body: JSON.stringify({
-            seller_name,
-            price_label,
-            title,
-            category,
-            checkout_url,
-            description,
-            image_url,
-            status: "published"
-          })
-        });
-        form.reset();
-        clearListingImagePreview();
-        document.getElementById("sellerFormCard").classList.remove("open");
+        publishListingBtn.textContent = isEditing ? "Saving..." : "Publishing...";
+
+        const payload = {
+          seller_name,
+          price_label,
+          title,
+          category,
+          checkout_url,
+          description,
+          image_url,
+          status: "published"
+        };
+
+        if (isEditing) {
+          await sbFetch(`market_listings?id=eq.${encodeURIComponent(editingListingId)}`, {
+            method: "PATCH",
+            headers: { Prefer: "return=minimal" },
+            body: JSON.stringify(payload)
+          });
+          showFeedToast("✓ Listing updated");
+        } else {
+          await sbFetch("market_listings", {
+            method: "POST",
+            headers: { Prefer: "return=minimal" },
+            body: JSON.stringify(payload)
+          });
+          showFeedToast("✓ Listing published");
+        }
+
+        resetListingFormMode(true);
         await loadData(true);
       } catch (err) {
-        alert("Could not publish listing: " + err.message);
+        alert((isEditing ? "Could not update listing: " : "Could not publish listing: ") + err.message);
       } finally {
-        btn.disabled = false;
-        btn.textContent = "Publish Listing";
+        publishListingBtn.disabled = false;
+        cancelEditBtn.disabled = false;
+        publishListingBtn.textContent = editingListingId ? "Save Changes" : "Publish Listing";
       }
     });
 

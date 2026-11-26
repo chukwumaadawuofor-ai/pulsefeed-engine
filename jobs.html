@@ -422,8 +422,9 @@
     };
 
     window.shareItem = async function(btnEl, title, url) {
+      const cleanTitle = escapeHtml(title);
       const shareUrl = url || window.location.href;
-      const shareText = `${title} — via PulseFeed`;
+      const shareText = `${cleanTitle} — via PulseFeed`;
       if (navigator.share) {
         try {
           await navigator.share({ title: shareText, text: shareText, url: shareUrl });
@@ -596,8 +597,18 @@
       });
     }
 
-    function escapeHtml(str) {
+    function sanitizeDisplayText(str) {
       return String(str || "")
+        .replace(/\uFFFD/g, " ")
+        .replace(/â[\u0080-\u00BF]{1,2}/g, "—")
+        .replace(/Â(?=\s|$)/g, "")
+        .replace(/\s+—\s+/g, " — ")
+        .replace(/\s{2,}/g, " ")
+        .trim();
+    }
+
+    function escapeHtml(str) {
+      return sanitizeDisplayText(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")

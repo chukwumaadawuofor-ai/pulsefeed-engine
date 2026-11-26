@@ -21,6 +21,13 @@ MOJIBAKE_MAP = {
     "\u00a0": " ",
 }
 
+CATEGORY_IMAGES = {
+    "tech": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=75",
+    "support": "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=900&q=75",
+    "writing": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=75",
+    "remote": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=75",
+}
+
 
 def normalize_str(raw: str) -> str:
     if not raw:
@@ -53,6 +60,37 @@ def make_dedupe_key(source: str, title: str, url: str) -> str:
     return hashlib.sha256(seed.encode("utf-8")).hexdigest()[:24]
 
 
+def pick_job_image(title: str, summary: str, location: str = "", explicit_url: str = "") -> str:
+    candidate = normalize_str(explicit_url).strip()
+    if candidate.startswith("https://") or candidate.startswith("http://"):
+        return candidate
+
+    hay = f"{title} {summary} {location}".lower()
+    if re.search(r"\b(engineer|developer|software|python|react|devops|cloud|data|qa|full[- ]?stack|backend|frontend|ai|ml|security)\b", hay):
+        return CATEGORY_IMAGES["tech"]
+    if re.search(r"\b(support|customer|assistant|operations|ops|accountant|tax|coordinator|administrator|sales|success)\b", hay):
+        return CATEGORY_IMAGES["support"]
+    if re.search(r"\b(writer|writing|content|copywriter|editor|design|designer|ui|ux|marketing|social media)\b", hay):
+        return CATEGORY_IMAGES["writing"]
+    return CATEGORY_IMAGES["remote"]
+
+
+def extract_rss_image(item: ET.Element) -> str:
+    enclosure = item.find("enclosure")
+    if enclosure is not None:
+        enc_url = (enclosure.attrib.get("url") or "").strip()
+        enc_type = (enclosure.attrib.get("type") or "").lower()
+        if enc_url.startswith("http") and (not enc_type or enc_type.startswith("image/")):
+            return enc_url
+
+    for elem in item.iter():
+        if elem.tag.endswith("content") or elem.tag.endswith("thumbnail"):
+            media_url = (elem.attrib.get("url") or "").strip()
+            if media_url.startswith("http"):
+                return media_url
+    return ""
+
+
 def fetch_remoteok(limit: int = 15) -> list[dict]:
     jobs = []
     try:
@@ -75,6 +113,7 @@ def fetch_remoteok(limit: int = 15) -> list[dict]:
             tags = ", ".join(clean_text(t, 40) for t in (item.get("tags") or []) if t)
             raw_desc = item.get("description") or tags or "Remote role"
             summary = clean_text(f"{company} — {raw_desc}", 260, strip_urls=True)
+            logo_url = item.get("company_logo") or item.get("logo") or ""
             jobs.append({
                 "dedupe_key": make_dedupe_key("RemoteOK", title, apply_url),
                 "source_name": "RemoteOK",
@@ -82,6 +121,7 @@ def fetch_remoteok(limit: int = 15) -> list[dict]:
                 "location_or_type": location,
                 "summary": summary,
                 "apply_url": apply_url,
+                "image_url": pick_job_image(title, summary, location, logo_url),
                 "status": "published",
             })
             if len(jobs) >= limit:
@@ -124,6 +164,7 @@ def fetch_weworkremotely(limit: int = 15) -> list[dict]:
                     260,
                     strip_urls=True,
                 )
+                rss_img = extract_rss_image(item)
                 jobs.append({
                     "dedupe_key": make_dedupe_key("WeWorkRemotely", title, link),
                     "source_name": "WeWorkRemotely",
@@ -131,6 +172,7 @@ def fetch_weworkremotely(limit: int = 15) -> list[dict]:
                     "location_or_type": "Remote",
                     "summary": summary,
                     "apply_url": link,
+                    "image_url": pick_job_image(title, summary, "Remote", rss_img),
                     "status": "published",
                 })
                 if len(jobs) >= limit:

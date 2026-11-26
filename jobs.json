@@ -1,27 +1,38 @@
 {
-  "updated_at": "2026-11-26T14:17:39Z",
+  "updated_at": "2026-11-26T15:30:30Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
     {
-      "id": "4df2a5ec-8380-4fee-ac16-9cf1a19be82e",
-      "dedupe_key": "6c58b7f9263e7e631932e8c5",
-      "title": "Creative Director",
-      "summary": "Luxury Presence — Luxury Presence is building the AI growth platform for real estate. Backed by Bessemer Venture Partners and other top investors, we're a Series C company that has hit $100M in annual recurring revenue…",
+      "id": "288c85d1-61ec-489d-a24d-a3e1d94d143d",
+      "dedupe_key": "ecb5d83954752ecc19c64e17",
+      "title": "Commercial Manager - Europe",
+      "summary": "Lyra Health — About Lyra Lyra Health is the leading provider of mental health solutions for employers supporting more than 20 million people globally. The company has delivered 13 million sessions of mental health care…",
       "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/creative-director-6c58b7f9.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-creative-director-luxury-presence-1138146",
+      "location_or_type": "UK Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/commercial-manager-europe-ecb5d839.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-commercial-manager-europe-lyra-health-1138149",
       "date_posted": "2026-11-26"
     },
     {
-      "id": "67fea225-045b-4056-b49d-d482e515df8a",
-      "dedupe_key": "701cf081db383150a6107049",
-      "title": "Account Executive",
-      "summary": "IDMWORKS — IDMWORKS is an award-winning identity and access management (IAM) solutions firm that has been serving a wide range of sectors since its inception in 2004. As a firm thatâs purely focused on IAM, IDMWORKS…",
+      "id": "091e269d-715e-40a7-923e-202fa615bf55",
+      "dedupe_key": "167adc964c80407af3db29b0",
+      "title": "SEO - Manager",
+      "summary": "Bounteous — Bounteous is a global AI Services firm where agentic engineering and human experience converge to deliver transformative business outcomes for the enterprise. We help organizations design, build, and scale…",
       "source_name": "RemoteOK",
       "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-701cf081.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-idmworks-1138145",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/seo-manager-167adc96.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-seo-manager-bounteous-1138148",
+      "date_posted": "2026-11-26"
+    },
+    {
+      "id": "e7c710ed-166c-414a-8fb9-f51561d027d9",
+      "dedupe_key": "aa1b048c4cc755468284037a",
+      "title": "Manager, Account Managment",
+      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/manager-account-managment-aa1b048c.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-manager-account-managment-agiloft-1138147",
       "date_posted": "2026-11-26"
     },
     {
@@ -113,6 +124,39 @@
       "date_posted": "2026-11-26"
     },
     {
+      "id": "4df2a5ec-8380-4fee-ac16-9cf1a19be82e",
+      "dedupe_key": "6c58b7f9263e7e631932e8c5",
+      "title": "Creative Director",
+      "summary": "Luxury Presence — Luxury Presence is building the AI growth platform for real estate. Backed by Bessemer Venture Partners and other top investors, we're a Series C company that has hit $100M in annual recurring revenue…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/creative-director-6c58b7f9.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-creative-director-luxury-presence-1138146",
+      "date_posted": "2026-11-26"
+    },
+    {
+      "id": "67fea225-045b-4056-b49d-d482e515df8a",
+      "dedupe_key": "701cf081db383150a6107049",
+      "title": "Account Executive",
+      "summary": "IDMWORKS — IDMWORKS is an award-winning identity and access management (IAM) solutions firm that has been serving a wide range of sectors since its inception in 2004. As a firm thatâs purely focused on IAM, IDMWORKS…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-701cf081.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-idmworks-1138145",
+      "date_posted": "2026-11-26"
+    },
+    {
+      "id": "9a1a675e-51b7-4d72-a528-deab83379666",
+      "dedupe_key": "23b834237d6dafe979c05d35",
+      "title": "Head of Customer Support",
+      "summary": "Jobgether — Headquarters: UK This position is listed on behalf of a partner company, who manages all applications and next steps. Our partner is looking for a Head of Customer Support based in United Kingdom. As Head of…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/head-of-customer-support-23b83423.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/jobgether-head-of-customer-support",
+      "date_posted": "2026-11-26"
+    },
+    {
       "id": "e4100fbc-a3af-4396-ad67-7d14ad25e47e",
       "dedupe_key": "325e58d2f857cbd3ee28c3f2",
       "title": "Regional Account Manager - Canada (Technical/Cybersecurity)",
@@ -201,17 +245,6 @@
       "date_posted": "2026-11-26"
     },
     {
-      "id": "9a1a675e-51b7-4d72-a528-deab83379666",
-      "dedupe_key": "23b834237d6dafe979c05d35",
-      "title": "Head of Customer Support",
-      "summary": "Jobgether — Headquarters: UK This position is listed on behalf of a partner company, who manages all applications and next steps. Our partner is looking for a Head of Customer Support based in United Kingdom. As Head of…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/head-of-customer-support-23b83423.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/jobgether-head-of-customer-support",
-      "date_posted": "2026-11-26"
-    },
-    {
       "id": "69fb8c36-2dc0-46a8-9c29-c2e79969d942",
       "dedupe_key": "a7aa36bb5bc50ae0216ee424",
       "title": "Senior Paid Media Manager (Remote)",
@@ -297,39 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-sales-engineer-atlanta-ee9bc883.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-sales-engineer-atlanta-saviynt-1138120",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "9c736ea2-b881-4f44-9e06-59c553ec4d52",
-      "dedupe_key": "b0c5f9c78669fcc5197636fc",
-      "title": "Senior Sales Engineer - Chicago",
-      "summary": "Saviynt — Saviynt's AI-powered identity platform manages and governs human and non-human access to all of an organization's applications, data, and business processes. Customers trust Saviynt to safeguard their digital…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-sales-engineer-chicago-b0c5f9c7.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-sales-engineer-chicago-saviynt-1138119",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "fb9f3038-10bc-4e8c-8973-28590a9cd38f",
-      "dedupe_key": "79d651277dc154208c48d9ae",
-      "title": "Sales Enablement Director",
-      "summary": "Jobgether — This position is listed on behalf of a partner company, who manages all applications and next steps. Our partner is looking for a Sales Enablement Director based in the United Kingdom. We are looking for an…",
-      "source_name": "RemoteOK",
-      "location_or_type": "UK Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-enablement-director-79d65127.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-enablement-director-jobgether-1138118",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "1eab4e2d-f991-404c-ba75-1d7a22d9132a",
-      "dedupe_key": "bc035ff59de152fa58ec2b15",
-      "title": "Account Director (Network Testing & Planning)",
-      "summary": "Jobgether — This position is listed on behalf of a partner company, who manages all applications and next steps. Our partner is looking for an Account Director (Network Testing & Planning) based in the United Kingdom…",
-      "source_name": "RemoteOK",
-      "location_or_type": "UK Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-director-network-testing-planning-bc035ff5.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-director-network-testing-planning-jobgether-1138117",
       "date_posted": "2026-11-26"
     }
   ]

@@ -17,6 +17,7 @@
       --gumroad-dark: #e06fd0;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: var(--bg);
@@ -174,7 +175,7 @@
       <p>Instant digital downloads on Gumroad — plus drop your questions, service pitches, or offers in any job thread below.</p>
       <div class="market-actions">
         <a id="gumroadBtn" class="btn btn-gumroad" href="https://gumroad.com" target="_blank" rel="noopener noreferrer">Get It on Gumroad →</a>
-        <a class="btn btn-outline" href="#feed">Comment &amp; List Offer Below ↓</a>
+        <a id="jumpCommentBtn" class="btn btn-outline" href="#feed">Comment &amp; List Offer Below ↓</a>
       </div>
     </section>
 
@@ -196,6 +197,7 @@
 
     let allJobs = [];
     let commentsByJob = {};
+    let openJobIds = new Set();
 
     function escapeHtml(str) {
       return String(str || "")
@@ -216,8 +218,14 @@
           ...(options.headers || {})
         }
       });
-      if (!res.ok) throw new Error(await res.text());
-      return res.status === 204 ? null : res.json();
+      const rawText = await res.text();
+      if (!res.ok) {
+        throw new Error(rawText || `HTTP ${res.status}`);
+      }
+      if (!rawText || res.status === 204) {
+        return null;
+      }
+      return JSON.parse(rawText);
     }
 
     async function loadData() {
@@ -247,17 +255,18 @@
       }
       feed.innerHTML = jobs.map(job => {
         const jobComments = commentsByJob[job.id] || [];
+        const isOpen = openJobIds.has(job.id);
         const commentsHtml = jobComments.length
           ? jobComments.map(c => `
               <div class="comment-item">
                 <span class="comment-author">${escapeHtml(c.author_name)}:</span>
-                <span>${escapeHtml(c.comment_text)}</span>
+                <span>${escapeHtml(c.comment_text || c.message || "")}</span>
               </div>
             `).join("")
           : `<div style="font-size:0.82rem;color:var(--muted);">No comments yet. Ask a question or post an offer below.</div>`;
 
         return `
-          <article class="job-card">
+          <article id="job-${job.id}" class="job-card">
             <div class="job-meta">
               <span>${escapeHtml(job.source_name)} • ${escapeHtml(job.location_or_type)}</span>
               <span>${job.created_at ? new Date(job.created_at).toLocaleDateString() : ""}</span>
@@ -270,7 +279,7 @@
                 Comments (${jobComments.length})
               </button>
             </div>
-            <div id="comments-${job.id}" class="comments-box">
+            <div id="comments-${job.id}" class="comments-box ${isOpen ? "open" : ""}">
               <div id="list-${job.id}">${commentsHtml}</div>
               <form class="comment-form" onsubmit="submitComment(event, '${job.id}')">
                 <input type="text" name="author" placeholder="Your name or handle (optional)" maxlength="50" />
@@ -284,7 +293,13 @@
     }
 
     window.toggleComments = function(jobId) {
-      document.getElementById(`comments-${jobId}`).classList.toggle("open");
+      if (openJobIds.has(jobId)) {
+        openJobIds.delete(jobId);
+      } else {
+        openJobIds.add(jobId);
+      }
+      const box = document.getElementById(`comments-${jobId}`);
+      if (box) box.classList.toggle("open", openJobIds.has(jobId));
     };
 
     window.submitComment = async function(e, jobId) {
@@ -302,13 +317,19 @@
         await sbFetch("job_comments", {
           method: "POST",
           headers: { Prefer: "return=minimal" },
-          body: JSON.stringify({ job_id: jobId, author_name, comment_text, status: "approved" })
+          body: JSON.stringify({
+            job_id: jobId,
+            author_name,
+            comment_text,
+            message: comment_text,
+            status: "approved"
+          })
         });
+        openJobIds.add(jobId);
         if (!commentsByJob[jobId]) commentsByJob[jobId] = [];
-        commentsByJob[jobId].push({ author_name, comment_text });
+        commentsByJob[jobId].push({ author_name, comment_text, message: comment_text });
         form.reset();
         renderJobs(allJobs);
-        document.getElementById(`comments-${jobId}`).classList.add("open");
       } catch (err) {
         alert("Could not post comment: " + err.message);
       } finally {
@@ -316,6 +337,18 @@
         btn.textContent = "Post Comment";
       }
     };
+
+    document.getElementById("jumpCommentBtn").addEventListener("click", () => {
+      if (allJobs.length) {
+        const firstId = allJobs[0].id;
+        openJobIds.add(firstId);
+        renderJobs(allJobs);
+        const target = document.getElementById(`comments-${firstId}`);
+        if (target) {
+          setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "nearest" }), 80);
+        }
+      }
+    });
 
     document.getElementById("searchInput").addEventListener("input", (e) => {
       const q = e.target.value.toLowerCase();

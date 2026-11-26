@@ -102,6 +102,28 @@
     .btn-outline:hover { border-color: #58a6ff; }
     .btn-green { background: var(--accent-dark); color: #ffffff; }
     .btn-green:hover { background: var(--accent); color: #06210d; }
+    .mode-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .mode-tab {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-align: center;
+    }
+    .mode-tab.active {
+      background: #1f242d;
+      border-color: var(--gumroad);
+      color: #ffffff;
+    }
     .search-bar {
       width: 100%;
       padding: 11px 14px;
@@ -145,7 +167,44 @@
       margin-bottom: 14px;
       display: none;
     }
-    .job-card {
+    .seller-form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .seller-form-card.open { display: block; }
+    .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .form-grid input, .form-grid select, .form-grid textarea {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-family: inherit;
+    }
+    .form-grid input:focus, .form-grid select:focus, .form-grid textarea:focus {
+      outline: none;
+      border-color: #58a6ff;
+    }
+    .job-card, .market-item-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -160,6 +219,14 @@
       margin-bottom: 6px;
       gap: 8px;
       flex-wrap: wrap;
+    }
+    .price-pill {
+      background: rgba(63, 185, 80, 0.16);
+      color: var(--accent);
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
     }
     .job-title { font-size: 1.05rem; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
     .job-summary { font-size: 0.88rem; color: var(--muted); margin-bottom: 12px; }
@@ -221,12 +288,17 @@
     <section class="market-banner">
       <span class="badge">Gumroad Store &amp; Creator Offers</span>
       <h2>Digital Templates, E-Books &amp; Automation Kits</h2>
-      <p>Instant digital downloads on Gumroad — plus drop your questions, service pitches, or offers in any job thread below.</p>
+      <p>Instant digital downloads on Gumroad — plus browse or list community offers and remote jobs below.</p>
       <div class="market-actions">
         <a id="gumroadBtn" class="btn btn-gumroad" href="https://chukwuma448.gumroad.com/" target="_blank" rel="noopener noreferrer">Get It on Gumroad →</a>
-        <a id="jumpCommentBtn" class="btn btn-outline" href="#feed">Comment &amp; List Offer Below ↓</a>
+        <button id="openSellTabBtn" type="button" class="btn btn-outline">+ Sell / List Offer</button>
       </div>
     </section>
+
+    <div class="mode-tabs">
+      <button id="tabJobs" type="button" class="mode-tab active">💼 Remote Jobs</button>
+      <button id="tabMarket" type="button" class="mode-tab">🛒 Community Market</button>
+    </div>
 
     <input id="searchInput" class="search-bar" type="search" placeholder="Filter remote jobs by title, keyword, or source..." />
 
@@ -237,6 +309,29 @@
       <button type="button" class="pill" data-cat="writing">Writing &amp; Design</button>
       <button type="button" class="pill" data-cat="worldwide">Worldwide</button>
     </div>
+
+    <section id="sellerFormCard" class="seller-form-card">
+      <h3 style="font-size:1rem;color:#ffffff;">List a Product or Service</h3>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:2px;">Share your Gumroad, Selar, Paystack, or WhatsApp link (must start with https://).</p>
+      <form id="listingForm" class="form-grid">
+        <div class="form-row">
+          <input type="text" name="seller_name" placeholder="Your name or brand *" required maxlength="60" />
+          <input type="text" name="price_label" placeholder="Price (e.g. $15, ₦10,000, Free) *" required maxlength="30" />
+        </div>
+        <div class="form-row">
+          <input type="text" name="title" placeholder="Item or service title *" required maxlength="120" />
+          <select name="category">
+            <option value="Digital Product">Digital Product</option>
+            <option value="Freelance Service">Freelance Service</option>
+            <option value="Template / Prompt Pack">Template / Prompt Pack</option>
+            <option value="Course / E-Book">Course / E-Book</option>
+          </select>
+        </div>
+        <input type="url" name="checkout_url" placeholder="https://your-checkout-or-contact-link" required maxlength="300" />
+        <textarea name="description" rows="2" placeholder="Describe what buyers get (10–600 characters) *" required minlength="10" maxlength="600"></textarea>
+        <button id="publishListingBtn" type="submit" class="btn btn-green">Publish Listing</button>
+      </form>
+    </section>
 
     <div id="offlineNote" class="offline-note">Showing cached jobs offline — reconnect to sync the latest drops.</div>
 
@@ -258,9 +353,11 @@
     document.getElementById("gumroadBtn").href = CONFIG.GUMROAD_URL;
 
     let allJobs = [];
+    let allListings = [];
     let commentsByJob = {};
     let openJobIds = new Set();
     let activeCategory = "all";
+    let activeTab = "jobs";
     let deferredInstallPrompt = null;
     let swRegistration = null;
 
@@ -394,6 +491,19 @@
       });
     }
 
+    function getFilteredListings() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      return allListings.filter((item) => {
+        if (!q) return true;
+        return (
+          (item.title || "").toLowerCase().includes(q) ||
+          (item.description || "").toLowerCase().includes(q) ||
+          (item.seller_name || "").toLowerCase().includes(q) ||
+          (item.category || "").toLowerCase().includes(q)
+        );
+      });
+    }
+
     function escapeHtml(str) {
       return String(str || "")
         .replace(/&/g, "&amp;")
@@ -431,7 +541,7 @@
         const cachedCommentsRaw = localStorage.getItem(CACHE_COMMENTS_KEY);
         commentsByJob = cachedCommentsRaw ? JSON.parse(cachedCommentsRaw) : {};
         document.getElementById("offlineNote").style.display = "block";
-        renderJobs(getFilteredJobs());
+        renderCurrentTab();
         return true;
       } catch {
         return false;
@@ -442,11 +552,13 @@
       const feed = document.getElementById("feed");
       const offlineNote = document.getElementById("offlineNote");
       try {
-        const [jobs, comments] = await Promise.all([
+        const [jobs, comments, listings] = await Promise.all([
           sbFetch("job_drops?status=eq.published&order=created_at.desc&limit=50"),
-          sbFetch("job_comments?status=eq.approved&order=created_at.asc&limit=500")
+          sbFetch("job_comments?status=eq.approved&order=created_at.asc&limit=500"),
+          sbFetch("market_listings?status=eq.published&order=created_at.desc&limit=50").catch(() => [])
         ]);
         allJobs = jobs || [];
+        allListings = listings || [];
         checkForNewJobs(allJobs);
 
         const grouped = {};
@@ -460,15 +572,47 @@
         localStorage.setItem(CACHE_COMMENTS_KEY, JSON.stringify(commentsByJob));
         offlineNote.style.display = "none";
 
-        renderJobs(getFilteredJobs());
+        renderCurrentTab();
       } catch (err) {
         if (!isBackgroundPoll) {
           const hadCache = loadCachedFallback();
           if (!hadCache) {
-            feed.innerHTML = `<div class="status-msg">Could not load jobs: ${escapeHtml(err.message)}</div>`;
+            feed.innerHTML = `<div class="status-msg">Could not load feed: ${escapeHtml(err.message)}</div>`;
           }
         }
       }
+    }
+
+    function renderCurrentTab() {
+      if (activeTab === "market") {
+        renderMarket(getFilteredListings());
+      } else {
+        renderJobs(getFilteredJobs());
+      }
+    }
+
+    function renderMarket(items) {
+      const feed = document.getElementById("feed");
+      if (!items.length) {
+        feed.innerHTML = `<div class="status-msg">No community listings yet. Tap <strong>+ Sell / List Offer</strong> above to post the first product or service.</div>`;
+        return;
+      }
+      feed.innerHTML = items.map((item) => {
+        const safeUrl = /^https:\/\//i.test(item.checkout_url || "") ? item.checkout_url : "https://gumroad.com";
+        return `
+          <article class="market-item-card">
+            <div class="job-meta">
+              <span>${escapeHtml(item.category)} • Sold by <strong>${escapeHtml(item.seller_name)}</strong></span>
+              <span class="price-pill">${escapeHtml(item.price_label)}</span>
+            </div>
+            <div class="job-title">${escapeHtml(item.title)}</div>
+            <p class="job-summary">${escapeHtml(item.description)}</p>
+            <div class="job-actions">
+              <a class="btn btn-gumroad" href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">Buy / View Offer ↗</a>
+            </div>
+          </article>
+        `;
+      }).join("");
     }
 
     function renderJobs(jobs) {
@@ -516,6 +660,76 @@
       }).join("");
     }
 
+    function setActiveTab(tabName, openSellerForm = false) {
+      activeTab = tabName;
+      const isMarket = tabName === "market";
+      document.getElementById("tabJobs").classList.toggle("active", !isMarket);
+      document.getElementById("tabMarket").classList.toggle("active", isMarket);
+      document.getElementById("filterPills").style.display = isMarket ? "none" : "flex";
+      document.getElementById("searchInput").placeholder = isMarket
+        ? "Search products, templates, sellers, or services..."
+        : "Filter remote jobs by title, keyword, or source...";
+
+      const sellerCard = document.getElementById("sellerFormCard");
+      if (openSellerForm) {
+        sellerCard.classList.add("open");
+      } else if (!isMarket) {
+        sellerCard.classList.remove("open");
+      }
+      renderCurrentTab();
+    }
+
+    document.getElementById("tabJobs").addEventListener("click", () => setActiveTab("jobs", false));
+    document.getElementById("tabMarket").addEventListener("click", () => setActiveTab("market", false));
+    document.getElementById("openSellTabBtn").addEventListener("click", () => {
+      setActiveTab("market", true);
+      document.getElementById("sellerFormCard").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    document.getElementById("listingForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById("publishListingBtn");
+      const seller_name = form.seller_name.value.trim();
+      const price_label = form.price_label.value.trim();
+      const title = form.title.value.trim();
+      const category = form.category.value;
+      const checkout_url = form.checkout_url.value.trim();
+      const description = form.description.value.trim();
+
+      if (!/^https:\/\//i.test(checkout_url)) {
+        alert("Please enter a valid link starting with https://");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Publishing...";
+
+      try {
+        await sbFetch("market_listings", {
+          method: "POST",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({
+            seller_name,
+            price_label,
+            title,
+            category,
+            checkout_url,
+            description,
+            status: "published"
+          })
+        });
+        form.reset();
+        document.getElementById("sellerFormCard").classList.remove("open");
+        await loadData(true);
+      } catch (err) {
+        alert("Could not publish listing: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Publish Listing";
+      }
+    });
+
     window.toggleComments = function(jobId) {
       if (openJobIds.has(jobId)) {
         openJobIds.delete(jobId);
@@ -554,7 +768,7 @@
         commentsByJob[jobId].push({ author_name, comment_text, message: comment_text });
         localStorage.setItem(CACHE_COMMENTS_KEY, JSON.stringify(commentsByJob));
         form.reset();
-        renderJobs(getFilteredJobs());
+        renderCurrentTab();
       } catch (err) {
         alert("Could not post comment: " + err.message);
       } finally {
@@ -563,30 +777,17 @@
       }
     };
 
-    document.getElementById("jumpCommentBtn").addEventListener("click", () => {
-      const list = getFilteredJobs();
-      if (list.length) {
-        const firstId = list[0].id;
-        openJobIds.add(firstId);
-        renderJobs(list);
-        const target = document.getElementById(`comments-${firstId}`);
-        if (target) {
-          setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "nearest" }), 80);
-        }
-      }
-    });
-
     document.querySelectorAll("#filterPills .pill").forEach((pill) => {
       pill.addEventListener("click", () => {
         document.querySelectorAll("#filterPills .pill").forEach((p) => p.classList.remove("active"));
         pill.classList.add("active");
         activeCategory = pill.dataset.cat;
-        renderJobs(getFilteredJobs());
+        renderCurrentTab();
       });
     });
 
     document.getElementById("searchInput").addEventListener("input", () => {
-      renderJobs(getFilteredJobs());
+      renderCurrentTab();
     });
 
     loadData();

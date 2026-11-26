@@ -1,0 +1,24 @@
+{
+  "name": "PulseFeed Jobs & Market",
+  "short_name": "PulseFeed Jobs",
+  "description": "Live remote job drops, community offers, and Gumroad digital tools.",
+  "start_url": "./jobs.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

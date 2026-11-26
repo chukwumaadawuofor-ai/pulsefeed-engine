@@ -1,4 +1,5 @@
 import hashlib
+import html
 import os
 import re
 import urllib.parse
@@ -8,11 +9,43 @@ import requests
 SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip()
 SUPABASE_KEY = os.getenv("SUPABASE_KEY", "").strip()
 
+MOJIBAKE_MAP = {
+    "â€™": "’",
+    "â€˜": "‘",
+    "â€œ": "“",
+    "â€": "”",
+    "â€”": "—",
+    "â€“": "–",
+    "â€¦": "…",
+    "Â": " ",
+    "\u00a0": " ",
+}
 
-def clean_text(raw: str, limit: int = 240) -> str:
-    text = re.sub(r"<[^>]+>", " ", raw or "")
+
+def normalize_str(raw: str) -> str:
+    if not raw:
+        return ""
+    s = str(raw)
+    # Unescape HTML entities twice in case feeds double-encode (e.g. &amp;nbsp;)
+    s = html.unescape(html.unescape(s))
+    for bad, good in MOJIBAKE_MAP.items():
+        s = s.replace(bad, good)
+    return s
+
+
+def clean_text(raw: str, limit: int = 240, strip_urls: bool = False) -> str:
+    text = normalize_str(raw)
+    text = re.sub(r"<[^>]+>", " ", text)
+    if strip_urls:
+        text = re.sub(r"https?://\S+", "", text)
     text = re.sub(r"\s+", " ", text).strip()
-    return text[:limit]
+    if len(text) <= limit:
+        return text
+    trimmed = text[:limit]
+    if " " in trimmed:
+        trimmed = trimmed.rsplit(" ", 1)[0]
+    trimmed = trimmed.rstrip(".,;:-—– ")
+    return f"{trimmed}…"
 
 
 def make_dedupe_key(source: str, title: str, url: str) -> str:
@@ -36,14 +69,12 @@ def fetch_remoteok(limit: int = 15) -> list[dict]:
             title = clean_text(item["position"], 140)
             company = clean_text(item.get("company", "RemoteOK"), 80)
             location = clean_text(item.get("location") or "Remote", 80)
-            apply_url = (item.get("apply_url") or item.get("url") or "").strip()
+            apply_url = normalize_str(item.get("apply_url") or item.get("url") or "").strip()
             if not apply_url:
                 continue
-            tags = ", ".join(item.get("tags") or [])
-            summary = clean_text(
-                f"{company} — {item.get('description') or tags or 'Remote role'}",
-                260,
-            )
+            tags = ", ".join(clean_text(t, 40) for t in (item.get("tags") or []) if t)
+            raw_desc = item.get("description") or tags or "Remote role"
+            summary = clean_text(f"{company} — {raw_desc}", 260, strip_urls=True)
             jobs.append({
                 "dedupe_key": make_dedupe_key("RemoteOK", title, apply_url),
                 "source_name": "RemoteOK",
@@ -78,16 +109,21 @@ def fetch_weworkremotely(limit: int = 15) -> list[dict]:
             root = ET.fromstring(resp.text)
             for item in root.findall(".//item"):
                 raw_title = item.findtext("title") or ""
-                link = (item.findtext("link") or "").strip()
+                link = normalize_str(item.findtext("link") or "").strip()
                 desc = item.findtext("description") or ""
                 if not raw_title or not link:
                     continue
-                if ":" in raw_title:
-                    company, role = [p.strip() for p in raw_title.split(":", 1)]
+                clean_raw_title = clean_text(raw_title, 200)
+                if ":" in clean_raw_title:
+                    company, role = [p.strip() for p in clean_raw_title.split(":", 1)]
                 else:
-                    company, role = "WeWorkRemotely", raw_title.strip()
+                    company, role = "WeWorkRemotely", clean_raw_title.strip()
                 title = clean_text(role, 140)
-                summary = clean_text(f"{company} — {desc or 'Remote opportunity'}", 260)
+                summary = clean_text(
+                    f"{company} — {desc or 'Remote opportunity'}",
+                    260,
+                    strip_urls=True,
+                )
                 jobs.append({
                     "dedupe_key": make_dedupe_key("WeWorkRemotely", title, link),
                     "source_name": "WeWorkRemotely",

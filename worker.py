@@ -1,10 +1,11 @@
 import os
 import re
 import html
+import json
 import urllib.parse
 import requests
 import feedparser
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 # 1. Environment Secrets (from GitHub Actions)
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
@@ -12,6 +13,9 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "").strip()
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID", "").strip()
 SOCIAL_WEBHOOK_URL = os.environ.get("SOCIAL_WEBHOOK_URL", "").strip()
+DAILY_BOOKING_CODE = os.environ.get("DAILY_BOOKING_CODE", "").strip()
+
+WAT_TZ = timezone(timedelta(hours=1))
 
 SITE_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/"
 JOBS_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html"
@@ -20,7 +24,7 @@ GUMROAD_OFFER_URL = (
     "?utm_source=pulsefeed&utm_medium=telegram_auto&utm_campaign=viralhook_ai"
 )
 
-# 2. RSS Feeds mapped by lane (Breaking, Trending, Football) and region (NG, US, UK, EU, AU, GLOBAL)
+# 2. RSS Feeds mapped by lane (Breaking, Trending, Football) and region
 FEEDS = [
     # Nigeria (NG)
     {"url": "https://rss.punchng.com/v1/category/latest_news", "source": "Punch NG", "lane": "trending", "region": "NG"},
@@ -52,7 +56,20 @@ FEEDS = [
     {"url": "https://feeds.bbci.co.uk/news/world/rss.xml", "source": "BBC World", "lane": "breaking", "region": "GLOBAL"},
 ]
 
-# Guaranteed fallback cover banners (never fails chk_news_requires_media)
+# Leagues tracked for daily football betting slips & EOD score verification
+SOCCER_LEAGUES = [
+    ("eng.1", "Premier League"),
+    ("esp.1", "La Liga"),
+    ("ita.1", "Serie A"),
+    ("ger.1", "Bundesliga"),
+    ("fra.1", "Ligue 1"),
+    ("uefa.champions", "Champions League"),
+    ("uefa.europa", "Europa League"),
+    ("eng.2", "Championship"),
+    ("ned.1", "Eredivisie"),
+    ("por.1", "Primeira Liga"),
+]
+
 FALLBACK_BANNERS = {
     "NG": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80",
     "US": "https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=1000&q=80",
@@ -63,6 +80,7 @@ FALLBACK_BANNERS = {
     "breaking": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1000&q=80",
     "trending": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80",
     "football": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1000&q=80",
+    "betting": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1000&q=80",
 }
 
 REGION_LABELS = {
@@ -96,7 +114,7 @@ HEADERS_HTTP = {
         "Mozilla/5.0 (Linux; Android 13; SM-G998B) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
     ),
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept": "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
 
 
@@ -130,13 +148,369 @@ def detect_lane(title: str, summary: str, default_lane: str) -> str:
 
 
 def get_fallback_banner(lane: str, region: str) -> str:
-    if lane == "football":
-        return FALLBACK_BANNERS["football"]
+    if lane in ("football", "betting"):
+        return FALLBACK_BANNERS[lane]
     if region in FALLBACK_BANNERS:
         return FALLBACK_BANNERS[region]
     return FALLBACK_BANNERS.get(lane, FALLBACK_BANNERS["trending"])
 
 
+def send_telegram_raw(caption: str, photo_url: str = "") -> bool:
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHANNEL_ID:
+        print("Telegram credentials not configured; skipping.")
+        return False
+
+    base_tg = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
+    try:
+        if photo_url.startswith("https://") and len(caption) <= 1020:
+            r = requests.post(
+                f"{base_tg}/sendPhoto",
+                data={"chat_id": TELEGRAM_CHANNEL_ID, "photo": photo_url, "caption": caption},
+                timeout=20,
+            )
+            if r.ok:
+                return True
+
+        r = requests.post(
+            f"{base_tg}/sendMessage",
+            data={
+                "chat_id": TELEGRAM_CHANNEL_ID,
+                "text": caption,
+                "disable_web_page_preview": True,
+            },
+            timeout=15,
+        )
+        return r.ok
+    except Exception as e:
+        print(f"Telegram raw send error: {e}")
+        return False
+
+
+# ==============================================================================
+# 3. DAILY FOOTBALL BETTING SLIP GENERATOR & END-OF-DAY VERIFIER
+# ==============================================================================
+def american_to_decimal(ml) -> float:
+    try:
+        val = float(str(ml).replace("+", "").strip())
+        if val > 0:
+            return round(1.0 + (val / 100.0), 2)
+        if val < 0:
+            return round(1.0 + (100.0 / abs(val)), 2)
+    except Exception:
+        pass
+    return 0.0
+
+
+def fetch_espn_events_for_date(date_yyyymmdd: str) -> list[dict]:
+    """Pulls fixtures, odds, and live/final scores across top soccer leagues."""
+    events_out = []
+    for league_code, league_name in SOCCER_LEAGUES:
+        url = (
+            f"https://site.api.espn.com/apis/site/v2/sports/soccer/{league_code}/scoreboard"
+            f"?dates={date_yyyymmdd}"
+        )
+        try:
+            resp = requests.get(url, headers=HEADERS_HTTP, timeout=10)
+            if not resp.ok:
+                continue
+            data = resp.json()
+            for ev in data.get("events", []):
+                comp = (ev.get("competitions") or [{}])[0]
+                competitors = comp.get("competitors") or []
+                if len(competitors) < 2:
+                    continue
+
+                home = next((c for c in competitors if c.get("homeAway") == "home"), competitors[0])
+                away = next((c for c in competitors if c.get("homeAway") == "away"), competitors[1])
+
+                home_name = home.get("team", {}).get("shortDisplayName") or home.get("team", {}).get("displayName", "Home")
+                away_name = away.get("team", {}).get("shortDisplayName") or away.get("team", {}).get("displayName", "Away")
+
+                status_obj = comp.get("status", {}).get("type", {})
+                state = status_obj.get("state", "pre")  # pre, in, post
+                completed = bool(status_obj.get("completed", False))
+
+                try:
+                    home_score = int(home.get("score", 0))
+                    away_score = int(away.get("score", 0))
+                except Exception:
+                    home_score, away_score = 0, 0
+
+                # Extract moneyline odds if available
+                home_dec, away_dec, draw_dec = 0.0, 0.0, 0.0
+                odds_list = comp.get("odds") or []
+                if odds_list:
+                    o0 = odds_list[0]
+                    ml_home = (o0.get("homeTeamOdds") or {}).get("moneyLine")
+                    ml_away = (o0.get("awayTeamOdds") or {}).get("moneyLine")
+                    ml_draw = (o0.get("drawOdds") or {}).get("moneyLine")
+                    home_dec = american_to_decimal(ml_home)
+                    away_dec = american_to_decimal(ml_away)
+                    draw_dec = american_to_decimal(ml_draw)
+
+                kickoff_iso = ev.get("date", "")
+                kickoff_wat = "Today"
+                try:
+                    dt_utc = datetime.fromisoformat(kickoff_iso.replace("Z", "+00:00"))
+                    kickoff_wat = dt_utc.astimezone(WAT_TZ).strftime("%H:%M WAT")
+                except Exception:
+                    pass
+
+                events_out.append({
+                    "event_id": str(ev.get("id")),
+                    "league_code": league_code,
+                    "league": league_name,
+                    "home": home_name,
+                    "away": away_name,
+                    "kickoff_wat": kickoff_wat,
+                    "state": state,
+                    "completed": completed,
+                    "home_score": home_score,
+                    "away_score": away_score,
+                    "home_dec": home_dec,
+                    "away_dec": away_dec,
+                    "draw_dec": draw_dec,
+                })
+        except Exception as e:
+            print(f"ESPN scoreboard skip ({league_code}): {e}")
+    return events_out
+
+
+def build_daily_slip_legs(events: list[dict], max_legs: int = 4) -> list[dict]:
+    """Selects upcoming matches and assigns smart value markets (Home Win / 1X / Over 1.5)."""
+    upcoming = [e for e in events if e["state"] == "pre"]
+    if not upcoming:
+        return []
+
+    scored_candidates = []
+    for ev in upcoming:
+        h_odds = ev["home_dec"]
+        a_odds = ev["away_dec"]
+
+        if 1.25 <= h_odds <= 1.75:
+            pick_code = "HOME_WIN"
+            pick_label = f"{ev['home']} Win (1)"
+            odd = h_odds
+            priority = 1
+        elif 1.76 <= h_odds <= 2.35:
+            pick_code = "HOME_OR_DRAW"
+            pick_label = f"{ev['home']} Win or Draw (1X)"
+            odd = round(max(1.22, h_odds * 0.68), 2)
+            priority = 2
+        elif 1.25 <= a_odds <= 1.75:
+            pick_code = "AWAY_WIN"
+            pick_label = f"{ev['away']} Win (2)"
+            odd = a_odds
+            priority = 2
+        else:
+            pick_code = "OVER_1_5"
+            pick_label = "Over 1.5 Goals"
+            odd = 1.30
+            priority = 3
+
+        scored_candidates.append((priority, odd, {
+            "event_id": ev["event_id"],
+            "league_code": ev["league_code"],
+            "league": ev["league"],
+            "match": f"{ev['home']} vs {ev['away']}",
+            "home": ev["home"],
+            "away": ev["away"],
+            "kickoff_wat": ev["kickoff_wat"],
+            "pick_code": pick_code,
+            "pick_label": pick_label,
+            "odds": odd,
+            "result": "pending",
+            "final_score": "",
+        }))
+
+    scored_candidates.sort(key=lambda x: (x[0], x[1]))
+    return [item[2] for item in scored_candidates[:max_legs]]
+
+
+def evaluate_leg_result(leg: dict, ev: dict) -> str:
+    hs = ev["home_score"]
+    as_ = ev["away_score"]
+    total_goals = hs + as_
+    code = leg.get("pick_code")
+
+    if code == "HOME_WIN":
+        return "won" if hs > as_ else "lost"
+    if code == "AWAY_WIN":
+        return "won" if as_ > hs else "lost"
+    if code == "HOME_OR_DRAW":
+        return "won" if hs >= as_ else "lost"
+    if code == "AWAY_OR_DRAW":
+        return "won" if as_ >= hs else "lost"
+    if code == "OVER_1_5":
+        return "won" if total_goals >= 2 else "lost"
+    if code == "OVER_2_5":
+        return "won" if total_goals >= 3 else "lost"
+    if code == "GG":
+        return "won" if (hs >= 1 and as_ >= 1) else "lost"
+    return "lost"
+
+
+def format_daily_slip_post(slip_date_str: str, legs: list[dict], total_odds: float, booking_code: str) -> str:
+    lines = [
+        f"⚽🔥 PULSEFEED DAILY FOOTBALL SLIP ({slip_date_str})",
+        f"📊 Total Odds: {total_odds:.2f}x",
+    ]
+    if booking_code:
+        lines.append(f"🎟️ Booking Code: {booking_code}")
+    lines.append("")
+
+    for idx, leg in enumerate(legs, 1):
+        lines.append(
+            f"{idx}. {leg['match']} ({leg['league']})\n"
+            f"   ⏰ {leg['kickoff_wat']} | 🎯 {leg['pick_label']} @ {leg['odds']:.2f}"
+        )
+
+    lines.extend([
+        "",
+        "🔁 End-of-day verified results drop tonight after full-time!",
+        f"🌐 Live Scores & News: {SITE_URL}",
+        f"💼 Remote Jobs & AI Tools: {JOBS_URL}",
+        "⚠️ 18+ Only • Stake responsibly.",
+    ])
+    return "\n".join(lines)
+
+
+def format_verified_slip_post(slip_date_str: str, legs: list[dict], total_odds: float, booking_code: str, won_count: int) -> str:
+    all_won = won_count == len(legs)
+    header = (
+        f"🏆✅ BOOM! VERIFIED WINNING SLIP ({slip_date_str})"
+        if all_won
+        else f"📋✅ END-OF-DAY VERIFIED SLIP RECAP ({slip_date_str})"
+    )
+    lines = [
+        header,
+        f"📈 Slip Result: {won_count}/{len(legs)} Legs Won | Total Odds: {total_odds:.2f}x",
+    ]
+    if booking_code:
+        lines.append(f"🎟️ Booking Code: {booking_code}")
+    lines.append("")
+
+    for idx, leg in enumerate(legs, 1):
+        icon = "✅ WON" if leg.get("result") == "won" else "❌ LOST"
+        score_txt = f" [{leg['final_score']}]" if leg.get("final_score") else ""
+        lines.append(
+            f"{idx}. {leg['match']}{score_txt}\n"
+            f"   🎯 {leg['pick_label']} ({leg['odds']:.2f}) — {icon}"
+        )
+
+    lines.extend([
+        "",
+        "🔔 Turn on channel notifications so you don't miss tomorrow's slip!",
+        f"🌐 Live Football & Breaking News: {SITE_URL}",
+        f"🚀 ViralHook AI ($39+): {GUMROAD_OFFER_URL}",
+    ])
+    return "\n".join(lines)
+
+
+def process_daily_betting_slips():
+    """Publishes today's slip once per day and verifies final scores at end of day (WAT)."""
+    now_wat = datetime.now(WAT_TZ)
+    today_iso = now_wat.strftime("%Y-%m-%d")
+    today_compact = now_wat.strftime("%Y%m%d")
+
+    # 1. Check if today's slip already exists in Supabase
+    existing_slip = None
+    try:
+        q = f"{SUPABASE_URL}/rest/v1/betting_slips?slip_date=eq.{today_iso}&limit=1"
+        r = requests.get(q, headers=HEADERS_SB, timeout=12)
+        if r.ok and r.json():
+            existing_slip = r.json()[0]
+    except Exception as e:
+        print(f"betting_slips lookup skipped: {e}")
+
+    # 2. If no slip posted yet today (and before 20:30 WAT), build & broadcast today's slip
+    if not existing_slip and now_wat.hour < 21:
+        events = fetch_espn_events_for_date(today_compact)
+        legs = build_daily_slip_legs(events, max_legs=4)
+        if not legs:
+            print("No upcoming soccer fixtures available for today's slip yet.")
+            return
+
+        total_odds = 1.0
+        for leg in legs:
+            total_odds *= float(leg["odds"])
+        total_odds = round(total_odds, 2)
+
+        caption = format_daily_slip_post(today_iso, legs, total_odds, DAILY_BOOKING_CODE)
+        sent = send_telegram_raw(caption, FALLBACK_BANNERS["betting"])
+
+        if sent:
+            try:
+                requests.post(
+                    f"{SUPABASE_URL}/rest/v1/betting_slips?on_conflict=slip_date",
+                    headers={**HEADERS_SB, "Prefer": "resolution=merge-duplicates,return=minimal"},
+                    json={
+                        "slip_date": today_iso,
+                        "title": f"PulseFeed Daily Slip {today_iso}",
+                        "booking_code": DAILY_BOOKING_CODE,
+                        "total_odds": total_odds,
+                        "legs": legs,
+                        "status": "pending",
+                    },
+                    timeout=12,
+                )
+            except Exception as e:
+                print(f"betting_slips save warning: {e}")
+            print(f"Posted daily betting slip for {today_iso} ({len(legs)} legs, {total_odds}x).")
+        return
+
+    # 3. End-of-Day Verification (from 21:00 WAT onward if slip is still pending)
+    if existing_slip and existing_slip.get("status") == "pending" and now_wat.hour >= 21:
+        legs = existing_slip.get("legs") or []
+        if not legs:
+            return
+
+        events = fetch_espn_events_for_date(today_compact)
+        ev_map = {e["event_id"]: e for e in events}
+
+        completed_count = 0
+        won_count = 0
+        for leg in legs:
+            ev = ev_map.get(str(leg.get("event_id")))
+            if ev and ev.get("completed"):
+                completed_count += 1
+                leg["final_score"] = f"{ev['home_score']}-{ev['away_score']}"
+                leg["result"] = evaluate_leg_result(leg, ev)
+                if leg["result"] == "won":
+                    won_count += 1
+
+        # Wait until all matches on the slip have finished (or 23:00 WAT cutoff)
+        if completed_count < len(legs) and now_wat.hour < 23:
+            print(f"EOD verification waiting: {completed_count}/{len(legs)} matches finished.")
+            return
+
+        final_status = "won" if won_count == len(legs) else "settled"
+        total_odds = float(existing_slip.get("total_odds") or 1.0)
+        b_code = existing_slip.get("booking_code") or ""
+
+        recap_caption = format_verified_slip_post(today_iso, legs, total_odds, b_code, won_count)
+        sent = send_telegram_raw(recap_caption, FALLBACK_BANNERS["betting"])
+
+        if sent:
+            try:
+                requests.patch(
+                    f"{SUPABASE_URL}/rest/v1/betting_slips?slip_date=eq.{today_iso}",
+                    headers={**HEADERS_SB, "Prefer": "return=minimal"},
+                    json={
+                        "legs": legs,
+                        "status": final_status,
+                        "verified_at": datetime.now(timezone.utc).isoformat(),
+                    },
+                    timeout=12,
+                )
+            except Exception as e:
+                print(f"betting_slips EOD patch warning: {e}")
+            print(f"Posted EOD verified slip recap ({won_count}/{len(legs)} won).")
+
+
+# ==============================================================================
+# 4. EXISTING NEWS & FOOTBALL RSS PIPELINE
+# ==============================================================================
 def extract_og_from_article(article_url: str) -> tuple[str, str]:
     if not article_url.startswith("https://"):
         return "", ""
@@ -173,7 +547,6 @@ def extract_og_from_article(article_url: str) -> tuple[str, str]:
 
 
 def extract_media_from_entry(entry, article_url: str, lane: str, region: str) -> tuple[str, str]:
-    """Returns (media_url, media_type) preferring real story photos over logos/banners."""
     for enc in entry.get("enclosures", []):
         href = html.unescape((enc.get("href") or enc.get("url") or "").strip())
         mime = (enc.get("type") or "").lower()
@@ -316,7 +689,6 @@ def send_telegram_post(post: dict) -> bool:
             )
             if r.ok:
                 return True
-            print(f"Primary sendPhoto failed ({r.status_code}); retrying with fallback banner.")
 
         if fallback_url.startswith("https://") and fallback_url != media_url:
             r_fb = requests.post(
@@ -343,7 +715,6 @@ def send_telegram_post(post: dict) -> bool:
 
 
 def send_social_webhook(post: dict):
-    """Optional webhook fan-out (Make / Zapier / n8n -> X, Facebook, WhatsApp)."""
     if not SOCIAL_WEBHOOK_URL.startswith("https://"):
         return
     try:
@@ -368,7 +739,6 @@ def send_social_webhook(post: dict):
 
 
 def broadcast_unposted(batch_limit: int = 4):
-    """Picks newest unbroadcasted posts (including user posts) and pushes to socials."""
     query = (
         f"{SUPABASE_URL}/rest/v1/feed_posts"
         f"?status=eq.published&broadcasted_at=is.null"
@@ -400,7 +770,6 @@ def broadcast_unposted(batch_limit: int = 4):
 
 
 def export_ai_discovery_files(limit: int = 30):
-    """Generates static sitemap.xml, feed.xml, and llms.txt so non-JS AI crawlers can read live headlines and offers."""
     query = (
         f"{SUPABASE_URL}/rest/v1/feed_posts"
         f"?status=eq.published&order=is_pinned.desc,created_at.desc&limit={limit}"
@@ -494,6 +863,7 @@ def export_ai_discovery_files(limit: int = 30):
 if __name__ == "__main__":
     if not SUPABASE_URL or not SUPABASE_KEY:
         raise RuntimeError("Missing SUPABASE_URL or SUPABASE_KEY environment variables.")
+    process_daily_betting_slips()
     ingest_feeds(max_per_feed=2)
     broadcast_unposted(batch_limit=4)
     export_ai_discovery_files(limit=30)

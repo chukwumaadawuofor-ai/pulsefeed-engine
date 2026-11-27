@@ -1,7 +1,40 @@
 {
-  "updated_at": "2026-11-27T13:51:23Z",
+  "updated_at": "2026-11-27T14:50:29Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "87313b3f-c2b9-47d3-bac0-bd9b718e461a",
+      "dedupe_key": "cac9e2160c3ad69f9a852769",
+      "title": "Account Manager - UK/I",
+      "summary": "ElevenLabs — About ElevenLabs ElevenLabs is an AI research and product company transforming how we interact with technology. We launched in January 2023 with the first human-like AI voice model. Today, we serve millions…",
+      "source_name": "RemoteOK",
+      "location_or_type": "UK Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-manager-uk-i-cac9e216.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-manager-uk-i-elevenlabs-1138194",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "ddd3bcd7-aa03-49f2-a492-8d040227f331",
+      "dedupe_key": "fec5d45868cca3e383ab78d0",
+      "title": "Account Executive, Japan",
+      "summary": "Socket — About Us Socket helps devs and security teams ship faster by cutting out security busywork. Thousands of orgs use Socket to safely find, audit, and manage open source code. Our customers - from Anthropic to…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Asia",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-japan-fec5d458.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-japan-socket-1138193",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "fb4dfa27-5127-472f-819e-988e51101706",
+      "dedupe_key": "35304db680ab34f83bd3c4bd",
+      "title": "Director, Demand Generation",
+      "summary": "ClickUp — At ClickUp, we're building the future of work: the first truly converged AI workspace unifying tasks, docs, chat, calendar, and enterprise search, all supercharged by context-driven AI. We are an AI-native…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-demand-generation-35304db6.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-director-demand-generation-clickup-1138192",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "dd1d79e7-6646-489f-bbfd-20b55d66ddf0",
       "dedupe_key": "0b4a76fed5bce1521da04162",
@@ -80,17 +113,6 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "10e87a54-9693-4609-b77b-7644a4c9ce6f",
-      "dedupe_key": "d57ef019f1e65cb0c8e57d6d",
-      "title": "Sr Dynamics 365 App Developer (remote)",
-      "summary": "Protective Life — The work we do has an impact on millions of lives, and you can be a part of it. We help protect our customers against lifeâs uncertainties. Regardless of where you work within the company, youâll…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sr-dynamics-365-app-developer-remote-d57ef019.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-sr-dynamics-365-app-developer-remote-protective-life-1138182",
-      "date_posted": "2026-11-27"
-    },
-    {
       "id": "446d9a34-b50f-4b66-a008-c6bb44349cf7",
       "dedupe_key": "3bc80eeff9a732e5de1a2b0d",
       "title": "Senior Energy Markets Analyst, PJM",
@@ -99,6 +121,17 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-energy-markets-analyst-pjm-3bc80eef.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-energy-markets-analyst-pjm-voltus-1138181",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "10e87a54-9693-4609-b77b-7644a4c9ce6f",
+      "dedupe_key": "d57ef019f1e65cb0c8e57d6d",
+      "title": "Sr Dynamics 365 App Developer (remote)",
+      "summary": "Protective Life — The work we do has an impact on millions of lives, and you can be a part of it. We help protect our customers against lifeâs uncertainties. Regardless of where you work within the company, youâll…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sr-dynamics-365-app-developer-remote-d57ef019.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-sr-dynamics-365-app-developer-remote-protective-life-1138182",
       "date_posted": "2026-11-27"
     },
     {
@@ -297,39 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/paid-media-manager-remote-5694ee3c.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-paid-media-manager-remote-silverback-strategies-1138165",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "d8da921f-0bd1-4c2d-90f4-0f03bb96815b",
-      "dedupe_key": "b548d5515801b4ed6a30e96a",
-      "title": "Director, Customer Success - Public Sector",
-      "summary": "Abnormal — Headquarters: Remote - USA About the Role Abnormal AI is looking for a Director of Customer Success, Public Sector to lead the team that drives adoption, retention, and expansion across our federal, state…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-customer-success-public-sector-b548d551.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/abnormal-director-customer-success-public-sector",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "b0c514e3-a02a-425e-a81c-531ab9c5e596",
-      "dedupe_key": "5bfce9952e0f3bef3f954d36",
-      "title": "Partner Director, Federal",
-      "summary": "Netomi — About the Company: Netomi is the leading agentic AI platform for enterprise customer experience. We work with the largest global brands like Delta Airlines, MetLife, United, and others to enable agentic…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-director-federal-5bfce995.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-director-federal-netomi-1138167",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "596dc5e5-27e9-4025-86e7-a7ca8b9639a8",
-      "dedupe_key": "790b951c473e76daee26bbcf",
-      "title": "Full-Stack Engineer",
-      "summary": "OpenTrain AI — Headquarters: United States URL: Full-Stack Engineer, Part-Time AI Code Evaluation - Remote (United States) • $50–$100 per hour equivalent, paid per accepted task • 100% remote • Part-time • Under 20…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
       "date_posted": "2026-11-27"
     }
   ]

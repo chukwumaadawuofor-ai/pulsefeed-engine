@@ -174,7 +174,6 @@ def extract_og_from_article(article_url: str) -> tuple[str, str]:
 
 def extract_media_from_entry(entry, article_url: str, lane: str, region: str) -> tuple[str, str]:
     """Returns (media_url, media_type) preferring real story photos over logos/banners."""
-    # 1. Check RSS enclosures
     for enc in entry.get("enclosures", []):
         href = html.unescape((enc.get("href") or enc.get("url") or "").strip())
         mime = (enc.get("type") or "").lower()
@@ -184,7 +183,6 @@ def extract_media_from_entry(entry, article_url: str, lane: str, region: str) ->
             if "image" in mime or re.search(r"\.(jpg|jpeg|png|webp)(\?|$)", href, re.I):
                 return href, "image"
 
-    # 2. Check media:content and media:thumbnail
     for key in ("media_content", "media_thumbnail"):
         for item in entry.get(key, []):
             href = html.unescape((item.get("url") or "").strip())
@@ -193,7 +191,6 @@ def extract_media_from_entry(entry, article_url: str, lane: str, region: str) ->
                     return href, "video"
                 return href, "image"
 
-    # 3. Check inline <img> or <video> in summary/content HTML
     raw_html = entry.get("summary", "") or ""
     if entry.get("content"):
         raw_html += " " + " ".join(c.get("value", "") for c in entry["content"])
@@ -206,12 +203,10 @@ def extract_media_from_entry(entry, article_url: str, lane: str, region: str) ->
         if is_usable_media_url(candidate):
             return candidate, "image"
 
-    # 4. Fetch OpenGraph og:video / og:image from the real article page
     og_url, og_type = extract_og_from_article(article_url)
     if og_url:
         return og_url, og_type
 
-    # 5. Guaranteed fallback image
     return get_fallback_banner(lane, region), "image"
 
 
@@ -404,8 +399,101 @@ def broadcast_unposted(batch_limit: int = 4):
         print(f"Broadcasted post {post_id} (tg_ok={sent}, patch={patch_res.status_code})")
 
 
+def export_ai_discovery_files(limit: int = 30):
+    """Generates static sitemap.xml, feed.xml, and llms.txt so non-JS AI crawlers can read live headlines and offers."""
+    query = (
+        f"{SUPABASE_URL}/rest/v1/feed_posts"
+        f"?status=eq.published&order=is_pinned.desc,created_at.desc&limit={limit}"
+    )
+    res = requests.get(query, headers=HEADERS_SB, timeout=15)
+    posts = res.json() if res.ok else []
+    now_rfc = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    sitemap_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{SITE_URL}</loc>
+    <lastmod>{now_iso}</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>{JOBS_URL}</loc>
+    <lastmod>{now_iso}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>
+"""
+    with open("sitemap.xml", "w", encoding="utf-8") as f:
+        f.write(sitemap_xml)
+
+    rss_items = []
+    for p in posts:
+        title = html.escape(clean_text(p.get("title", ""), max_len=160))
+        summary = html.escape(clean_text(p.get("summary", ""), max_len=320))
+        region = html.escape(p.get("region") or "GLOBAL")
+        lane = html.escape(p.get("feed_lane") or "trending")
+        guid = html.escape(str(p.get("id") or p.get("source_url") or title))
+        media_url = (p.get("media_url") or "").strip()
+        enclosure = (
+            f'<enclosure url="{html.escape(media_url)}" type="image/jpeg" />'
+            if media_url.startswith("https://")
+            else ""
+        )
+        rss_items.append(
+            f"""    <item>
+      <title>[{region}] {title}</title>
+      <link>{SITE_URL}</link>
+      <guid isPermaLink="false">{guid}</guid>
+      <category>{lane}</category>
+      <description>{summary}</description>
+      {enclosure}
+    </item>"""
+        )
+
+    feed_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>PulseFeed — Breaking News, Trending &amp; Football</title>
+    <link>{SITE_URL}</link>
+    <description>Real-time global and regional breaking news, football updates, remote jobs, and creator tools.</description>
+    <lastBuildDate>{now_rfc}</lastBuildDate>
+{chr(10).join(rss_items)}
+  </channel>
+</rss>
+"""
+    with open("feed.xml", "w", encoding="utf-8") as f:
+        f.write(feed_xml)
+
+    lines = [
+        "# PulseFeed",
+        "",
+        "> Real-time global and regional breaking news, trending stories, football updates, remote job listings, and creator monetization tools.",
+        "",
+        "## Core Pages",
+        f"- [PulseFeed Live Timeline]({SITE_URL}): Real-time breaking news, trending updates, and football feed across Nigeria (NG), UK, US, Europe (EU), Australia (AU), and Global.",
+        f"- [Remote Jobs, Marketplace & Sponsorships]({JOBS_URL}): Curated remote work opportunities, digital offers, and sponsorship placements.",
+        f"- [ViralHook AI Script Studio]({GUMROAD_OFFER_URL}): Featured AI script and hook generator for faceless Shorts, Reels, and TikTok creators ($39+).",
+        "",
+        "## Latest Headlines",
+    ]
+    for p in posts[:20]:
+        t = clean_text(p.get("title", ""), max_len=140)
+        s = clean_text(p.get("summary", ""), max_len=200)
+        r = p.get("region") or "GLOBAL"
+        lines.append(f"- [{r}] **{t}** — {s} ({SITE_URL})")
+
+    with open("llms.txt", "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+    print(f"Exported sitemap.xml, feed.xml, and llms.txt ({len(posts)} items).")
+
+
 if __name__ == "__main__":
     if not SUPABASE_URL or not SUPABASE_KEY:
         raise RuntimeError("Missing SUPABASE_URL or SUPABASE_KEY environment variables.")
     ingest_feeds(max_per_feed=2)
     broadcast_unposted(batch_limit=4)
+    export_ai_discovery_files(limit=30)

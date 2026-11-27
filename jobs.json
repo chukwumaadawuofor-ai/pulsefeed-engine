@@ -1,7 +1,51 @@
 {
-  "updated_at": "2026-11-27T02:35:12Z",
+  "updated_at": "2026-11-27T03:55:09Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "f027a04a-2a60-4fa9-ba9f-e20164955082",
+      "dedupe_key": "ad3b2ba596969d2c1584ae18",
+      "title": "Brazilian Subject Matter Expert in Home & Garden",
+      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-home-garden-ad3b2ba5.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-home-garden-welo-data-1138161",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "b26eb03c-1886-41be-9dd2-f522434e0e3f",
+      "dedupe_key": "f249c83c1eb61741a4748730",
+      "title": "Sales Engineer, US East",
+      "summary": "Secure Code Warrior — Software development is changing fast, and code is no longer written by humans alone. Secure Code Warrior is the AI Software Governance platform that gives organizations visibility into how their…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-engineer-us-east-f249c83c.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-engineer-us-east-secure-code-warrior-1138160",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "1377c431-7bb4-4d2f-b7b0-0ebb8e4c7068",
+      "dedupe_key": "809ba98f92e6fb6c651d8570",
+      "title": "Manager, Technical Support",
+      "summary": "Coupa — Coupa makes margins multiply through its community-generated AI and industry-leading total spend management platform for businesses large and small. Coupa AI is informed by trillions of dollars of direct and…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/manager-technical-support-809ba98f.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-manager-technical-support-coupa-1138159",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "de768699-e78c-4932-9ba8-22023510e3fe",
+      "dedupe_key": "4517d822a5e7151c8e597fb0",
+      "title": "Consultant - People Science",
+      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/consultant-people-science-4517d822.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-consultant-people-science-veeva-systems-1138158",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "a9d327f6-f2e9-43c8-a471-dd6d59ce2755",
       "dedupe_key": "61a8730c2b3919b52c252743",
@@ -124,6 +168,17 @@
       "date_posted": "2026-11-26"
     },
     {
+      "id": "67fea225-045b-4056-b49d-d482e515df8a",
+      "dedupe_key": "701cf081db383150a6107049",
+      "title": "Account Executive",
+      "summary": "IDMWORKS — IDMWORKS is an award-winning identity and access management (IAM) solutions firm that has been serving a wide range of sectors since its inception in 2004. As a firm thatâs purely focused on IAM, IDMWORKS…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-701cf081.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-idmworks-1138145",
+      "date_posted": "2026-11-26"
+    },
+    {
       "id": "cfc630b1-f96d-4854-b545-fbe8d58dbad6",
       "dedupe_key": "15572d69c1788fc436a7f93d",
       "title": "Director of Sales, North America",
@@ -165,17 +220,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/creative-director-6c58b7f9.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-creative-director-luxury-presence-1138146",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "67fea225-045b-4056-b49d-d482e515df8a",
-      "dedupe_key": "701cf081db383150a6107049",
-      "title": "Account Executive",
-      "summary": "IDMWORKS — IDMWORKS is an award-winning identity and access management (IAM) solutions firm that has been serving a wide range of sectors since its inception in 2004. As a firm thatâs purely focused on IAM, IDMWORKS…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-701cf081.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-idmworks-1138145",
       "date_posted": "2026-11-26"
     },
     {
@@ -286,50 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/seo-manager-remote-2c2f25ac.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-seo-manager-remote-silverback-strategies-1138130",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "77858a18-4f32-4357-8b6c-bc46dec839b5",
-      "dedupe_key": "167d522ff73b22ec30ccfb6d",
-      "title": "Senior SEO Manager (Remote)",
-      "summary": "Silverback Strategies — Silverback Strategies is a performance marketing agency built to help marketers grow and capitalize on change. Ad Age, Inc Magazine, The Washington Post, The Washingtonian, and The Washington…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-seo-manager-remote-167d522f.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-seo-manager-remote-silverback-strategies-1138129",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "fa63590c-1369-4ee3-a9ec-615d5d62b992",
-      "dedupe_key": "97403e311e1f90d46c7337c9",
-      "title": "Account Executive I - 1096 (Remote)",
-      "summary": "Lightcast — Important information before applying: Location: This position is remote; however, Lightcast can only employ individuals who live and work in states where the company is authorized to operate. At this time…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-i-1096-remote-97403e31.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-i-1096-remote-lightcast-1138132",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "69fb8c36-2dc0-46a8-9c29-c2e79969d942",
-      "dedupe_key": "a7aa36bb5bc50ae0216ee424",
-      "title": "Senior Paid Media Manager (Remote)",
-      "summary": "Silverback Strategies — Silverback Strategies is a performance marketing agency built to help marketers grow and capitalize on change. Ad Age, Inc Magazine, The Washington Post, The Washingtonian, and The Washington…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-paid-media-manager-remote-a7aa36bb.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-paid-media-manager-remote-silverback-strategies-1138128",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "dd8757be-e440-4753-af84-4b6273b63a2e",
-      "dedupe_key": "351597f3ea974aab13607612",
-      "title": "Commercial Account Executive",
-      "summary": "Apryse — The Role We're growing our sales team and we're looking to bring on a Commercialâ¯Account Executive,â¯with a focus on strategic commercial sales. You will be at the forefront of our efforts to expand our…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Canada Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/commercial-account-executive-351597f3.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-commercial-account-executive-apryse-1138127",
       "date_posted": "2026-11-26"
     }
   ]

@@ -25,6 +25,7 @@ jobs:
           pip install requests supabase feedparser
 
       - name: Fetch New Products into Supabase
+        if: false
         continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -32,6 +33,7 @@ jobs:
         run: python fetch_products.py
 
       - name: Run Marketplace Worker
+        if: false
         continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

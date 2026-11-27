@@ -1,7 +1,18 @@
 {
-  "updated_at": "2026-11-27T17:56:15Z",
+  "updated_at": "2026-11-27T18:54:39Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "1108ad02-3dc7-413f-b667-5b5e58d6cea8",
+      "dedupe_key": "2a587ed1990c4dd8c8cd6e39",
+      "title": "Commercial Sales Engineer - East",
+      "summary": "Zscaler — Headquarters: Remote - Massachusetts, USA; Remote - New Jersey, USA; Remote - New York, USA; Remote - Virginia, USA Zscaler (NASDAQ: ZS) accelerates digital transformation so customers can be more agile…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/commercial-sales-engineer-east-2a587ed1.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/zscaler-commercial-sales-engineer-east",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "ada0fda1-66b4-4a9c-86eb-048e497bd01f",
       "dedupe_key": "9d9ee8a944ee02fb57cdca03",
@@ -319,17 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-ios-engineer-foundations-5035e3a5.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-ios-engineer-foundations-raya-1138180",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "24adb170-007a-40ae-a197-af0da0e711e2",
-      "dedupe_key": "bce8798fdf38dfcd2131d852",
-      "title": "Sales Engineer",
-      "summary": "Ethena — Who we are Weâre Ethena, an AI platform thatâs revolutionizing the Compliance space. Our team of agents helps Compliance and People leaders run proactive Compliance programs that drive real behavior change…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-engineer-bce8798f.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-engineer-ethena-1138178",
       "date_posted": "2026-11-27"
     }
   ]

@@ -1,888 +1,1088 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="google-site-verification" content="3SGp_HisolvvC1d9D_GdgVLO1jPwrYw5DAzsBdfeRZU" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curated AI &amp; SaaS Software Deals</title>
-    <meta name="description" content="Verified software bundles, custom AI automation builds, and automated lead-capture engines with instant digital delivery in USD.">
-    <meta property="og:title" content="Curated AI &amp; SaaS Software Deals">
-    <meta property="og:description" content="Verified software bundles, custom AI automation builds, and automated lead-capture engines with zero monthly server fees.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
-            margin: 0;
-            padding: 20px 20px 80px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-            width: 100%;
-            max-width: 600px;
-        }
-        .header h1 {
-            font-size: 24px;
-            color: #ffffff;
-            margin: 0 0 10px 0;
-        }
-        .header p {
-            font-size: 14px;
-            color: #8b949e;
-            max-width: 520px;
-            margin: 0 auto;
-            line-height: 1.5;
-        }
-        .trust-strip {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-            font-size: 12px;
-            color: #9ba3af;
-        }
-        .trust-pill {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            padding: 4px 10px;
-            border-radius: 999px;
-        }
-        .tg-btn {
-            display: inline-block;
-            background-color: #21262d;
-            color: #58a6ff;
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            border: 1px solid #30363d;
-            margin-top: 15px;
-        }
-        .tg-btn:hover {
-            background-color: #2b313a;
-        }
-        .page-share-bar {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 14px;
-        }
-        .share-btn {
-            background-color: #161b22;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
-            padding: 7px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-        }
-        .share-btn:hover {
-            border-color: #58a6ff;
-            color: #ffffff;
-        }
-        .jobs-nav-btn {
-            background: linear-gradient(135deg, #238636, #2ea043);
-            color: #ffffff;
-            border: 1px solid #3fb950;
-            padding: 7px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .jobs-nav-btn:hover {
-            opacity: 0.92;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="manifest" href="./manifest.json" />
+  <title>PulseFeed — Breaking News, Trending &amp; Football</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card: #161b22;
+      --card-hover: #1c222b;
+      --border: #30363d;
+      --text: #f0f6fc;
+      --muted: #8b949e;
+      --accent: #3fb950;
+      --accent-dark: #238636;
+      --blue: #58a6ff;
+      --breaking: #f85149;
+      --trending: #f0883e;
+      --gumroad: #ff90e8;
+      --gumroad-dark: #e06fd0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.48;
+      padding: 14px;
+    }
+    .container { max-width: 660px; margin: 0 auto; }
 
-        /* Automated Motion Showcase */
-        .showcase-box {
-            background: linear-gradient(160deg, #161b22 0%, #0d1117 100%);
-            border: 1px solid #30363d;
-            border-radius: 14px;
-            padding: 18px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
-            position: relative;
-            overflow: hidden;
-        }
-        .showcase-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 11.5px;
-            color: #8b949e;
-        }
-        .live-dot {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #3fb950;
-            font-weight: 600;
-        }
-        .live-dot::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #3fb950;
-            box-shadow: 0 0 8px #3fb950;
-            animation: pulseDot 1.6s infinite;
-        }
-        @keyframes pulseDot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.85); }
-        }
-        .showcase-stage {
-            min-height: 150px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            background: #0d1117;
-            border: 1px solid #21262d;
-            border-radius: 10px;
-            padding: 16px;
-            transition: opacity 0.3s ease;
-        }
-        .stage-tag {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: #58a6ff;
-            margin-bottom: 6px;
-        }
-        .stage-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0 0 8px 0;
-            line-height: 1.35;
-        }
-        .stage-sub {
-            font-size: 13px;
-            color: #9ba3af;
-            margin: 0;
-            line-height: 1.5;
-        }
-        .stage-pill-row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-        .stage-chip {
-            background: rgba(56, 189, 248, 0.12);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            color: #58a6ff;
-            font-size: 11.5px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
-        .showcase-progress {
-            height: 3px;
-            background: #21262d;
-            border-radius: 99px;
-            overflow: hidden;
-            margin: 14px 0 12px 0;
-        }
-        .showcase-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #2563eb, #3fb950);
-            transition: width 0.25s linear;
-        }
-        .showcase-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-        .step-dots {
-            display: flex;
-            gap: 6px;
-        }
-        .step-dot {
-            width: 24px;
-            height: 6px;
-            border-radius: 99px;
-            background: #30363d;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            transition: background 0.2s ease, width 0.2s ease;
-        }
-        .step-dot.active {
-            background: #58a6ff;
-            width: 34px;
-        }
-        .showcase-cta {
-            background: #238636;
-            color: #ffffff;
-            border: none;
-            padding: 7px 13px;
-            border-radius: 7px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .showcase-cta:hover {
-            background: #2ea043;
-        }
+    /* Top Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(13, 17, 23, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 0 12px;
+      margin-bottom: 14px;
+    }
+    .topbar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+    .live-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--breaking);
+      box-shadow: 0 0 0 4px rgba(248, 81, 73, 0.22);
+    }
+    .nav-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .nav-chip {
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .nav-chip:hover { border-color: var(--blue); }
+    .nav-chip-promo {
+      background: rgba(255, 144, 232, 0.14);
+      border-color: var(--gumroad);
+      color: var(--gumroad);
+    }
 
-        .search-box {
-            width: 100%;
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            color: #f0f6fc;
-            padding: 11px 14px;
-            border-radius: 10px;
-            font-size: 14px;
-            margin-bottom: 18px;
-        }
-        .search-box:focus {
-            outline: none;
-            border-color: #58a6ff;
-        }
-        .card {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .card.highlighted {
-            border-color: #58a6ff;
-            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.35);
-        }
-        .card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            background-color: #21262d;
-            display: block;
-        }
-        .card-content {
-            padding: 20px;
-        }
-        .badge {
-            display: inline-block;
-            background-color: rgba(31, 111, 235, 0.2);
-            color: #58a6ff;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-        .card h3 {
-            font-size: 18px;
-            color: #ffffff;
-            margin: 0 0 10px 0;
-            line-height: 1.35;
-        }
-        .price {
-            font-size: 22px;
-            font-weight: bold;
-            color: #3fb950;
-            margin-bottom: 18px;
-        }
-        .price span {
-            font-size: 12px;
-            color: #8b949e;
-            font-weight: normal;
-        }
-        .cta-btn {
-            display: block;
-            width: 100%;
-            background-color: #238636;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .cta-btn:hover {
-            background-color: #2ea043;
-        }
-        .item-share-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #21262d;
-        }
-        .item-share-btn {
-            background-color: #0d1117;
-            color: #8b949e;
-            border: 1px solid #30363d;
-            padding: 7px 4px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .item-share-btn:hover {
-            color: #ffffff;
-            border-color: #58a6ff;
-        }
+    /* X-Style Lane Tabs */
+    .lane-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .lane-tabs::-webkit-scrollbar { display: none; }
+    .lane-tab {
+      flex: 0 0 auto;
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .lane-tab:hover { color: #ffffff; border-color: #484f58; }
+    .lane-tab.active {
+      background: #ffffff;
+      color: #0d1117;
+      border-color: #ffffff;
+    }
 
-        /* Custom Services & Pricing Section */
-        .services-section {
-            margin-top: 36px;
-            padding-top: 28px;
-            border-top: 1px solid #30363d;
-        }
-        .services-header {
-            text-align: center;
-            margin-bottom: 22px;
-        }
-        .services-header h2 {
-            font-size: 21px;
-            color: #ffffff;
-            margin: 8px 0 8px 0;
-        }
-        .services-header p {
-            font-size: 13.5px;
-            color: #8b949e;
-            margin: 0 auto;
-            line-height: 1.55;
-        }
-        .service-card {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        .service-card.popular {
-            border: 1.5px solid #58a6ff;
-            box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.18);
-        }
-        .service-desc {
-            font-size: 13.5px;
-            color: #8b949e;
-            margin: 0 0 14px 0;
-            line-height: 1.5;
-        }
-        .service-features {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 18px 0;
-            font-size: 13.5px;
-            color: #c9d1d9;
-            line-height: 1.75;
-        }
-        .service-features li::before {
-            content: "✓ ";
-            color: #3fb950;
-            font-weight: 700;
-        }
-        .service-btn-secondary {
-            display: block;
-            width: 100%;
-            background-color: #21262d;
-            color: #f0f6fc;
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .service-btn-secondary:hover {
-            border-color: #58a6ff;
-            color: #ffffff;
-        }
+    /* Monetized Top Spotlight Strip */
+    .spotlight-bar {
+      background: linear-gradient(145deg, #1b1629 0%, var(--card) 100%);
+      border: 1px solid rgba(255, 144, 232, 0.55);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .spotlight-text { flex: 1; min-width: 210px; }
+    .spotlight-tag {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--gumroad);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .spotlight-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .spotlight-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-        /* Contact Buttons & Modal */
-        .contact-cta-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #2563eb, #06b6d4);
-            color: #ffffff;
-            font-weight: 600;
-            padding: 11px 18px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
-            transition: transform 0.15s ease, opacity 0.15s ease;
-        }
-        .contact-cta-btn:hover {
-            transform: translateY(-1px);
-            opacity: 0.95;
-        }
-        .floating-contact {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 999;
-        }
-        .contact-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(10, 15, 28, 0.82);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-        .contact-modal.open {
-            display: flex;
-        }
-        .contact-card {
-            background: #161b22;
-            color: #f0f6fc;
-            border: 1px solid #30363d;
-            border-radius: 14px;
-            max-width: 420px;
-            width: 100%;
-            padding: 22px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
-        }
-        .contact-card input,
-        .contact-card textarea {
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 8px;
-            margin-bottom: 12px;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
-            background: #0d1117;
-            color: #f0f6fc;
-            font-size: 14px;
-            font-family: inherit;
-        }
-        .contact-card input:focus,
-        .contact-card textarea:focus {
-            outline: none;
-            border-color: #58a6ff;
-        }
-        .contact-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 4px;
-        }
-    </style>
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--blue); color: #061526; }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-gumroad { background: var(--gumroad); color: #111111; }
+    .btn-gumroad:hover { background: var(--gumroad-dark); }
+    .btn-green { background: var(--accent-dark); color: #ffffff; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover { border-color: var(--blue); }
+
+    /* Search */
+    .search-input {
+      width: 100%;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+    }
+    .search-input:focus { outline: none; border-color: var(--blue); }
+
+    /* X-Style Composer */
+    .composer-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .composer-top {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .composer-top input, .composer-top select {
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.82rem;
+    }
+    .composer-top input { flex: 1; min-width: 140px; }
+    .composer-card input[name="title"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+    .composer-card textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-family: inherit;
+      resize: vertical;
+      margin-bottom: 8px;
+    }
+    .composer-card input:focus, .composer-card textarea:focus, .composer-card select:focus {
+      outline: none;
+      border-color: var(--blue);
+    }
+    .composer-media-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .media-hint {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+    .media-hint.required { color: var(--trending); font-weight: 600; }
+    .composer-preview {
+      display: none;
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      background: #000000;
+    }
+
+    /* Toast */
+    .toast {
+      display: none;
+      font-size: 0.82rem;
+      color: var(--accent);
+      background: rgba(63, 185, 80, 0.14);
+      border: 1px solid rgba(63, 185, 80, 0.35);
+      padding: 8px 12px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    /* X-Style Post Card */
+    .post-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      transition: background 0.15s ease;
+    }
+    .post-card.sponsored {
+      border-color: rgba(255, 144, 232, 0.55);
+      background: linear-gradient(170deg, #191624 0%, var(--card) 100%);
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .author-wrap {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #21262d;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+    .author-meta { min-width: 0; }
+    .author-name {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .author-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .lane-pill {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .lane-breaking { background: rgba(248, 81, 73, 0.16); color: #ff7b72; }
+    .lane-trending { background: rgba(240, 136, 62, 0.16); color: #ffa657; }
+    .lane-football { background: rgba(63, 185, 80, 0.16); color: #56d364; }
+    .lane-community { background: rgba(88, 166, 255, 0.16); color: #79c0ff; }
+    .lane-sponsored { background: rgba(255, 144, 232, 0.18); color: var(--gumroad); }
+
+    .post-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .post-body {
+      font-size: 0.92rem;
+      color: #e6edf3;
+      margin-bottom: 10px;
+      white-space: pre-line;
+    }
+    .post-media {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+      display: block;
+      background: #000000;
+    }
+
+    /* Action Bar */
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+    .action-btn {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .action-btn:hover { color: #ffffff; border-color: var(--blue); }
+
+    /* Comments & Nested Replies */
+    .comments-drawer {
+      display: none;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .comments-drawer.open { display: block; }
+    .comment-node {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin-bottom: 7px;
+      font-size: 0.84rem;
+    }
+    .comment-reply {
+      margin-left: 20px;
+      border-left: 2px solid var(--blue);
+    }
+    .comment-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+      gap: 6px;
+    }
+    .comment-user { font-weight: 700; color: var(--blue); font-size: 0.8rem; }
+    .reply-link {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .reply-link:hover { color: #ffffff; }
+    .replying-banner {
+      display: none;
+      font-size: 0.76rem;
+      color: var(--blue);
+      background: rgba(88, 166, 255, 0.12);
+      padding: 5px 9px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .replying-banner.active { display: flex; }
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .comment-form input, .comment-form textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.84rem;
+      font-family: inherit;
+    }
+
+    .status-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>🚀 Curated AI &amp; SaaS Software Deals</h1>
-        <p>Verified software bundles, custom AI automation builds, and automated lead-capture engines with zero recurring server bloat.</p>
-        <div class="trust-strip">
-            <span class="trust-pill">⚡ Instant Access</span>
-            <span class="trust-pill">💵 USD Pricing</span>
-            <span class="trust-pill">🛠️ Custom AI Builds</span>
+  <div class="container">
+    <!-- Sticky Header & X-Style Lane Switcher -->
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="brand">
+          <span class="live-dot"></span>
+          <span>PulseFeed</span>
         </div>
-        <a href="https://t.me/PulseFeedNG" target="_blank" rel="noopener noreferrer" class="tg-btn">📱 Join Our Telegram Channel for Instant Deal Alerts</a>
-
-        <div class="page-share-bar">
-            <a href="./jobs.html" class="jobs-nav-btn">💼 Live Jobs &amp; Market →</a>
-            <a href="#services" class="share-btn">🛠️ Our Services</a>
-            <button type="button" class="share-btn" onclick="shareStore('x')">𝕏 Share</button>
-            <button type="button" class="share-btn" onclick="shareStore('whatsapp')">💬 WhatsApp</button>
-            <button type="button" class="share-btn" id="copyStoreBtn" onclick="shareStore('copy')">🔗 Copy Link</button>
-            <button type="button" class="share-btn" onclick="openContactModal()">✉️ Contact Us</button>
+        <div class="nav-group">
+          <a class="nav-chip" href="./jobs.html">💼 Jobs &amp; Market</a>
+          <a class="nav-chip nav-chip-promo" href="./jobs.html" id="sponsorHeaderBtn">⚡ Promote / Sponsor</a>
         </div>
-    </div>
+      </div>
 
-    <div class="container">
-        <!-- Automated Interactive Motion Showcase -->
-        <div class="showcase-box" id="autoShowcase">
-            <div class="showcase-top">
-                <span class="live-dot">AUTO-WORKFLOW PREVIEW</span>
-                <span id="stageCounter">Step 1 of 4</span>
-            </div>
-            <div class="showcase-stage" id="showcaseStage">
-                <div class="stage-tag" id="stageTag">01 • THE CONVERSION LEAK</div>
-                <h3 class="stage-title" id="stageTitle">85% of Visitors Leave Static Websites Without Requesting a Quote</h3>
-                <p class="stage-sub" id="stageSub">Slow contact forms and manual follow-ups cost businesses high-intent clients every week.</p>
-                <div class="stage-pill-row" id="stagePills">
-                    <span class="stage-chip">📉 High Bounce Rate</span>
-                    <span class="stage-chip">⏳ Slow Replies</span>
-                </div>
-            </div>
-            <div class="showcase-progress">
-                <div class="showcase-bar" id="showcaseBar"></div>
-            </div>
-            <div class="showcase-controls">
-                <div class="step-dots">
-                    <button type="button" class="step-dot active" onclick="goToStage(0)" aria-label="Step 1"></button>
-                    <button type="button" class="step-dot" onclick="goToStage(1)" aria-label="Step 2"></button>
-                    <button type="button" class="step-dot" onclick="goToStage(2)" aria-label="Step 3"></button>
-                    <button type="button" class="step-dot" onclick="goToStage(3)" aria-label="Step 4"></button>
-                </div>
-                <button type="button" class="showcase-cta" onclick="openContactModal()">Build Mine →</button>
-            </div>
+      <div class="lane-tabs" id="laneTabs">
+        <button type="button" class="lane-tab active" data-lane="all">For You</button>
+        <button type="button" class="lane-tab" data-lane="breaking">🚨 Breaking News</button>
+        <button type="button" class="lane-tab" data-lane="trending">🔥 Trending Now</button>
+        <button type="button" class="lane-tab" data-lane="football">⚽ Football</button>
+        <button type="button" class="lane-tab" data-lane="community">💬 Community</button>
+      </div>
+    </header>
+
+    <!-- Monetized Top Spotlight -->
+    <section class="spotlight-bar">
+      <div class="spotlight-text">
+        <span class="spotlight-tag">★ Featured Creator Tool • ViralHook AI</span>
+        <div class="spotlight-title">Faceless Shorts, Reels &amp; TikTok Script Studio ($39+)</div>
+      </div>
+      <div class="spotlight-actions">
+        <a class="btn btn-gumroad" href="https://chukwuma448.gumroad.com/l/dvfhm?utm_source=pulsefeed&utm_medium=main_feed&utm_campaign=viralhook_ai&utm_content=top_spotlight" target="_blank" rel="noopener noreferrer">Get Access ↗</a>
+        <a class="btn btn-outline" href="./jobs.html">All Offers</a>
+      </div>
+    </section>
+
+    <input id="searchInput" class="search-input" type="search" placeholder="Search breaking news, football, trending topics, or posts..." />
+
+    <!-- Inline X-Style Composer -->
+    <section class="composer-card">
+      <form id="composerForm">
+        <div class="composer-top">
+          <input type="text" name="author_name" placeholder="Your name or @handle" maxlength="45" />
+          <select name="feed_lane" id="composerLane">
+            <option value="community">💬 Community Post</option>
+            <option value="trending">🔥 Trending Now (Media Req.)</option>
+            <option value="breaking">🚨 Breaking News (Media Req.)</option>
+            <option value="football">⚽ Football News (Media Req.)</option>
+          </select>
         </div>
-
-        <input type="search" id="searchInput" class="search-box" placeholder="Search AI tools, automation, marketing suites..." oninput="filterProducts()">
-        <div id="product-container">
-            <p style="text-align: center; color: #8b949e;">Connecting to database...</p>
+        <input type="text" name="title" placeholder="Headline or short topic *" required maxlength="160" />
+        <textarea name="summary" rows="2" placeholder="What's happening? Keep it short and sharp... *" required maxlength="600"></textarea>
+        <img id="composerImgPreview" class="composer-preview" alt="Image preview" />
+        <video id="composerVidPreview" class="composer-preview" controls playsinline></video>
+        <div class="composer-media-row">
+          <label class="action-btn" style="cursor:pointer;">
+            📷 / 🎥 Add Photo or Video
+            <input id="composerMediaInput" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" style="display:none;" />
+          </label>
+          <span id="mediaHint" class="media-hint">Optional for Community • Required for Breaking/Trending/Football</span>
+          <button id="composerSubmitBtn" type="submit" class="btn btn-primary">Post</button>
         </div>
+      </form>
+    </section>
 
-        <!-- Custom AI & Automation Services Section -->
-        <section id="services" class="services-section">
-            <div class="services-header">
-                <span class="badge">Done-For-You AI &amp; Automation</span>
-                <h2>Custom Web Tools Built in Days — $0 Monthly Server Fees</h2>
-                <p>We turn static business websites into 24/7 lead-capture and client-intake engines without bloated $300/month SaaS subscriptions.</p>
+    <div id="toast" class="toast"></div>
+
+    <main id="timeline">
+      <div class="status-box">Loading live breaking news &amp; trending feed...</div>
+    </main>
+  </div>
+
+  <script>
+    const CONFIG = {
+      SUPABASE_URL: "https://pzaavnfswisvosgdfbgl.supabase.co",
+      SUPABASE_ANON_KEY: "sb_publishable_He61GsY9EO5I6Pf8D8pUZw_jgscYPNp",
+      STORAGE_BUCKET: "marketplace-images",
+      MAX_IMAGE_BYTES: 5 * 1024 * 1024,
+      MAX_VIDEO_BYTES: 15 * 1024 * 1024,
+      GUMROAD_DEFAULT: "https://chukwuma448.gumroad.com/l/dvfhm?utm_source=pulsefeed&utm_medium=inline_feed&utm_campaign=viralhook_ai&utm_content=native_card"
+    };
+
+    let allPosts = [];
+    let marketOffers = [];
+    let commentsByPost = {};
+    let openPostIds = new Set();
+    let replyTargetByPost = {};
+    let activeLane = "all";
+    let previewUrl = null;
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function escapeJs(str) {
+      return escapeHtml(str).replace(/'/g, "&#39;");
+    }
+
+    function timeAgo(iso) {
+      if (!iso) return "just now";
+      const secs = Math.max(1, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+      if (secs < 60) return `${secs}s`;
+      const mins = Math.floor(secs / 60);
+      if (mins < 60) return `${mins}m`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs}h`;
+      return `${Math.floor(hrs / 24)}d`;
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.style.display = "block";
+      clearTimeout(window._tTimer);
+      window._tTimer = setTimeout(() => { el.style.display = "none"; }, 2200);
+    }
+
+    async function sbFetch(path, options = {}) {
+      const base = CONFIG.SUPABASE_URL.replace(/\/+$/, "");
+      const res = await fetch(`${base}/rest/v1/${path}`, {
+        ...options,
+        headers: {
+          apikey: CONFIG.SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {})
+        }
+      });
+      const text = await res.text();
+      if (!res.ok) throw new Error(text || `HTTP ${res.status}`);
+      return text && res.status !== 204 ? JSON.parse(text) : null;
+    }
+
+    /* Mobile-safe image loader + JPEG compressor */
+    async function loadDrawableImage(file) {
+      try {
+        const bitmap = await createImageBitmap(file);
+        return {
+          source: bitmap,
+          width: bitmap.width,
+          height: bitmap.height,
+          cleanup: () => { if (typeof bitmap.close === "function") bitmap.close(); }
+        };
+      } catch {
+        const objectUrl = URL.createObjectURL(file);
+        try {
+          const img = await new Promise((resolve, reject) => {
+            const el = new Image();
+            el.onload = () => resolve(el);
+            el.onerror = () => reject(new Error("Could not decode image."));
+            el.src = objectUrl;
+          });
+          return {
+            source: img,
+            width: img.naturalWidth || img.width,
+            height: img.naturalHeight || img.height,
+            cleanup: () => URL.revokeObjectURL(objectUrl)
+          };
+        } catch (err) {
+          URL.revokeObjectURL(objectUrl);
+          throw err;
+        }
+      }
+    }
+
+    async function compressImage(file, maxWidth = 900, quality = 0.8) {
+      const d = await loadDrawableImage(file);
+      try {
+        const scale = Math.min(1, maxWidth / d.width);
+        const w = Math.max(1, Math.round(d.width * scale));
+        const h = Math.max(1, Math.round(d.height * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(d.source, 0, 0, w, h);
+        return await new Promise((resolve, reject) => {
+          canvas.toBlob(
+            (b) => (b ? resolve(b) : reject(new Error("Image compression failed."))),
+            "image/jpeg",
+            quality
+          );
+        });
+      } finally {
+        d.cleanup();
+      }
+    }
+
+    async function uploadMediaFile(file) {
+      const isVideo = file.type && file.type.startsWith("video/");
+      const isImage = file.type && file.type.startsWith("image/");
+      if (!isVideo && !isImage) {
+        throw new Error("Select a JPG, PNG, WebP image or MP4/WebM video.");
+      }
+      if (isImage && file.size > CONFIG.MAX_IMAGE_BYTES) {
+        throw new Error("Image must be 5 MB or smaller.");
+      }
+      if (isVideo && file.size > CONFIG.MAX_VIDEO_BYTES) {
+        throw new Error("Video must be 15 MB or smaller.");
+      }
+
+      const bodyBlob = isVideo ? file : await compressImage(file);
+      const ext = isVideo ? (file.type === "video/webm" ? "webm" : "mp4") : "jpg";
+      const contentType = isVideo ? (file.type || "video/mp4") : "image/jpeg";
+      const objectPath = `feed/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const base = CONFIG.SUPABASE_URL.replace(/\/+$/, "");
+
+      const res = await fetch(`${base}/storage/v1/object/${CONFIG.STORAGE_BUCKET}/${objectPath}`, {
+        method: "POST",
+        headers: {
+          apikey: CONFIG.SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${CONFIG.SUPABASE_ANON_KEY}`,
+          "Content-Type": contentType,
+          "x-upsert": "false"
+        },
+        body: bodyBlob
+      });
+
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(err || `Upload failed (${res.status})`);
+      }
+
+      return {
+        media_url: `${base}/storage/v1/object/public/${CONFIG.STORAGE_BUCKET}/${objectPath}`,
+        media_type: isVideo ? "video" : "image"
+      };
+    }
+
+    /* Composer preview & lane validation */
+    const composerLane = document.getElementById("composerLane");
+    const mediaHint = document.getElementById("mediaHint");
+    const mediaInput = document.getElementById("composerMediaInput");
+    const imgPrev = document.getElementById("composerImgPreview");
+    const vidPrev = document.getElementById("composerVidPreview");
+
+    function updateMediaHint() {
+      const needsMedia = composerLane.value !== "community";
+      mediaHint.textContent = needsMedia
+        ? "Picture or video required for this lane"
+        : "Optional for Community • Required for Breaking/Trending/Football";
+      mediaHint.classList.toggle("required", needsMedia);
+    }
+    composerLane.addEventListener("change", updateMediaHint);
+    updateMediaHint();
+
+    function clearComposerPreview() {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+        previewUrl = null;
+      }
+      imgPrev.style.display = "none";
+      imgPrev.src = "";
+      vidPrev.style.display = "none";
+      vidPrev.src = "";
+    }
+
+    mediaInput.addEventListener("change", () => {
+      clearComposerPreview();
+      const file = mediaInput.files && mediaInput.files[0];
+      if (!file) return;
+      previewUrl = URL.createObjectURL(file);
+      if (file.type && file.type.startsWith("video/")) {
+        vidPrev.src = previewUrl;
+        vidPrev.style.display = "block";
+      } else {
+        imgPrev.src = previewUrl;
+        imgPrev.style.display = "block";
+      }
+    });
+
+    document.getElementById("composerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const author_name = form.author_name.value.trim() || "Member";
+      const feed_lane = form.feed_lane.value;
+      const title = form.title.value.trim();
+      const summary = form.summary.value.trim();
+      const file = mediaInput.files && mediaInput.files[0] ? mediaInput.files[0] : null;
+
+      if (feed_lane !== "community" && !file) {
+        alert("Breaking News, Trending Now, and Football posts require a photo or video.");
+        return;
+      }
+
+      const btn = document.getElementById("composerSubmitBtn");
+      btn.disabled = true;
+      btn.textContent = file ? "Uploading..." : "Posting...";
+
+      try {
+        let media_url = null;
+        let media_type = "image";
+        if (file) {
+          const uploaded = await uploadMediaFile(file);
+          media_url = uploaded.media_url;
+          media_type = uploaded.media_type;
+        }
+
+        await sbFetch("feed_posts", {
+          method: "POST",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({
+            author_name,
+            source_name: author_name,
+            feed_lane,
+            title,
+            summary,
+            media_url,
+            media_type,
+            is_user_post: true,
+            status: "published"
+          })
+        });
+
+        form.reset();
+        clearComposerPreview();
+        updateMediaHint();
+        showToast("✓ Posted to live timeline");
+        await loadFeed();
+      } catch (err) {
+        alert("Could not publish post: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Post";
+      }
+    });
+
+    /* Share helper */
+    window.sharePost = async function(btn, title, url) {
+      const shareUrl = url || window.location.href;
+      const text = `${title}\n${shareUrl}`;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, text, url: shareUrl });
+          return;
+        } catch (e) {
+          if (e && e.name === "AbortError") return;
+        }
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        const old = btn.textContent;
+        btn.textContent = "✓ Copied";
+        setTimeout(() => { btn.textContent = old; }, 1500);
+      } catch {
+        alert(text);
+      }
+    };
+
+    /* Comments & Nested Replies */
+    window.toggleComments = function(postId) {
+      if (openPostIds.has(postId)) openPostIds.delete(postId);
+      else openPostIds.add(postId);
+      const drawer = document.getElementById(`drawer-${postId}`);
+      if (drawer) drawer.classList.toggle("open", openPostIds.has(postId));
+    };
+
+    window.setReplyTarget = function(postId, commentId, authorName) {
+      openPostIds.add(postId);
+      replyTargetByPost[postId] = { commentId, authorName };
+      renderTimeline();
+      const input = document.querySelector(`#form-${postId} textarea`);
+      if (input) {
+        input.value = `@${authorName} `;
+        input.focus();
+      }
+    };
+
+    window.clearReplyTarget = function(postId) {
+      delete replyTargetByPost[postId];
+      renderTimeline();
+    };
+
+    window.submitPostComment = async function(e, postId) {
+      e.preventDefault();
+      const form = e.target;
+      const author_name = form.author.value.trim() || "Visitor";
+      const comment_text = form.text.value.trim();
+      if (!comment_text) return;
+
+      const replyTarget = replyTargetByPost[postId] || null;
+      const btn = form.querySelector("button[type='submit']");
+      btn.disabled = true;
+      btn.textContent = "Posting...";
+
+      try {
+        await sbFetch("post_comments", {
+          method: "POST",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({
+            post_id: postId,
+            parent_comment_id: replyTarget ? replyTarget.commentId : null,
+            author_name,
+            comment_text,
+            status: "approved"
+          })
+        });
+        delete replyTargetByPost[postId];
+        openPostIds.add(postId);
+        await loadFeed();
+      } catch (err) {
+        alert("Could not post reply: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Reply";
+      }
+    };
+
+    function getLaneBadge(post) {
+      if (post.is_sponsored || post.is_pinned) {
+        return `<span class="lane-pill lane-sponsored">★ ${escapeHtml(post.sponsor_label || "Promoted")}</span>`;
+      }
+      if (post.feed_lane === "breaking") return `<span class="lane-pill lane-breaking">🚨 BREAKING</span>`;
+      if (post.feed_lane === "trending") return `<span class="lane-pill lane-trending">🔥 TRENDING</span>`;
+      if (post.feed_lane === "football") return `<span class="lane-pill lane-football">⚽ FOOTBALL</span>`;
+      return `<span class="lane-pill lane-community">💬 COMMUNITY</span>`;
+    }
+
+    function renderMediaHtml(post) {
+      const url = typeof post.media_url === "string" && /^https:\/\//i.test(post.media_url.trim())
+        ? post.media_url.trim()
+        : "";
+      if (!url) return "";
+      const isVid = post.media_type === "video" || /\.(mp4|webm|mov)(\?|$)/i.test(url);
+      if (isVid) {
+        return `<video class="post-media" src="${escapeHtml(url)}" controls playsinline preload="metadata"></video>`;
+      }
+      return `<img class="post-media" src="${escapeHtml(url)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.style.display='none'" />`;
+    }
+
+    function renderNativeOfferCard(offer) {
+      const url = /^https:\/\//i.test(offer.checkout_url || "") ? offer.checkout_url.trim() : CONFIG.GUMROAD_DEFAULT;
+      const img = /^https:\/\//i.test(offer.image_url || "")
+        ? `<img class="post-media" src="${escapeHtml(offer.image_url.trim())}" alt="${escapeHtml(offer.title)}" loading="lazy" onerror="this.style.display='none'" />`
+        : "";
+      return `
+        <article class="post-card sponsored">
+          <div class="post-header">
+            <div class="author-wrap">
+              <div class="avatar">★</div>
+              <div class="author-meta">
+                <div class="author-name">${escapeHtml(offer.seller_name || "PulseFeed Partner")}</div>
+                <div class="author-sub">Sponsored Offer • ${escapeHtml(offer.price_label || "Featured")}</div>
+              </div>
             </div>
+            <span class="lane-pill lane-sponsored">Promoted</span>
+          </div>
+          <div class="post-title">${escapeHtml(offer.title)}</div>
+          <div class="post-body">${escapeHtml(offer.description)}</div>
+          ${img}
+          <div class="post-actions">
+            <a class="btn btn-gumroad" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Buy / View Offer ↗</a>
+            <a class="action-btn" href="./jobs.html">Promote Your Offer</a>
+          </div>
+        </article>
+      `;
+    }
 
-            <!-- Tier 1 -->
-            <div class="service-card">
-                <span class="badge">Tier 1 • Fast Launch</span>
-                <h3 style="font-size:18px;color:#ffffff;margin:0 0 8px 0;">Starter Conversion Tool</h3>
-                <div class="price">$450 <span>USD • one-time build</span></div>
-                <p class="service-desc">Ideal for local service businesses losing visitors who leave without requesting a quote or booking a call.</p>
-                <ul class="service-features">
-                    <li>Custom AI client-intake or instant quote/ROI calculator</li>
-                    <li>Instant email &amp; Telegram lead notifications</li>
-                    <li>Mobile-responsive embed for your existing website</li>
-                    <li>Delivered in 3–5 days with zero recurring server fees</li>
-                </ul>
-                <button type="button" class="service-btn-secondary" onclick="requestService('Starter Conversion Tool ($450 one-time)')">
-                    Request Starter Build →
-                </button>
+    function renderPostCard(post) {
+      const comments = commentsByPost[post.id] || [];
+      const isOpen = openPostIds.has(post.id);
+      const replyTarget = replyTargetByPost[post.id];
+      const author = post.author_name || post.source_name || "PulseFeed";
+      const initials = author.replace(/[^a-zA-Z0-9]/g, "").slice(0, 2).toUpperCase() || "PF";
+      const actionUrl = post.cta_url || post.source_url || window.location.href;
+      const isPromo = Boolean(post.is_sponsored || post.is_pinned);
+
+      // Order parent comments followed by their direct replies
+      const topLevel = comments.filter((c) => !c.parent_comment_id);
+      const byParent = {};
+      for (const c of comments) {
+        if (c.parent_comment_id) {
+          if (!byParent[c.parent_comment_id]) byParent[c.parent_comment_id] = [];
+          byParent[c.parent_comment_id].push(c);
+        }
+      }
+
+      const orderedComments = [];
+      for (const parent of topLevel) {
+        orderedComments.push({ ...parent, isReply: false });
+        for (const child of (byParent[parent.id] || [])) {
+          orderedComments.push({ ...child, isReply: true });
+        }
+      }
+
+      const commentsHtml = orderedComments.length
+        ? orderedComments.map((c) => `
+            <div class="comment-node ${c.isReply ? "comment-reply" : ""}">
+              <div class="comment-top">
+                <span class="comment-user">${escapeHtml(c.author_name)}</span>
+                <button type="button" class="reply-link" onclick="setReplyTarget('${escapeJs(post.id)}', '${escapeJs(c.isReply ? c.parent_comment_id : c.id)}', '${escapeJs(c.author_name)}')">↩ Reply</button>
+              </div>
+              <div>${escapeHtml(c.comment_text)}</div>
             </div>
+          `).join("")
+        : `<div style="font-size:0.8rem;color:var(--muted);">No replies yet — start the conversation.</div>`;
 
-            <!-- Tier 2 (Most Popular) -->
-            <div class="service-card popular">
-                <span class="badge">Tier 2 • Most Popular</span>
-                <h3 style="font-size:18px;color:#ffffff;margin:0 0 8px 0;">Automated Lead Engine</h3>
-                <div class="price">$950 <span>USD • one-time build</span></div>
-                <p class="service-desc">Complete capture-to-database workflow that qualifies prospects and logs every inquiry automatically 24/7.</p>
-                <ul class="service-features">
-                    <li>Everything in Starter Conversion Tool</li>
-                    <li>Automated database/CRM logging (Supabase or Google Sheets)</li>
-                    <li>Instant prospect auto-response &amp; booking routing</li>
-                    <li>Full source code ownership • zero monthly lock-in</li>
-                </ul>
-                <button type="button" class="cta-btn" onclick="requestService('Automated Lead Engine ($950 one-time)')">
-                    Book Automated Lead Engine →
-                </button>
+      return `
+        <article class="post-card ${isPromo ? "sponsored" : ""}">
+          <div class="post-header">
+            <div class="author-wrap">
+              <div class="avatar">${escapeHtml(initials)}</div>
+              <div class="author-meta">
+                <div class="author-name">${escapeHtml(author)}</div>
+                <div class="author-sub">${escapeHtml(post.source_name || "PulseFeed")} · ${timeAgo(post.created_at)}</div>
+              </div>
             </div>
+            ${getLaneBadge(post)}
+          </div>
 
-            <!-- Tier 3 -->
-            <div class="service-card">
-                <span class="badge">Tier 3 • Full Pipeline</span>
-                <h3 style="font-size:18px;color:#ffffff;margin:0 0 8px 0;">Custom B2B &amp; Workflow Suite</h3>
-                <div class="price">$1,850+ <span>USD • one-time build</span></div>
-                <p class="service-desc">Tailored outbound lead scouting, scheduled data feeds, or multi-step AI operations built for your niche.</p>
-                <ul class="service-features">
-                    <li>Custom niche lead-scouting &amp; website audit automation</li>
-                    <li>Scheduled serverless cron workers &amp; Telegram bot controls</li>
-                    <li>Multi-region prospect filtering &amp; outreach drafting</li>
-                    <li>Priority handover &amp; full setup walkthrough</li>
-                </ul>
-                <button type="button" class="service-btn-secondary" onclick="requestService('Custom B2B & Workflow Suite ($1,850+)')">
-                    Discuss Custom Build →
-                </button>
-            </div>
-        </section>
-    </div>
+          <div class="post-title">${escapeHtml(post.title)}</div>
+          <div class="post-body">${escapeHtml(post.summary)}</div>
+          ${renderMediaHtml(post)}
 
-    <script>
-        const SUPABASE_URL = 'https://pzaavnfswisvosgdfbgl.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_He61GsY9EO5I6Pf8D8pUZw_jgscYPNp';
-        const STORE_URL = 'https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/';
-        const FALLBACK_IMG = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800';
-
-        let allProducts = [];
-
-        function escapeHtml(str) {
-            return String(str || '').replace(/[&<>"']/g, m => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-            }[m]));
-        }
-
-        function renderProducts(productsToShow) {
-            const container = document.getElementById('product-container');
-            const params = new URLSearchParams(window.location.search);
-            const highlightedId = params.get('item');
-
-            if (!productsToShow || productsToShow.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #8b949e;">No matching deals found right now.</p>';
-                return;
+          <div class="post-actions">
+            <button type="button" class="action-btn" onclick="toggleComments('${escapeJs(post.id)}')">
+              💬 ${comments.length} ${comments.length === 1 ? "Reply" : "Replies"}
+            </button>
+            <button type="button" class="action-btn" onclick="sharePost(this, '${escapeJs(post.title)}', '${escapeJs(actionUrl)}')">
+              🔁 Share
+            </button>
+            ${post.cta_url
+              ? `<a class="btn btn-gumroad" href="${escapeHtml(post.cta_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(post.cta_label || "View Offer ↗")}</a>`
+              : (post.source_url
+                  ? `<a class="action-btn" href="${escapeHtml(post.source_url)}" target="_blank" rel="noopener noreferrer">↗ Source</a>`
+                  : "")
             }
+          </div>
 
-            container.innerHTML = '';
+          <div id="drawer-${escapeHtml(post.id)}" class="comments-drawer ${isOpen ? "open" : ""}">
+            ${commentsHtml}
+            <form id="form-${escapeHtml(post.id)}" class="comment-form" onsubmit="submitPostComment(event, '${escapeJs(post.id)}')">
+              <div class="replying-banner ${replyTarget ? "active" : ""}">
+                <span>Replying to <strong>@${replyTarget ? escapeHtml(replyTarget.authorName) : ""}</strong></span>
+                <button type="button" class="reply-link" onclick="clearReplyTarget('${escapeJs(post.id)}')">✕ Cancel</button>
+              </div>
+              <input type="text" name="author" placeholder="Your name (optional)" maxlength="45" />
+              <textarea name="text" rows="2" placeholder="Post your reply..." required maxlength="1000"></textarea>
+              <button type="submit" class="btn btn-primary" style="align-self:flex-start;">Reply</button>
+            </form>
+          </div>
+        </article>
+      `;
+    }
 
-            productsToShow.forEach(product => {
-                const itemId = String(product.id);
-                const safeTitle = escapeHtml(product.title);
-                const safeUrl = escapeHtml(product.seller_contact);
-                const safeImg = escapeHtml(product.image_url || FALLBACK_IMG);
-                const priceFormatted = Number(product.price_value || 0).toFixed(2);
-                const isHighlighted = highlightedId && highlightedId === itemId;
+    function renderTimeline() {
+      const timeline = document.getElementById("timeline");
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
 
-                const card = document.createElement('div');
-                card.className = isHighlighted ? 'card highlighted' : 'card';
-                card.id = `product-${itemId}`;
+      const filtered = allPosts.filter((p) => {
+        if (activeLane !== "all" && !p.is_pinned && p.feed_lane !== activeLane) return false;
+        if (!q) return true;
+        return (
+          (p.title || "").toLowerCase().includes(q) ||
+          (p.summary || "").toLowerCase().includes(q) ||
+          (p.author_name || "").toLowerCase().includes(q) ||
+          (p.source_name || "").toLowerCase().includes(q)
+        );
+      });
 
-                card.innerHTML = `
-                    <img src="${safeImg}" alt="${safeTitle}" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';">
-                    <div class="card-content">
-                        <span class="badge">Instant Digital Access</span>
-                        <h3>${safeTitle}</h3>
-                        <div class="price">$${priceFormatted} <span>USD</span></div>
-                        <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="cta-btn">Get Instant Access →</a>
-                        <div class="item-share-row">
-                            <button type="button" class="item-share-btn" onclick="shareItem('${encodeURIComponent(product.title || '')}', '${encodeURIComponent(itemId)}', 'x')">𝕏 Post</button>
-                            <button type="button" class="item-share-btn" onclick="shareItem('${encodeURIComponent(product.title || '')}', '${encodeURIComponent(itemId)}', 'whatsapp')">WhatsApp</button>
-                            <button type="button" class="item-share-btn" onclick="shareItem('${encodeURIComponent(product.title || '')}', '${encodeURIComponent(itemId)}', 'telegram')">Telegram</button>
-                            <button type="button" class="item-share-btn" onclick="shareItem('${encodeURIComponent(product.title || '')}', '${encodeURIComponent(itemId)}', 'copy', this)">🔗 Copy</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+      if (!filtered.length && !marketOffers.length) {
+        timeline.innerHTML = `<div class="status-box">No posts in this lane yet. Be the first to post above!</div>`;
+        return;
+      }
 
-            if (highlightedId) {
-                const targetCard = document.getElementById(`product-${highlightedId}`);
-                if (targetCard) {
-                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }
+      const chunks = [];
+      let offerIdx = 0;
+
+      filtered.forEach((post, index) => {
+        chunks.push(renderPostCard(post));
+        // Inject a monetized offer card every 4 posts
+        if ((index + 1) % 4 === 0 && marketOffers.length > 0) {
+          chunks.push(renderNativeOfferCard(marketOffers[offerIdx % marketOffers.length]));
+          offerIdx++;
         }
+      });
 
-        function filterProducts() {
-            const query = (document.getElementById('searchInput').value || '').trim().toLowerCase();
-            if (!query) {
-                renderProducts(allProducts);
-                return;
-            }
-            const filtered = allProducts.filter(p => String(p.title || '').toLowerCase().includes(query));
-            renderProducts(filtered);
+      // If fewer than 4 posts exist, still show 1 native offer card at the bottom
+      if (filtered.length < 4 && marketOffers.length > 0) {
+        chunks.push(renderNativeOfferCard(marketOffers[0]));
+      }
+
+      timeline.innerHTML = chunks.join("");
+    }
+
+    async function loadFeed() {
+      try {
+        const [posts, comments, listings] = await Promise.all([
+          sbFetch("feed_posts?status=eq.published&order=is_pinned.desc,created_at.desc&limit=60"),
+          sbFetch("post_comments?status=eq.approved&order=created_at.asc&limit=1000"),
+          sbFetch("market_listings?status=eq.published&order=created_at.desc&limit=20").catch(() => [])
+        ]);
+
+        allPosts = posts || [];
+        marketOffers = listings || [];
+
+        const grouped = {};
+        for (const c of (comments || [])) {
+          if (!grouped[c.post_id]) grouped[c.post_id] = [];
+          grouped[c.post_id].push(c);
         }
+        commentsByPost = grouped;
+        renderTimeline();
+      } catch (err) {
+        document.getElementById("timeline").innerHTML =
+          `<div class="status-box">Could not load timeline: ${escapeHtml(err.message)}</div>`;
+      }
+    }
 
-        function shareStore(platform) {
-            const text = encodeURIComponent('🔥 Curated AI & SaaS Software Deals & Custom Automation Builds:');
-            const url = encodeURIComponent(STORE_URL);
+    document.querySelectorAll("#laneTabs .lane-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll("#laneTabs .lane-tab").forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        activeLane = tab.dataset.lane;
+        renderTimeline();
+      });
+    });
 
-            if (platform === 'x') {
-                window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'noopener,noreferrer');
-            } else if (platform === 'whatsapp') {
-                window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank', 'noopener,noreferrer');
-            } else if (platform === 'telegram') {
-                window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
-            } else if (platform === 'copy') {
-                navigator.clipboard.writeText(STORE_URL);
-                const btn = document.getElementById('copyStoreBtn');
-                btn.textContent = '✅ Copied!';
-                setTimeout(() => { btn.textContent = '🔗 Copy Link'; }, 2000);
-            }
-        }
+    document.getElementById("searchInput").addEventListener("input", renderTimeline);
 
-        function shareItem(encodedTitle, encodedId, platform, btnEl) {
-            const title = decodeURIComponent(encodedTitle);
-            const itemUrl = `${STORE_URL}?item=${encodedId}`;
-            const text = encodeURIComponent(`⚡ ${title} — Instant Digital Access:`);
-            const url = encodeURIComponent(itemUrl);
-
-            if (platform === 'x') {
-                window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'noopener,noreferrer');
-            } else if (platform === 'whatsapp') {
-                window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank', 'noopener,noreferrer');
-            } else if (platform === 'telegram') {
-                window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank', 'noopener,noreferrer');
-            } else if (platform === 'copy') {
-                navigator.clipboard.writeText(itemUrl);
-                if (btnEl) {
-                    const prev = btnEl.textContent;
-                    btnEl.textContent = '✅ Copied';
-                    setTimeout(() => { btnEl.textContent = prev; }, 2000);
-                }
-            }
-        }
-
-        async function loadProducts() {
-            const container = document.getElementById('product-container');
-
-            try {
-                const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-                const { data, error } = await supabase
-                    .from('marketplace_products')
-                    .select('*')
-                    .order('id', { ascending: false });
-
-                if (error) {
-                    container.innerHTML = `<p style="text-align: center; color: #f85149;">Database Error: ${escapeHtml(error.message)}</p>`;
-                    return;
-                }
-
-                allProducts = data || [];
-                renderProducts(allProducts);
-
-            } catch (err) {
-                container.innerHTML = `<p style="text-align: center; color: #f85149;">Connection Exception: ${escapeHtml(err.message)}</p>`;
-            }
-        }
-
-        loadProducts();
-    </script>
-
-    <!-- Floating Contact Button -->
-    <div class="floating-contact">
-        <button type="button" class="contact-cta-btn" onclick="openContactModal()">
-            ✉️ Contact Us
-        </button>
-    </div>
-
-    <!-- Quick Contact Modal -->
-    <div id="contactModal" class="contact-modal" onclick="if(event.target===this)closeContactModal()">
-        <div class="contact-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                <h3 style="margin:0;font-size:18px;color:#ffffff;">Get a Custom AI Tool Quote</h3>
-                <button type="button" onclick="closeContactModal()" style="background:none;border:none;color:#8b949e;font-size:20px;cursor:pointer;">✕</button>
-            </div>
-            <p style="margin:0 0 14px;font-size:13px;color:#8b949e;">
-                Curated AI &amp; SaaS Software Deals — zero recurring server fees.
-            </p>
-            <input id="leadName" type="text" placeholder="Your Name / Company" />
-            <input id="leadSite" type="text" placeholder="Your Website URL (optional)" />
-            <textarea id="leadMsg" rows="3" placeholder="What would you like to automate? (e.g., instant quote calculator, 24/7 lead capture)"></textarea>
-            <div class="contact-actions">
-                <button type="button" class="contact-cta-btn" style="flex:1;" onclick="sendViaEmail()">
-                    Send Email
-                </button>
-                <a class="contact-cta-btn" style="background:#21262d;border:1px solid #30363d;box-shadow:none;" href="mailto:damiancuratedaideals@gmail.com?subject=Custom%20AI%20Tool%20Inquiry">
-                    Direct Email
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openContactModal() {
-            document.getElementById('contactModal').classList.add('open');
-        }
-        function closeContactModal() {
-            document.getElementById('contactModal').classList.remove('open');
-        }
-        function requestService(packageName) {
-            document.getElementById('leadMsg').value = 'Hi Damian, I am interested in the ' + packageName + '. Here is what we want to automate: ';
-            openContactModal();
-        }
-        function sendViaEmail() {
-            const name = document.getElementById('leadName').value.trim() || 'Prospect';
-            const site = document.getElementById('leadSite').value.trim() || 'Not provided';
-            const msg = document.getElementById('leadMsg').value.trim() || 'Interested in a custom AI web tool.';
-            const subject = encodeURIComponent('Custom AI Tool Inquiry from ' + name);
-            const body = encodeURIComponent(
-                'Name / Company: ' + name + '\n' +
-                'Website: ' + site + '\n\n' +
-                'Project Details:\n' + msg
-            );
-            window.location.href = 'mailto:damiancuratedaideals@gmail.com?subject=' + subject + '&body=' + body;
-        }
-
-        const showcaseStages = [
-            {
-                tag: '01 • THE CONVERSION LEAK',
-                title: '85% of Visitors Leave Static Websites Without Requesting a Quote',
-                sub: 'Slow contact forms and manual follow-ups cost businesses high-intent clients every week.',
-                pills: ['📉 High Bounce Rate', '⏳ Slow Replies']
-            },
-            {
-                tag: '02 • CUSTOM AI INTAKE WIDGET',
-                title: 'Interactive Quote & Client-Intake Embedded Directly on Your Site',
-                sub: 'Visitors get instant answers in seconds while our engine captures their project scope 24/7.',
-                pills: ['🤖 Smart Intake', '⚡ 3-Second Response']
-            },
-            {
-                tag: '03 • INSTANT TELEGRAM & CRM SYNC',
-                title: 'Every Lead Logged Automatically & Pushed Straight to Your Phone',
-                sub: 'Zero manual copy-pasting — leads sync to Google Sheets or Supabase with instant mobile alerts.',
-                pills: ['📲 Telegram Alerts', '📊 Auto-CRM Sync']
-            },
-            {
-                tag: '04 • ONE-TIME BUILD, $0/MO FEES',
-                title: 'Full Source Code Ownership Without Bloated $300/Mo SaaS Bills',
-                sub: 'Delivered in 3–5 days starting at $450 one-time. Ready to upgrade your site?',
-                pills: ['💵 Starting at $450', '🔒 $0 Server Bloat']
-            }
-        ];
-
-        let currentStage = 0;
-        let progressPct = 0;
-
-        function renderStage(idx) {
-            const s = showcaseStages[idx];
-            const box = document.getElementById('showcaseStage');
-            box.style.opacity = '0.35';
-            setTimeout(() => {
-                document.getElementById('stageCounter').textContent = `Step ${idx + 1} of ${showcaseStages.length}`;
-                document.getElementById('stageTag').textContent = s.tag;
-                document.getElementById('stageTitle').textContent = s.title;
-                document.getElementById('stageSub').textContent = s.sub;
-                document.getElementById('stagePills').innerHTML = s.pills.map(p => `<span class="stage-chip">${p}</span>`).join('');
-                document.querySelectorAll('.step-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-                box.style.opacity = '1';
-            }, 180);
-        }
-
-        function goToStage(idx) {
-            currentStage = idx;
-            progressPct = 0;
-            document.getElementById('showcaseBar').style.width = '0%';
-            renderStage(currentStage);
-        }
-
-        setInterval(() => {
-            progressPct += 5;
-            document.getElementById('showcaseBar').style.width = progressPct + '%';
-            if (progressPct >= 100) {
-                progressPct = 0;
-                currentStage = (currentStage + 1) % showcaseStages.length;
-                renderStage(currentStage);
-            }
-        }, 200);
-    </script>
+    loadFeed();
+    setInterval(loadFeed, 2 * 60 * 1000);
+  </script>
 </body>
 </html>

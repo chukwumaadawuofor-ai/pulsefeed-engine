@@ -17,6 +17,7 @@
       --accent-dark: #238636;
       --gumroad: #ff90e8;
       --gumroad-dark: #e06fd0;
+      --gold: #f59e0b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -326,6 +327,26 @@
       border: 1px solid var(--border);
       border-radius: 12px;
     }
+    .tiers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .tier-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .tier-card.featured { border-color: var(--gold); }
+    .tier-price { font-size: 1.25rem; font-weight: 800; color: var(--accent); margin: 6px 0; }
+    .tier-card ul { list-style: none; color: var(--muted); font-size: 0.84rem; margin-bottom: 12px; }
+    .tier-card li { margin-bottom: 5px; }
+    .tier-card li::before { content: "✓ "; color: var(--accent); font-weight: bold; }
     .embed-box {
       background: var(--card);
       border: 1px solid var(--border);
@@ -368,14 +389,16 @@
       </div>
     </header>
 
-    <!-- Gumroad Store & Offer Card -->
+    <!-- Gumroad Store, ViralHook AI & Creator Offers Card -->
     <section class="market-banner">
-      <span class="badge">Gumroad Store &amp; Creator Offers</span>
-      <h2>Digital Templates, E-Books &amp; Automation Kits</h2>
-      <p>Instant digital downloads on Gumroad — plus browse or list community offers and remote jobs below.</p>
+      <span class="badge">Gumroad Store • ViralHook AI ($39+) &amp; Creator Offers</span>
+      <h2>Digital Templates, E-Books &amp; ViralHook AI</h2>
+      <p>Boost content retention with <strong>ViralHook AI ($39+)</strong> and instant digital downloads on Gumroad — plus browse or list community offers and remote jobs below.</p>
       <div class="market-actions">
+        <a id="viralhookBtn" class="btn btn-green" href="https://YOUR-VIRALHOOK-LINK-HERE" target="_blank" rel="noopener noreferrer">Try ViralHook AI ($39+) →</a>
         <a id="gumroadBtn" class="btn btn-gumroad" href="https://chukwuma448.gumroad.com/?utm_source=pulsefeed&utm_medium=jobs_hub&utm_campaign=job_seekers&utm_content=jobs_hub_banner" target="_blank" rel="noopener noreferrer">Get It on Gumroad →</a>
         <button id="openSellTabBtn" type="button" class="btn btn-outline">+ Sell / List Offer</button>
+        <a class="btn btn-outline" href="#sponsor">Sponsor Tiers</a>
       </div>
     </section>
 
@@ -400,7 +423,7 @@
       <form id="listingForm" class="form-grid">
         <div class="form-row">
           <input type="text" name="seller_name" placeholder="Your name or brand *" required maxlength="60" />
-          <input type="text" name="price_label" placeholder="Price (e.g. $15, ₦10,000, Free) *" required maxlength="30" />
+          <input type="text" name="price_label" placeholder="Price (e.g. $15, $39, ₦10,000, Free) *" required maxlength="30" />
         </div>
         <div class="form-row">
           <input type="text" name="title" placeholder="Item or service title *" required maxlength="120" />
@@ -431,6 +454,39 @@
     <main id="feed">
       <div class="status-msg">Loading live job drops...</div>
     </main>
+
+    <!-- Sponsorship Tiers -->
+    <section id="sponsor" class="embed-box">
+      <h3>📣 Sponsorship &amp; Featured Placement Tiers</h3>
+      <p>Promote a remote role, AI creator tool, or digital offer across PulseFeed Jobs and our community.</p>
+      <div class="tiers">
+        <div class="tier-card">
+          <div>
+            <strong>Pinned Job / Offer</strong>
+            <div class="tier-price">$15 <span style="font-size:0.8rem;color:var(--muted);">/ 14 days</span></div>
+            <ul>
+              <li>Featured community marketplace listing</li>
+              <li>Direct checkout or apply link</li>
+              <li>Included in live board search</li>
+            </ul>
+          </div>
+          <button type="button" class="btn btn-outline" onclick="openSponsorListing('Pinned Job / Offer ($15 / 14d)')">List $15 Offer →</button>
+        </div>
+        <div class="tier-card featured">
+          <div>
+            <span class="badge" style="color:var(--gold);background:rgba(245,158,11,0.15);margin-bottom:4px;">Featured Spotlight</span>
+            <div><strong>Creator Tool / Brand Spotlight</strong></div>
+            <div class="tier-price">$39 <span style="font-size:0.8rem;color:var(--muted);">/ 30 days</span></div>
+            <ul>
+              <li>Priority spotlight positioning</li>
+              <li>Full product/tool card &amp; image</li>
+              <li>Great for AI tools &amp; courses</li>
+            </ul>
+          </div>
+          <button type="button" class="btn btn-gumroad" onclick="openSponsorListing('Creator Tool Spotlight ($39 / 30d)')">Book $39 Spotlight →</button>
+        </div>
+      </div>
+    </section>
 
     <section class="embed-box">
       <h3>🌐 Own a Blog, Forum, or Community Page?</h3>
@@ -904,6 +960,14 @@
         document.getElementById("sellerFormCard").classList.remove("open");
       }
     }
+
+    window.openSponsorListing = function(tierLabel) {
+      resetListingFormMode(false);
+      setActiveTab("market", true, false);
+      listingFormHeading.textContent = `Submit Sponsored Listing — ${tierLabel}`;
+      listingFormSubtext.textContent = "Fill in your offer details and checkout/contact link below to publish.";
+      document.getElementById("sellerFormCard").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
 
     window.startEditListing = function(listingId) {
       const target = allListings.find((item) => String(item.id) === String(listingId));

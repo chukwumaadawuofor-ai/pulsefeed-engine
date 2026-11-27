@@ -1,7 +1,51 @@
 {
-  "updated_at": "2026-11-27T07:53:37Z",
+  "updated_at": "2026-11-27T08:57:58Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "7868ed29-b6fc-4808-bf4c-a8e4aa1c3693",
+      "dedupe_key": "e2c26dff61cddd1969bed923",
+      "title": "Android Developer",
+      "summary": "Airalo — Help Us Build The Future of Travel At Airalo, we're making it easier for people to stay connected wherever they travel. As the world's first eSIM store, we help millions of travelers access affordable mobile…",
+      "source_name": "RemoteOK",
+      "location_or_type": "UK Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/android-developer-e2c26dff.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-android-developer-airalo-1138176",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "0b44d3b8-fa9a-4e9b-9d6f-7a677910a483",
+      "dedupe_key": "f3ab4ea2d43042bb5eb34577",
+      "title": "Senior Accountant",
+      "summary": "Ethena — Who we are Weâre Ethena, an AI platform thatâs revolutionizing the Compliance space. Our team of agents helps Compliance and People leaders run proactive Compliance programs that drive real behavior change…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-accountant-f3ab4ea2.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-accountant-ethena-1138175",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "19477d27-4164-44dc-96d9-3af771ab0c9b",
+      "dedupe_key": "b55b3be7a8302672863723cf",
+      "title": "Senior Engineering Manager - Agentic Products",
+      "summary": "Spotify — The Personalization team makes deciding what to play next easier and more enjoyable for every listener. From Blend to Discover Weekly, weâre behind some of Spotifyâs most-loved features. We built them by…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-engineering-manager-agentic-products-b55b3be7.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-engineering-manager-agentic-products-spotify-1138174",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "67945ba6-993a-408e-8c39-d303c53185a6",
+      "dedupe_key": "760de0d28264329394f67322",
+      "title": "Customer Care <> Pet End of Life Arranger",
+      "summary": "Bare Funeral Group Pty Ltd — Headquarters: Australia URL: At Goodbye Good Boy, we provide compassionate end of life services, supporting veterinary clinics and the families they care for during one of life’s most…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/customer-care-pet-end-of-life-arranger-760de0d2.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/bare-funeral-group-pty-ltd-customer-care-pet-end-of-life-arranger",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "acbcc6e8-0930-4d67-bda7-2c92a752fd2e",
       "dedupe_key": "f56e3746a2394d673c47c8e9",
@@ -11,6 +55,17 @@
       "location_or_type": "Canada Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-of-software-engineering-f56e3746.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-director-of-software-engineering-warner-music-group-1138173",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "c93ecca5-6f70-4c95-8b72-9496ffaf8b2d",
+      "dedupe_key": "03420b7b7d752fd14c1f7a3b",
+      "title": "Enterprise Account Executive - Western US",
+      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-western-us-03420b7b.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-western-us-agiloft-1138169",
       "date_posted": "2026-11-27"
     },
     {
@@ -44,17 +99,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/developer-advocate-network-apis-6f7188e1.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-developer-advocate-network-apis-aduna-1138170",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "c93ecca5-6f70-4c95-8b72-9496ffaf8b2d",
-      "dedupe_key": "03420b7b7d752fd14c1f7a3b",
-      "title": "Enterprise Account Executive - Western US",
-      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-western-us-03420b7b.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-western-us-agiloft-1138169",
       "date_posted": "2026-11-27"
     },
     {
@@ -113,28 +157,6 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "015a533a-13da-448b-b874-e6673eedfe14",
-      "dedupe_key": "6d4e5cbfc70c6256af5934c3",
-      "title": "Brazilian Subject Matter Expert in Fandoms (Music, Pop, Disney & Political Memes)",
-      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-fandoms-music-pop-disney-polit-6d4e5cbf.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-fandoms-music-pop-disney-political-memes-welo-data-1138163",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "0c05ae6c-3401-4bb9-973a-214270981555",
-      "dedupe_key": "e3a9c9e83df74a2e3f982cac",
-      "title": "Brazilian Subject Matter Expert in Games, Puzzles & Play",
-      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-games-puzzles-play-e3a9c9e8.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-games-puzzles-play-welo-data-1138162",
-      "date_posted": "2026-11-27"
-    },
-    {
       "id": "ce3187d5-560e-408b-ab8f-a6948dbe7c9c",
       "dedupe_key": "51227bdb0fab3c379199c3b7",
       "title": "Account Executive - Chicago",
@@ -154,6 +176,28 @@
       "location_or_type": "Remote",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
       "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "015a533a-13da-448b-b874-e6673eedfe14",
+      "dedupe_key": "6d4e5cbfc70c6256af5934c3",
+      "title": "Brazilian Subject Matter Expert in Fandoms (Music, Pop, Disney & Political Memes)",
+      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-fandoms-music-pop-disney-polit-6d4e5cbf.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-fandoms-music-pop-disney-political-memes-welo-data-1138163",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "0c05ae6c-3401-4bb9-973a-214270981555",
+      "dedupe_key": "e3a9c9e83df74a2e3f982cac",
+      "title": "Brazilian Subject Matter Expert in Games, Puzzles & Play",
+      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-games-puzzles-play-e3a9c9e8.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-games-puzzles-play-welo-data-1138162",
       "date_posted": "2026-11-27"
     },
     {
@@ -286,50 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/seo-manager-167adc96.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-seo-manager-bounteous-1138148",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "e7c710ed-166c-414a-8fb9-f51561d027d9",
-      "dedupe_key": "aa1b048c4cc755468284037a",
-      "title": "Manager, Account Managment",
-      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/manager-account-managment-aa1b048c.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-manager-account-managment-agiloft-1138147",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "f26a5440-a5ef-4994-bae9-f0d443f795fa",
-      "dedupe_key": "ac8c24d90934b8f2b8c3c549",
-      "title": "Enterprise Account Executive - Southeast",
-      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-southeast-ac8c24d9.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-southeast-agiloft-1138139",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "fc82226c-3f89-4715-a4fe-55d388acc9d1",
-      "dedupe_key": "b4776ff67fbb775d1227c74d",
-      "title": "Sr. Manager, Revenue Enablement",
-      "summary": "Secure Code Warrior — Software development is changing fast, and code is no longer written by humans alone. Secure Code Warrior is the AI Software Governance platform that gives organizations visibility into how their…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sr-manager-revenue-enablement-b4776ff6.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-sr-manager-revenue-enablement-secure-code-warrior-1138138",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "67fea225-045b-4056-b49d-d482e515df8a",
-      "dedupe_key": "701cf081db383150a6107049",
-      "title": "Account Executive",
-      "summary": "IDMWORKS — IDMWORKS is an award-winning identity and access management (IAM) solutions firm that has been serving a wide range of sectors since its inception in 2004. As a firm thatâs purely focused on IAM, IDMWORKS…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-701cf081.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-idmworks-1138145",
       "date_posted": "2026-11-26"
     }
   ]

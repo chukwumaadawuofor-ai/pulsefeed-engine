@@ -74,6 +74,17 @@ REGION_LABELS = {
     "GLOBAL": "🌍 Global",
 }
 
+BAD_MEDIA_TOKENS = (
+    "logo",
+    "favicon",
+    "sprite",
+    "placeholder",
+    "default-image",
+    "punch-logo",
+    "pm-news",
+    "1x1",
+)
+
 HEADERS_SB = {
     "apikey": SUPABASE_KEY,
     "Authorization": f"Bearer {SUPABASE_KEY}",
@@ -81,8 +92,22 @@ HEADERS_SB = {
 }
 
 HEADERS_HTTP = {
-    "User-Agent": "Mozilla/5.0 (compatible; PulseFeedBot/2.0; +https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/)"
+    "User-Agent": (
+        "Mozilla/5.0 (Linux; Android 13; SM-G998B) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
+
+
+def is_usable_media_url(url: str) -> bool:
+    u = (url or "").strip()
+    if not u.startswith("https://"):
+        return False
+    low = u.lower()
+    if any(token in low for token in BAD_MEDIA_TOKENS):
+        return False
+    return True
 
 
 def clean_text(raw: str, max_len: int = 320) -> str:
@@ -112,13 +137,48 @@ def get_fallback_banner(lane: str, region: str) -> str:
     return FALLBACK_BANNERS.get(lane, FALLBACK_BANNERS["trending"])
 
 
+def extract_og_from_article(article_url: str) -> tuple[str, str]:
+    if not article_url.startswith("https://"):
+        return "", ""
+    try:
+        resp = requests.get(article_url, headers=HEADERS_HTTP, timeout=10)
+        if not resp.ok or not resp.text:
+            return "", ""
+        page = resp.text[:120000]
+
+        og_vid = re.search(
+            r'<meta[^>]+(?:property|name)=["\']og:video(?::secure_url)?["\'][^>]+content=["\'](https://[^"\']+)["\']',
+            page,
+            re.I,
+        )
+        if og_vid:
+            v_url = html.unescape(og_vid.group(1).strip())
+            if is_usable_media_url(v_url) and re.search(r"\.(mp4|webm)(\?|$)", v_url, re.I):
+                return v_url, "video"
+
+        for pattern in (
+            r'<meta[^>]+(?:property|name)=["\']og:image(?::secure_url)?["\'][^>]+content=["\'](https?://[^"\']+)["\']',
+            r'<meta[^>]+content=["\'](https?://[^"\']+)["\'][^>]+(?:property|name)=["\']og:image(?::secure_url)?["\']',
+        ):
+            og_img = re.search(pattern, page, re.I)
+            if og_img:
+                img_url = html.unescape(og_img.group(1).strip())
+                if img_url.startswith("http://"):
+                    img_url = "https://" + img_url[7:]
+                if is_usable_media_url(img_url):
+                    return img_url, "image"
+    except Exception as e:
+        print(f"OG fetch skipped for {article_url}: {e}")
+    return "", ""
+
+
 def extract_media_from_entry(entry, article_url: str, lane: str, region: str) -> tuple[str, str]:
-    """Returns (media_url, media_type) guaranteed non-empty for news lanes."""
+    """Returns (media_url, media_type) preferring real story photos over logos/banners."""
     # 1. Check RSS enclosures
     for enc in entry.get("enclosures", []):
-        href = (enc.get("href") or enc.get("url") or "").strip()
+        href = html.unescape((enc.get("href") or enc.get("url") or "").strip())
         mime = (enc.get("type") or "").lower()
-        if href.startswith("https://"):
+        if is_usable_media_url(href):
             if "video" in mime or re.search(r"\.(mp4|webm|mov)(\?|$)", href, re.I):
                 return href, "video"
             if "image" in mime or re.search(r"\.(jpg|jpeg|png|webp)(\?|$)", href, re.I):
@@ -127,8 +187,8 @@ def extract_media_from_entry(entry, article_url: str, lane: str, region: str) ->
     # 2. Check media:content and media:thumbnail
     for key in ("media_content", "media_thumbnail"):
         for item in entry.get(key, []):
-            href = (item.get("url") or "").strip()
-            if href.startswith("https://"):
+            href = html.unescape((item.get("url") or "").strip())
+            if is_usable_media_url(href):
                 if re.search(r"\.(mp4|webm|mov)(\?|$)", href, re.I):
                     return href, "video"
                 return href, "image"
@@ -138,35 +198,18 @@ def extract_media_from_entry(entry, article_url: str, lane: str, region: str) ->
     if entry.get("content"):
         raw_html += " " + " ".join(c.get("value", "") for c in entry["content"])
     vid_match = re.search(r'src=["\'](https://[^"\']+\.(?:mp4|webm))["\']', raw_html, re.I)
-    if vid_match:
-        return vid_match.group(1), "video"
-    img_match = re.search(r'<img[^>]+src=["\'](https://[^"\']+)["\']', raw_html, re.I)
-    if img_match:
-        return img_match.group(1), "image"
+    if vid_match and is_usable_media_url(vid_match.group(1)):
+        return html.unescape(vid_match.group(1)), "video"
 
-    # 4. Fetch OpenGraph og:video / og:image from the article page
-    if article_url.startswith("https://"):
-        try:
-            resp = requests.get(article_url, headers=HEADERS_HTTP, timeout=8)
-            if resp.ok:
-                page = resp.text[:40000]
-                og_vid = re.search(
-                    r'<meta[^>]+property=["\']og:video(?::secure_url)?["\'][^>]+content=["\'](https://[^"\']+)["\']',
-                    page,
-                    re.I,
-                )
-                if og_vid and re.search(r"\.(mp4|webm)(\?|$)", og_vid.group(1), re.I):
-                    return og_vid.group(1), "video"
+    for img_match in re.finditer(r'<img[^>]+src=["\'](https://[^"\']+)["\']', raw_html, re.I):
+        candidate = html.unescape(img_match.group(1).strip())
+        if is_usable_media_url(candidate):
+            return candidate, "image"
 
-                og_img = re.search(
-                    r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\'](https://[^"\']+)["\']',
-                    page,
-                    re.I,
-                )
-                if og_img:
-                    return html.unescape(og_img.group(1)), "image"
-        except Exception as e:
-            print(f"OG fetch skipped for {article_url}: {e}")
+    # 4. Fetch OpenGraph og:video / og:image from the real article page
+    og_url, og_type = extract_og_from_article(article_url)
+    if og_url:
+        return og_url, og_type
 
     # 5. Guaranteed fallback image
     return get_fallback_banner(lane, region), "image"
@@ -255,6 +298,9 @@ def send_telegram_post(post: dict) -> bool:
     caption = build_social_caption(post)
     media_url = (post.get("media_url") or "").strip()
     media_type = post.get("media_type") or "image"
+    lane = post.get("feed_lane") or "trending"
+    region = post.get("region") or "GLOBAL"
+    fallback_url = get_fallback_banner(lane, region)
     base_tg = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
     try:
@@ -275,8 +321,17 @@ def send_telegram_post(post: dict) -> bool:
             )
             if r.ok:
                 return True
+            print(f"Primary sendPhoto failed ({r.status_code}); retrying with fallback banner.")
 
-        # Fallback to text message if external media host blocks Telegram fetch
+        if fallback_url.startswith("https://") and fallback_url != media_url:
+            r_fb = requests.post(
+                f"{base_tg}/sendPhoto",
+                data={"chat_id": TELEGRAM_CHANNEL_ID, "photo": fallback_url, "caption": caption},
+                timeout=20,
+            )
+            if r_fb.ok:
+                return True
+
         r = requests.post(
             f"{base_tg}/sendMessage",
             data={
@@ -340,7 +395,6 @@ def broadcast_unposted(batch_limit: int = 4):
         sent = send_telegram_post(post)
         send_social_webhook(post)
 
-        # Mark broadcasted_at so it is never duplicated
         patch_res = requests.patch(
             f"{SUPABASE_URL}/rest/v1/feed_posts?id=eq.{urllib.parse.quote(str(post_id))}",
             headers={**HEADERS_SB, "Prefer": "return=minimal"},

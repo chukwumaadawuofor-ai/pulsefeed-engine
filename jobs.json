@@ -1,7 +1,18 @@
 {
-  "updated_at": "2026-11-26T23:50:43Z",
+  "updated_at": "2026-11-27T01:04:32Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "eb1704c2-b291-4775-9a42-4a3eccaa0636",
+      "dedupe_key": "26f0d4012e31bc98de0a5910",
+      "title": "Product Marketing Manager - Ostro",
+      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/product-marketing-manager-ostro-26f0d401.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-product-marketing-manager-ostro-veeva-systems-1138153",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "10771718-efde-48c1-9af0-915558492520",
       "dedupe_key": "d06b67609e3be54c12336759",
@@ -319,17 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/north-america-alliance-and-partnerships-director-remote-38d68bb7.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-north-america-alliance-and-partnerships-director-remote-vendavo-1138124",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "be218aa5-baae-47ce-a86a-650b20edef04",
-      "dedupe_key": "7966f36b705a47b0698bc014",
-      "title": "Associate Director of Field Marketing - Quality Cloud - Europe",
-      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
-      "source_name": "RemoteOK",
-      "location_or_type": "UK Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/associate-director-of-field-marketing-quality-cloud-europe-7966f36b.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-associate-director-of-field-marketing-quality-cloud-europe-veeva-systems-1138121",
       "date_posted": "2026-11-26"
     }
   ]

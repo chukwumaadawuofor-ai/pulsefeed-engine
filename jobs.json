@@ -1,7 +1,62 @@
 {
-  "updated_at": "2026-11-27T12:27:27Z",
+  "updated_at": "2026-11-27T13:51:23Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "dd1d79e7-6646-489f-bbfd-20b55d66ddf0",
+      "dedupe_key": "0b4a76fed5bce1521da04162",
+      "title": "Senior Service Delivery Manager",
+      "summary": "Vultr — Who We Are Vultr is on a mission to make high-performance cloud infrastructure easy to use, affordable, and locally accessible for enterprises and AI innovators around the world. With 33 global cloud data center…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-service-delivery-manager-0b4a76fe.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-service-delivery-manager-vultr-1138191",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "022c0f78-6bb8-4da5-a5ef-38458cafd3b9",
+      "dedupe_key": "15b520bf494b9dcf5ab1d7c2",
+      "title": "Service Delivery Manager",
+      "summary": "Vultr — Who We Are Vultr is on a mission to make high-performance cloud infrastructure easy to use, affordable, and locally accessible for enterprises and AI innovators around the world. With 33 global cloud data center…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/service-delivery-manager-15b520bf.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-service-delivery-manager-vultr-1138190",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "23387a09-ee7c-47e3-9e6f-a72723a5ea53",
+      "dedupe_key": "8d76277ddfac1b445ac5717f",
+      "title": "Customer Success Manager",
+      "summary": "Outmarket AI — About Outmarket Outmarket is an AI-powered platform purpose-built for commercial insurance agencies. We help brokers, MGAs, and carriers extract insights, automate workflows, and move faster by turning…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/customer-success-manager-8d76277d.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-customer-success-manager-outmarket-ai-1138189",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "2026cb46-2564-4f13-9a68-f156aeac1dfd",
+      "dedupe_key": "73ef45fa96c48401ca714f5a",
+      "title": "Support Operations Lead",
+      "summary": "Zip — About Zip Zip is the AI platform for enterprise procurement â built for humans and agents working together. By orchestrating procurement across teams, tools, and suppliers with the help of AI agents, companies…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/support-operations-lead-73ef45fa.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-support-operations-lead-zip-1138188",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "f108769b-c7fe-46f8-b05f-b347f0683aad",
+      "dedupe_key": "5d14e8bea2d7a8c842e066f5",
+      "title": "Content Engineer, Developer Documentation",
+      "summary": "LiveKit — About LiveKit LiveKit is building the infrastructure layer for the voice-driven era of computing. Our platform gives developers everything they need to build, test, deploy, scale, and observe agents in…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/content-engineer-developer-documentation-5d14e8be.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-content-engineer-developer-documentation-livekit-1138185",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "2eafd51b-cb7a-4037-902d-123a4aa4315e",
       "dedupe_key": "173f1b9a53027409aca3e510",
@@ -22,39 +77,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/customer-service-representative-2cfe3b65.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-customer-service-representative-vultr-1138186",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "f108769b-c7fe-46f8-b05f-b347f0683aad",
-      "dedupe_key": "5d14e8bea2d7a8c842e066f5",
-      "title": "Content Engineer, Developer Documentation",
-      "summary": "LiveKit — About LiveKit LiveKit is building the infrastructure layer for the voice-driven era of computing. Our platform gives developers everything they need to build, test, deploy, scale, and observe agents in…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/content-engineer-developer-documentation-5d14e8be.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-content-engineer-developer-documentation-livekit-1138185",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "1fdba9c2-8931-47c4-818f-856c0f86b9ba",
-      "dedupe_key": "f6f6929a24a0c497351438cf",
-      "title": "Enterprise Sales Engineer - Germany",
-      "summary": "Datadog — As an Enterprise Sales Engineer, you will provide technical expertise through sales presentations, product demonstrations, and supporting technical evaluations (POVs). Sales Engineers help qualify and close…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Europe",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-sales-engineer-germany-f6f6929a.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-sales-engineer-germany-datadog-1138184",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "6fd1c3b6-1985-47c3-8f64-4e08ed1ef7cc",
-      "dedupe_key": "2579a3c8ff83c4563654cdff",
-      "title": "Staff Compliance Engineer",
-      "summary": "LiveKit — About LiveKit LiveKit is building the infrastructure layer for the voice-driven era of computing. Our platform gives developers everything they need to build, test, deploy, scale, and observe agents in…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/staff-compliance-engineer-2579a3c8.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-staff-compliance-engineer-livekit-1138183",
       "date_posted": "2026-11-27"
     },
     {
@@ -80,6 +102,39 @@
       "date_posted": "2026-11-27"
     },
     {
+      "id": "1fdba9c2-8931-47c4-818f-856c0f86b9ba",
+      "dedupe_key": "f6f6929a24a0c497351438cf",
+      "title": "Enterprise Sales Engineer - Germany",
+      "summary": "Datadog — As an Enterprise Sales Engineer, you will provide technical expertise through sales presentations, product demonstrations, and supporting technical evaluations (POVs). Sales Engineers help qualify and close…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Europe",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-sales-engineer-germany-f6f6929a.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-sales-engineer-germany-datadog-1138184",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "6fd1c3b6-1985-47c3-8f64-4e08ed1ef7cc",
+      "dedupe_key": "2579a3c8ff83c4563654cdff",
+      "title": "Staff Compliance Engineer",
+      "summary": "LiveKit — About LiveKit LiveKit is building the infrastructure layer for the voice-driven era of computing. Our platform gives developers everything they need to build, test, deploy, scale, and observe agents in…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/staff-compliance-engineer-2579a3c8.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-staff-compliance-engineer-livekit-1138183",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "4d86044e-154e-42cd-99b1-9e88111d1b43",
+      "dedupe_key": "4751c96d9e91f110db5e9f14",
+      "title": "Senior Director, Client Service (FIT)",
+      "summary": "Bounteous — Bounteous is a global AI Services firm where agentic engineering and human experience converge to deliver transformative business outcomes for the enterprise. We help organizations design, build, and scale…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-director-client-service-fit-4751c96d.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-director-client-service-fit-bounteous-1138177",
+      "date_posted": "2026-11-27"
+    },
+    {
       "id": "21ac5306-7bc8-443b-8685-dcbc6b89fb8f",
       "dedupe_key": "5035e3a515b93642f563c4e5",
       "title": "Senior iOS Engineer, Foundations",
@@ -99,17 +154,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-engineer-bce8798f.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-engineer-ethena-1138178",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "4d86044e-154e-42cd-99b1-9e88111d1b43",
-      "dedupe_key": "4751c96d9e91f110db5e9f14",
-      "title": "Senior Director, Client Service (FIT)",
-      "summary": "Bounteous — Bounteous is a global AI Services firm where agentic engineering and human experience converge to deliver transformative business outcomes for the enterprise. We help organizations design, build, and scale…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-director-client-service-fit-4751c96d.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-director-client-service-fit-bounteous-1138177",
       "date_posted": "2026-11-27"
     },
     {
@@ -278,39 +322,6 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "ce3187d5-560e-408b-ab8f-a6948dbe7c9c",
-      "dedupe_key": "51227bdb0fab3c379199c3b7",
-      "title": "Account Executive - Chicago",
-      "summary": "Saviynt — Saviynt's AI-powered identity platform manages and governs human and non-human access to all of an organization's applications, data, and business processes. Customers trust Saviynt to safeguard their digital…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-chicago-51227bdb.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-chicago-saviynt-1138164",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "015a533a-13da-448b-b874-e6673eedfe14",
-      "dedupe_key": "6d4e5cbfc70c6256af5934c3",
-      "title": "Brazilian Subject Matter Expert in Fandoms (Music, Pop, Disney & Political Memes)",
-      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-fandoms-music-pop-disney-polit-6d4e5cbf.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-fandoms-music-pop-disney-political-memes-welo-data-1138163",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "0c05ae6c-3401-4bb9-973a-214270981555",
-      "dedupe_key": "e3a9c9e83df74a2e3f982cac",
-      "title": "Brazilian Subject Matter Expert in Games, Puzzles & Play",
-      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-games-puzzles-play-e3a9c9e8.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-games-puzzles-play-welo-data-1138162",
-      "date_posted": "2026-11-27"
-    },
-    {
       "id": "596dc5e5-27e9-4025-86e7-a7ca8b9639a8",
       "dedupe_key": "790b951c473e76daee26bbcf",
       "title": "Full-Stack Engineer",
@@ -319,17 +330,6 @@
       "location_or_type": "Remote",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
       "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "de768699-e78c-4932-9ba8-22023510e3fe",
-      "dedupe_key": "4517d822a5e7151c8e597fb0",
-      "title": "Consultant - People Science",
-      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/consultant-people-science-4517d822.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-consultant-people-science-veeva-systems-1138158",
       "date_posted": "2026-11-27"
     }
   ]

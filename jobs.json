@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-27T20:28:20Z",
+  "updated_at": "2026-11-27T21:51:08Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
     {
@@ -124,17 +124,6 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "1f12c910-f02e-4993-b79c-982054920b74",
-      "dedupe_key": "df410e9dcc24fd3450d4a3ad",
-      "title": "Partner Sales Manager - EMEA Central (Eastern Europe)",
-      "summary": "Snowflake — At Snowflake, we are powering the era of the agentic enterprise. To usher in this new era, we seek AI-native thinkers across every function who are energized by the opportunity to reinvent how they work. You…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Europe",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-sales-manager-emea-central-eastern-europe-df410e9d.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-sales-manager-emea-central-eastern-europe-snowflake-1138198",
-      "date_posted": "2026-11-27"
-    },
-    {
       "id": "7f3e07d2-6390-479e-8d57-5f2be19b7e3a",
       "dedupe_key": "9000d7bfdf60d40b4b2c038c",
       "title": "District Manager, Majors Financial Services",
@@ -143,6 +132,17 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/district-manager-majors-financial-services-9000d7bf.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-district-manager-majors-financial-services-snowflake-1138196",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "1f12c910-f02e-4993-b79c-982054920b74",
+      "dedupe_key": "df410e9dcc24fd3450d4a3ad",
+      "title": "Partner Sales Manager - EMEA Central (Eastern Europe)",
+      "summary": "Snowflake — At Snowflake, we are powering the era of the agentic enterprise. To usher in this new era, we seek AI-native thinkers across every function who are energized by the opportunity to reinvent how they work. You…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Europe",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-sales-manager-emea-central-eastern-europe-df410e9d.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-sales-manager-emea-central-eastern-europe-snowflake-1138198",
       "date_posted": "2026-11-27"
     },
     {

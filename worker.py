@@ -20,24 +20,58 @@ GUMROAD_OFFER_URL = (
     "?utm_source=pulsefeed&utm_medium=telegram_auto&utm_campaign=viralhook_ai"
 )
 
-# 2. RSS Feeds mapped by lane (Breaking, Trending, Football)
+# 2. RSS Feeds mapped by lane (Breaking, Trending, Football) and region (NG, US, UK, EU, AU, GLOBAL)
 FEEDS = [
+    # Nigeria (NG)
+    {"url": "https://rss.punchng.com/v1/category/latest_news", "source": "Punch NG", "lane": "trending", "region": "NG"},
+    {"url": "https://pmnewsnigeria.com/feed/", "source": "P.M. News", "lane": "breaking", "region": "NG"},
+
+    # United States (US)
+    {"url": "https://feeds.npr.org/1001/rss.xml", "source": "NPR News", "lane": "trending", "region": "US"},
+    {"url": "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en", "source": "Google News US", "lane": "breaking", "region": "US"},
+
+    # United Kingdom (UK)
+    {"url": "https://feeds.bbci.co.uk/news/uk/rss.xml", "source": "BBC News UK", "lane": "trending", "region": "UK"},
+    {"url": "https://www.theguardian.com/uk/rss", "source": "The Guardian UK", "lane": "breaking", "region": "UK"},
+
+    # Europe (EU)
+    {"url": "https://www.politico.eu/feed/", "source": "Politico Europe", "lane": "trending", "region": "EU"},
+    {"url": "https://www.euronews.com/rss", "source": "Euronews", "lane": "breaking", "region": "EU"},
+
+    # Australia (AU)
+    {"url": "https://www.abc.net.au/news/feed/45910/rss.xml", "source": "ABC News Australia", "lane": "trending", "region": "AU"},
+
     # Football Breaking & Transfer News
-    {"url": "https://feeds.bbci.co.uk/sport/football/rss.xml", "source": "BBC Football", "lane": "football"},
-    {"url": "https://www.espn.com/espn/rss/soccer/news", "source": "ESPN FC", "lane": "football"},
-    # Breaking World & Tech News
-    {"url": "https://feeds.bbci.co.uk/news/world/rss.xml", "source": "BBC World", "lane": "breaking"},
-    {"url": "https://www.aljazeera.com/xml/rss/all.xml", "source": "Al Jazeera", "lane": "breaking"},
-    # Trending Tech, AI & Business
-    {"url": "https://techcrunch.com/feed/", "source": "TechCrunch", "lane": "trending"},
-    {"url": "https://www.theverge.com/rss/index.xml", "source": "The Verge", "lane": "trending"},
+    {"url": "https://feeds.bbci.co.uk/sport/football/rss.xml", "source": "BBC Football", "lane": "football", "region": "GLOBAL"},
+    {"url": "https://www.espn.com/espn/rss/soccer/news", "source": "ESPN FC", "lane": "football", "region": "GLOBAL"},
+
+    # High-Intent Tech, AI & Business (GLOBAL)
+    {"url": "https://techcrunch.com/feed/", "source": "TechCrunch", "lane": "trending", "region": "GLOBAL"},
+    {"url": "https://www.theverge.com/rss/index.xml", "source": "The Verge", "lane": "trending", "region": "GLOBAL"},
+    {"url": "https://feeds.businessinsider.com/custom/all", "source": "Business Insider", "lane": "trending", "region": "GLOBAL"},
+    {"url": "https://feeds.bbci.co.uk/news/world/rss.xml", "source": "BBC World", "lane": "breaking", "region": "GLOBAL"},
 ]
 
 # Guaranteed fallback cover banners (never fails chk_news_requires_media)
 FALLBACK_BANNERS = {
+    "NG": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80",
+    "US": "https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=1000&q=80",
+    "UK": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1000&q=80",
+    "EU": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1000&q=80",
+    "AU": "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1000&q=80",
+    "GLOBAL": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80",
     "breaking": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1000&q=80",
     "trending": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80",
     "football": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1000&q=80",
+}
+
+REGION_LABELS = {
+    "NG": "🇳🇬 Nigeria",
+    "US": "🇺🇸 US",
+    "UK": "🇬🇧 UK",
+    "EU": "🇪🇺 Europe",
+    "AU": "🇦🇺 Australia",
+    "GLOBAL": "🌍 Global",
 }
 
 HEADERS_SB = {
@@ -70,7 +104,15 @@ def detect_lane(title: str, summary: str, default_lane: str) -> str:
     return default_lane
 
 
-def extract_media_from_entry(entry, article_url: str, lane: str) -> tuple[str, str]:
+def get_fallback_banner(lane: str, region: str) -> str:
+    if lane == "football":
+        return FALLBACK_BANNERS["football"]
+    if region in FALLBACK_BANNERS:
+        return FALLBACK_BANNERS[region]
+    return FALLBACK_BANNERS.get(lane, FALLBACK_BANNERS["trending"])
+
+
+def extract_media_from_entry(entry, article_url: str, lane: str, region: str) -> tuple[str, str]:
     """Returns (media_url, media_type) guaranteed non-empty for news lanes."""
     # 1. Check RSS enclosures
     for enc in entry.get("enclosures", []):
@@ -127,12 +169,13 @@ def extract_media_from_entry(entry, article_url: str, lane: str) -> tuple[str, s
             print(f"OG fetch skipped for {article_url}: {e}")
 
     # 5. Guaranteed fallback image
-    return FALLBACK_BANNERS.get(lane, FALLBACK_BANNERS["trending"]), "image"
+    return get_fallback_banner(lane, region), "image"
 
 
-def ingest_feeds(max_per_feed: int = 3):
+def ingest_feeds(max_per_feed: int = 2):
     inserted = 0
     for feed_cfg in FEEDS:
+        region = feed_cfg.get("region", "GLOBAL")
         try:
             parsed = feedparser.parse(feed_cfg["url"])
         except Exception as e:
@@ -151,12 +194,13 @@ def ingest_feeds(max_per_feed: int = 3):
                 summary = f"{title} — Read full update and join the live discussion."
 
             lane = detect_lane(title, summary, feed_cfg["lane"])
-            media_url, media_type = extract_media_from_entry(entry, link, lane)
+            media_url, media_type = extract_media_from_entry(entry, link, lane, region)
 
             payload = {
                 "title": title,
                 "summary": summary,
                 "feed_lane": lane,
+                "region": region,
                 "source_name": feed_cfg["source"],
                 "source_url": link,
                 "media_url": media_url,
@@ -188,12 +232,13 @@ def build_social_caption(post: dict) -> str:
         "community": "💬 COMMUNITY POST",
     }
     badge = lane_tags.get(post.get("feed_lane"), "🔥 TRENDING NOW")
+    region_label = REGION_LABELS.get(post.get("region") or "GLOBAL", "🌍 Global")
     title = clean_text(post.get("title", ""), max_len=150)
     summary = clean_text(post.get("summary", ""), max_len=240)
     source = clean_text(post.get("source_name", "PulseFeed"), max_len=40)
 
     return (
-        f"{badge} | {source}\n\n"
+        f"{badge} • {region_label} | {source}\n\n"
         f"{title}\n\n"
         f"{summary}\n\n"
         f"💬 Comment & Watch Live: {SITE_URL}\n"
@@ -257,6 +302,7 @@ def send_social_webhook(post: dict):
             json={
                 "id": post.get("id"),
                 "lane": post.get("feed_lane"),
+                "region": post.get("region", "GLOBAL"),
                 "title": post.get("title"),
                 "summary": post.get("summary"),
                 "media_url": post.get("media_url"),

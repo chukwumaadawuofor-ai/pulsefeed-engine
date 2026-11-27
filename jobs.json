@@ -1,7 +1,40 @@
 {
-  "updated_at": "2026-11-27T11:21:19Z",
+  "updated_at": "2026-11-27T12:27:27Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "2eafd51b-cb7a-4037-902d-123a4aa4315e",
+      "dedupe_key": "173f1b9a53027409aca3e510",
+      "title": "Senior Frontend Engineer",
+      "summary": "LastPass — About LastPass LastPass delivers Secure Access Essentials, helping individuals and organizations manage and protect access to AI, applications, and credentials straight from the browser. Trusted by more than…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Europe",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-frontend-engineer-173f1b9a.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-frontend-engineer-lastpass-1138187",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "29a0b400-a1b9-42dc-afd3-cc8fea8e6992",
+      "dedupe_key": "2cfe3b65d9c22ac536c24908",
+      "title": "Customer Service Representative",
+      "summary": "Vultr — Who We Are Vultr is on a mission to make high-performance cloud infrastructure easy to use, affordable, and locally accessible for enterprises and AI innovators around the world. With 33 global cloud data center…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/customer-service-representative-2cfe3b65.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-customer-service-representative-vultr-1138186",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "f108769b-c7fe-46f8-b05f-b347f0683aad",
+      "dedupe_key": "5d14e8bea2d7a8c842e066f5",
+      "title": "Content Engineer, Developer Documentation",
+      "summary": "LiveKit — About LiveKit LiveKit is building the infrastructure layer for the voice-driven era of computing. Our platform gives developers everything they need to build, test, deploy, scale, and observe agents in…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/content-engineer-developer-documentation-5d14e8be.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-content-engineer-developer-documentation-livekit-1138185",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "1fdba9c2-8931-47c4-818f-856c0f86b9ba",
       "dedupe_key": "f6f6929a24a0c497351438cf",
@@ -157,17 +190,6 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "d3909cb4-b86a-4e49-bf1e-2f0a7a121dc6",
-      "dedupe_key": "7f60688b7b256512e3a65023",
-      "title": "Partner Solution Architect, Partner Center of Excellence",
-      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-solution-architect-partner-center-of-excellence-7f60688b.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-solution-architect-partner-center-of-excellence-agiloft-1138172",
-      "date_posted": "2026-11-27"
-    },
-    {
       "id": "9c9dc5de-0df9-4a4f-ba2a-e96a67e5ee5d",
       "dedupe_key": "fd7284fe2176a5bf79eeb2e4",
       "title": "Head of Professional Services, NICE",
@@ -187,6 +209,17 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/developer-advocate-network-apis-6f7188e1.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-developer-advocate-network-apis-aduna-1138170",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "d3909cb4-b86a-4e49-bf1e-2f0a7a121dc6",
+      "dedupe_key": "7f60688b7b256512e3a65023",
+      "title": "Partner Solution Architect, Partner Center of Excellence",
+      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-solution-architect-partner-center-of-excellence-7f60688b.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-solution-architect-partner-center-of-excellence-agiloft-1138172",
       "date_posted": "2026-11-27"
     },
     {
@@ -297,39 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/consultant-people-science-4517d822.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-consultant-people-science-veeva-systems-1138158",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "1377c431-7bb4-4d2f-b7b0-0ebb8e4c7068",
-      "dedupe_key": "809ba98f92e6fb6c651d8570",
-      "title": "Manager, Technical Support",
-      "summary": "Coupa — Coupa makes margins multiply through its community-generated AI and industry-leading total spend management platform for businesses large and small. Coupa AI is informed by trillions of dollars of direct and…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/manager-technical-support-809ba98f.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-manager-technical-support-coupa-1138159",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "f027a04a-2a60-4fa9-ba9f-e20164955082",
-      "dedupe_key": "ad3b2ba596969d2c1584ae18",
-      "title": "Brazilian Subject Matter Expert in Home & Garden",
-      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-home-garden-ad3b2ba5.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-home-garden-welo-data-1138161",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "b26eb03c-1886-41be-9dd2-f522434e0e3f",
-      "dedupe_key": "f249c83c1eb61741a4748730",
-      "title": "Sales Engineer, US East",
-      "summary": "Secure Code Warrior — Software development is changing fast, and code is no longer written by humans alone. Secure Code Warrior is the AI Software Governance platform that gives organizations visibility into how their…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-engineer-us-east-f249c83c.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-engineer-us-east-secure-code-warrior-1138160",
       "date_posted": "2026-11-27"
     }
   ]

@@ -1,7 +1,40 @@
 {
-  "updated_at": "2026-11-27T14:50:29Z",
+  "updated_at": "2026-11-27T15:54:36Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "1f12c910-f02e-4993-b79c-982054920b74",
+      "dedupe_key": "df410e9dcc24fd3450d4a3ad",
+      "title": "Partner Sales Manager - EMEA Central (Eastern Europe)",
+      "summary": "Snowflake — At Snowflake, we are powering the era of the agentic enterprise. To usher in this new era, we seek AI-native thinkers across every function who are energized by the opportunity to reinvent how they work. You…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Europe",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-sales-manager-emea-central-eastern-europe-df410e9d.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-sales-manager-emea-central-eastern-europe-snowflake-1138198",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "7f3e07d2-6390-479e-8d57-5f2be19b7e3a",
+      "dedupe_key": "9000d7bfdf60d40b4b2c038c",
+      "title": "District Manager, Majors Financial Services",
+      "summary": "Snowflake — At Snowflake, we are powering the era of the agentic enterprise. To usher in this new era, we seek AI-native thinkers across every function who are energized by the opportunity to reinvent how they work. You…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/district-manager-majors-financial-services-9000d7bf.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-district-manager-majors-financial-services-snowflake-1138196",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "b8d7cbae-4f85-476d-9a83-e20c6b568cf1",
+      "dedupe_key": "b4dab2ef313973404d5f1f21",
+      "title": "MSP Account Executive - DACH",
+      "summary": "Rubrik Job Board — About the Team & Role Managed service providers are how thousands of organisations, from hospitals to public bodies to financial institutions, run and protect their data, and Rubrik's MSP team helps…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Europe",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/msp-account-executive-dach-b4dab2ef.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-msp-account-executive-dach-rubrik-job-board-1138195",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "87313b3f-c2b9-47d3-bac0-bd9b718e461a",
       "dedupe_key": "cac9e2160c3ad69f9a852769",
@@ -297,39 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-solution-architect-partner-center-of-excellence-7f60688b.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-solution-architect-partner-center-of-excellence-agiloft-1138172",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "eecb4647-0093-4f98-8d04-404454c08359",
-      "dedupe_key": "57342986ba1dcbb7972b785a",
-      "title": "Enterprise Account Executive - New York",
-      "summary": "zimperium — Zimperium ® is an industry leader in enterprise mobile security, being the first and only company to provide a complete mobile threat defense system that offers real-time, on device world-class protection…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-new-york-57342986.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-new-york-zimperium-1138166",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "a2ab831f-0b1b-4fbc-93fa-86c0c13874e3",
-      "dedupe_key": "6b6c9bac398d1ba58db17b7b",
-      "title": "Sales Director - Quality",
-      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
-      "source_name": "RemoteOK",
-      "location_or_type": "UK Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-director-quality-6b6c9bac.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-director-quality-veeva-systems-1138168",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "f10a5a79-e1eb-46d3-be11-79455f09ac19",
-      "dedupe_key": "5694ee3ca27c637864647efc",
-      "title": "Paid Media Manager (Remote)",
-      "summary": "Silverback Strategies — Silverback Strategies is a performance marketing agency built to help marketers grow and capitalize on change. Ad Age, Inc Magazine, The Washington Post, The Washingtonian, and The Washington…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/paid-media-manager-remote-5694ee3c.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-paid-media-manager-remote-silverback-strategies-1138165",
       "date_posted": "2026-11-27"
     }
   ]

@@ -187,7 +187,7 @@ def send_telegram_raw(caption: str, photo_url: str = "") -> bool:
 
 
 # ==============================================================================
-# 3. DAILY FOOTBALL BETTING SLIP GENERATOR & END-OF-DAY VERIFIER
+# 3. SMART COMBO FOOTBALL SLIP GENERATOR (SMALL + BIG ODDS) & EOD VERIFIER
 # ==============================================================================
 def american_to_decimal(ml) -> float:
     try:
@@ -227,7 +227,7 @@ def fetch_espn_events_for_date(date_yyyymmdd: str) -> list[dict]:
                 away_name = away.get("team", {}).get("shortDisplayName") or away.get("team", {}).get("displayName", "Away")
 
                 status_obj = comp.get("status", {}).get("type", {})
-                state = status_obj.get("state", "pre")  # pre, in, post
+                state = status_obj.get("state", "pre")
                 completed = bool(status_obj.get("completed", False))
 
                 try:
@@ -236,7 +236,6 @@ def fetch_espn_events_for_date(date_yyyymmdd: str) -> list[dict]:
                 except Exception:
                     home_score, away_score = 0, 0
 
-                # Extract moneyline odds if available
                 home_dec, away_dec, draw_dec = 0.0, 0.0, 0.0
                 odds_list = comp.get("odds") or []
                 if odds_list:
@@ -277,54 +276,156 @@ def fetch_espn_events_for_date(date_yyyymmdd: str) -> list[dict]:
 
 
 def build_daily_slip_legs(events: list[dict], max_legs: int = 4) -> list[dict]:
-    """Selects upcoming matches and assigns smart value markets (Home Win / 1X / Over 1.5)."""
+    """Builds a balanced slip combining 2 Safe Banker small odds + 2 Big Value odds."""
     upcoming = [e for e in events if e["state"] == "pre"]
     if not upcoming:
         return []
 
-    scored_candidates = []
+    small_bankers = []
+    big_boosters = []
+
     for ev in upcoming:
         h_odds = ev["home_dec"]
         a_odds = ev["away_dec"]
 
-        if 1.25 <= h_odds <= 1.75:
-            pick_code = "HOME_WIN"
-            pick_label = f"{ev['home']} Win (1)"
-            odd = h_odds
-            priority = 1
-        elif 1.76 <= h_odds <= 2.35:
-            pick_code = "HOME_OR_DRAW"
-            pick_label = f"{ev['home']} Win or Draw (1X)"
-            odd = round(max(1.22, h_odds * 0.68), 2)
-            priority = 2
-        elif 1.25 <= a_odds <= 1.75:
-            pick_code = "AWAY_WIN"
-            pick_label = f"{ev['away']} Win (2)"
-            odd = a_odds
-            priority = 2
-        else:
-            pick_code = "OVER_1_5"
-            pick_label = "Over 1.5 Goals"
-            odd = 1.30
-            priority = 3
+        # 1. Safe Banker Candidates (1.25 - 1.68)
+        if 1.25 <= h_odds <= 1.68:
+            small_bankers.append((h_odds, {
+                "event_id": ev["event_id"],
+                "league_code": ev["league_code"],
+                "league": ev["league"],
+                "match": f"{ev['home']} vs {ev['away']}",
+                "home": ev["home"],
+                "away": ev["away"],
+                "kickoff_wat": ev["kickoff_wat"],
+                "tier": "SAFE BANKER",
+                "pick_code": "HOME_WIN",
+                "pick_label": f"{ev['home']} Win (1)",
+                "odds": h_odds,
+                "result": "pending",
+                "final_score": "",
+            }))
+        elif 1.25 <= a_odds <= 1.68:
+            small_bankers.append((a_odds, {
+                "event_id": ev["event_id"],
+                "league_code": ev["league_code"],
+                "league": ev["league"],
+                "match": f"{ev['home']} vs {ev['away']}",
+                "home": ev["home"],
+                "away": ev["away"],
+                "kickoff_wat": ev["kickoff_wat"],
+                "tier": "SAFE BANKER",
+                "pick_code": "AWAY_WIN",
+                "pick_label": f"{ev['away']} Win (2)",
+                "odds": a_odds,
+                "result": "pending",
+                "final_score": "",
+            }))
+        elif 1.70 <= h_odds <= 2.15:
+            dc_odd = round(max(1.24, h_odds * 0.68), 2)
+            small_bankers.append((dc_odd, {
+                "event_id": ev["event_id"],
+                "league_code": ev["league_code"],
+                "league": ev["league"],
+                "match": f"{ev['home']} vs {ev['away']}",
+                "home": ev["home"],
+                "away": ev["away"],
+                "kickoff_wat": ev["kickoff_wat"],
+                "tier": "SAFE BANKER",
+                "pick_code": "HOME_OR_DRAW",
+                "pick_label": f"{ev['home']} Win or Draw (1X)",
+                "odds": dc_odd,
+                "result": "pending",
+                "final_score": "",
+            }))
 
-        scored_candidates.append((priority, odd, {
-            "event_id": ev["event_id"],
-            "league_code": ev["league_code"],
-            "league": ev["league"],
-            "match": f"{ev['home']} vs {ev['away']}",
-            "home": ev["home"],
-            "away": ev["away"],
-            "kickoff_wat": ev["kickoff_wat"],
-            "pick_code": pick_code,
-            "pick_label": pick_label,
-            "odds": odd,
-            "result": "pending",
-            "final_score": "",
-        }))
+        # 2. Big Odd Value Boosters (1.85 - 3.10)
+        if 1.85 <= h_odds <= 3.10:
+            big_boosters.append((h_odds, {
+                "event_id": ev["event_id"],
+                "league_code": ev["league_code"],
+                "league": ev["league"],
+                "match": f"{ev['home']} vs {ev['away']}",
+                "home": ev["home"],
+                "away": ev["away"],
+                "kickoff_wat": ev["kickoff_wat"],
+                "tier": "BIG VALUE",
+                "pick_code": "HOME_WIN",
+                "pick_label": f"{ev['home']} Straight Win (1)",
+                "odds": h_odds,
+                "result": "pending",
+                "final_score": "",
+            }))
+        elif 1.95 <= a_odds <= 3.10:
+            big_boosters.append((a_odds, {
+                "event_id": ev["event_id"],
+                "league_code": ev["league_code"],
+                "league": ev["league"],
+                "match": f"{ev['home']} vs {ev['away']}",
+                "home": ev["home"],
+                "away": ev["away"],
+                "kickoff_wat": ev["kickoff_wat"],
+                "tier": "BIG VALUE",
+                "pick_code": "AWAY_WIN",
+                "pick_label": f"{ev['away']} Straight Win (2)",
+                "odds": a_odds,
+                "result": "pending",
+                "final_score": "",
+            }))
+        elif h_odds == 0.0 and a_odds == 0.0:
+            small_bankers.append((1.30, {
+                "event_id": ev["event_id"],
+                "league_code": ev["league_code"],
+                "league": ev["league"],
+                "match": f"{ev['home']} vs {ev['away']}",
+                "home": ev["home"],
+                "away": ev["away"],
+                "kickoff_wat": ev["kickoff_wat"],
+                "tier": "SAFE BANKER",
+                "pick_code": "OVER_1_5",
+                "pick_label": "Over 1.5 Goals",
+                "odds": 1.30,
+                "result": "pending",
+                "final_score": "",
+            }))
+            big_boosters.append((1.95, {
+                "event_id": ev["event_id"],
+                "league_code": ev["league_code"],
+                "league": ev["league"],
+                "match": f"{ev['home']} vs {ev['away']}",
+                "home": ev["home"],
+                "away": ev["away"],
+                "kickoff_wat": ev["kickoff_wat"],
+                "tier": "BIG VALUE",
+                "pick_code": "OVER_2_5",
+                "pick_label": "Over 2.5 Goals",
+                "odds": 1.95,
+                "result": "pending",
+                "final_score": "",
+            }))
 
-    scored_candidates.sort(key=lambda x: (x[0], x[1]))
-    return [item[2] for item in scored_candidates[:max_legs]]
+    small_bankers.sort(key=lambda x: x[0])
+    big_boosters.sort(key=lambda x: x[0], reverse=True)
+
+    selected = []
+    used_ids = set()
+
+    for _, leg in small_bankers:
+        if leg["event_id"] not in used_ids and len(selected) < 2:
+            selected.append(leg)
+            used_ids.add(leg["event_id"])
+
+    for _, leg in big_boosters:
+        if leg["event_id"] not in used_ids and len(selected) < max_legs:
+            selected.append(leg)
+            used_ids.add(leg["event_id"])
+
+    for _, leg in small_bankers:
+        if leg["event_id"] not in used_ids and len(selected) < max_legs:
+            selected.append(leg)
+            used_ids.add(leg["event_id"])
+
+    return selected
 
 
 def evaluate_leg_result(leg: dict, ev: dict) -> str:
@@ -352,17 +453,18 @@ def evaluate_leg_result(leg: dict, ev: dict) -> str:
 
 def format_daily_slip_post(slip_date_str: str, legs: list[dict], total_odds: float, booking_code: str) -> str:
     lines = [
-        f"⚽🔥 PULSEFEED DAILY FOOTBALL SLIP ({slip_date_str})",
-        f"📊 Total Odds: {total_odds:.2f}x",
+        f"⚽🔥 PULSEFEED SMART COMBO SLIP ({slip_date_str})",
+        f"📊 Combined Odds: {total_odds:.2f}x (Safe Bankers + Big Value)",
     ]
     if booking_code:
         lines.append(f"🎟️ Booking Code: {booking_code}")
     lines.append("")
 
     for idx, leg in enumerate(legs, 1):
+        tier_tag = "🛡️" if leg.get("tier") == "SAFE BANKER" else "🚀"
         lines.append(
             f"{idx}. {leg['match']} ({leg['league']})\n"
-            f"   ⏰ {leg['kickoff_wat']} | 🎯 {leg['pick_label']} @ {leg['odds']:.2f}"
+            f"   ⏰ {leg['kickoff_wat']} | {tier_tag} {leg['pick_label']} @ {leg['odds']:.2f}"
         )
 
     lines.extend([
@@ -408,12 +510,11 @@ def format_verified_slip_post(slip_date_str: str, legs: list[dict], total_odds: 
 
 
 def process_daily_betting_slips():
-    """Publishes today's slip once per day and verifies final scores at end of day (WAT)."""
+    """Publishes today's Smart Combo Slip once per day and verifies final scores at end of day (WAT)."""
     now_wat = datetime.now(WAT_TZ)
     today_iso = now_wat.strftime("%Y-%m-%d")
     today_compact = now_wat.strftime("%Y%m%d")
 
-    # 1. Check if today's slip already exists in Supabase
     existing_slip = None
     try:
         q = f"{SUPABASE_URL}/rest/v1/betting_slips?slip_date=eq.{today_iso}&limit=1"
@@ -423,7 +524,6 @@ def process_daily_betting_slips():
     except Exception as e:
         print(f"betting_slips lookup skipped: {e}")
 
-    # 2. If no slip posted yet today (and before 20:30 WAT), build & broadcast today's slip
     if not existing_slip and now_wat.hour < 21:
         events = fetch_espn_events_for_date(today_compact)
         legs = build_daily_slip_legs(events, max_legs=4)
@@ -446,7 +546,7 @@ def process_daily_betting_slips():
                     headers={**HEADERS_SB, "Prefer": "resolution=merge-duplicates,return=minimal"},
                     json={
                         "slip_date": today_iso,
-                        "title": f"PulseFeed Daily Slip {today_iso}",
+                        "title": f"PulseFeed Smart Combo Slip {today_iso}",
                         "booking_code": DAILY_BOOKING_CODE,
                         "total_odds": total_odds,
                         "legs": legs,
@@ -456,10 +556,9 @@ def process_daily_betting_slips():
                 )
             except Exception as e:
                 print(f"betting_slips save warning: {e}")
-            print(f"Posted daily betting slip for {today_iso} ({len(legs)} legs, {total_odds}x).")
+            print(f"Posted daily Smart Combo slip for {today_iso} ({len(legs)} legs, {total_odds}x).")
         return
 
-    # 3. End-of-Day Verification (from 21:00 WAT onward if slip is still pending)
     if existing_slip and existing_slip.get("status") == "pending" and now_wat.hour >= 21:
         legs = existing_slip.get("legs") or []
         if not legs:
@@ -479,7 +578,6 @@ def process_daily_betting_slips():
                 if leg["result"] == "won":
                     won_count += 1
 
-        # Wait until all matches on the slip have finished (or 23:00 WAT cutoff)
         if completed_count < len(legs) and now_wat.hour < 23:
             print(f"EOD verification waiting: {completed_count}/{len(legs)} matches finished.")
             return

@@ -1,7 +1,73 @@
 {
-  "updated_at": "2026-11-27T06:04:55Z",
+  "updated_at": "2026-11-27T07:53:37Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "acbcc6e8-0930-4d67-bda7-2c92a752fd2e",
+      "dedupe_key": "f56e3746a2394d673c47c8e9",
+      "title": "Director of Software Engineering",
+      "summary": "Warner Music Group — At Warner Music Group, weâre a global collective of music makers and music lovers, tech innovators and inspired entrepreneurs, game-changing creatives and passionate team members. Here, we turn…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Canada Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-of-software-engineering-f56e3746.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-director-of-software-engineering-warner-music-group-1138173",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "d3909cb4-b86a-4e49-bf1e-2f0a7a121dc6",
+      "dedupe_key": "7f60688b7b256512e3a65023",
+      "title": "Partner Solution Architect, Partner Center of Excellence",
+      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-solution-architect-partner-center-of-excellence-7f60688b.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-solution-architect-partner-center-of-excellence-agiloft-1138172",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "9c9dc5de-0df9-4a4f-ba2a-e96a67e5ee5d",
+      "dedupe_key": "fd7284fe2176a5bf79eeb2e4",
+      "title": "Head of Professional Services, NICE",
+      "summary": "TTEC Digital — At TTEC Digital, we coach clients to ensure their employees feel valued, and fully supported, because an amazing customer experience is an employee first process. Our vision is the same, a place where…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/head-of-professional-services-nice-fd7284fe.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-head-of-professional-services-nice-ttec-digital-1138171",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "49043824-ece5-48be-9685-a1a7610673d8",
+      "dedupe_key": "6f7188e15b47671062074c92",
+      "title": "Developer Advocate - Network APIs",
+      "summary": "aduna — All Together, Extraordinary adunaglobal.com Aduna is the Connector of networks, bringing together leading telecom operators and technology partners to simplify global access to Network APIs. Through a single…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/developer-advocate-network-apis-6f7188e1.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-developer-advocate-network-apis-aduna-1138170",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "c93ecca5-6f70-4c95-8b72-9496ffaf8b2d",
+      "dedupe_key": "03420b7b7d752fd14c1f7a3b",
+      "title": "Enterprise Account Executive - Western US",
+      "summary": "agiloft — As the most trusted global leader in data-first contract lifecycle management (CLM) software, Agiloft helps organizations manage the end-to-end process of proposing, negotiating, signing, and leveraging…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-western-us-03420b7b.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-western-us-agiloft-1138169",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "eecb4647-0093-4f98-8d04-404454c08359",
+      "dedupe_key": "57342986ba1dcbb7972b785a",
+      "title": "Enterprise Account Executive - New York",
+      "summary": "zimperium — Zimperium ® is an industry leader in enterprise mobile security, being the first and only company to provide a complete mobile threat defense system that offers real-time, on device world-class protection…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-new-york-57342986.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-new-york-zimperium-1138166",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "a2ab831f-0b1b-4fbc-93fa-86c0c13874e3",
       "dedupe_key": "6b6c9bac398d1ba58db17b7b",
@@ -22,17 +88,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-director-federal-5bfce995.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-director-federal-netomi-1138167",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "eecb4647-0093-4f98-8d04-404454c08359",
-      "dedupe_key": "57342986ba1dcbb7972b785a",
-      "title": "Enterprise Account Executive - New York",
-      "summary": "zimperium — Zimperium ® is an industry leader in enterprise mobile security, being the first and only company to provide a complete mobile threat defense system that offers real-time, on device world-class protection…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-new-york-57342986.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-new-york-zimperium-1138166",
       "date_posted": "2026-11-27"
     },
     {
@@ -58,28 +113,6 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "596dc5e5-27e9-4025-86e7-a7ca8b9639a8",
-      "dedupe_key": "790b951c473e76daee26bbcf",
-      "title": "Full-Stack Engineer",
-      "summary": "OpenTrain AI — Headquarters: United States URL: Full-Stack Engineer, Part-Time AI Code Evaluation - Remote (United States) • $50–$100 per hour equivalent, paid per accepted task • 100% remote • Part-time • Under 20…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "ce3187d5-560e-408b-ab8f-a6948dbe7c9c",
-      "dedupe_key": "51227bdb0fab3c379199c3b7",
-      "title": "Account Executive - Chicago",
-      "summary": "Saviynt — Saviynt's AI-powered identity platform manages and governs human and non-human access to all of an organization's applications, data, and business processes. Customers trust Saviynt to safeguard their digital…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-chicago-51227bdb.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-chicago-saviynt-1138164",
-      "date_posted": "2026-11-27"
-    },
-    {
       "id": "015a533a-13da-448b-b874-e6673eedfe14",
       "dedupe_key": "6d4e5cbfc70c6256af5934c3",
       "title": "Brazilian Subject Matter Expert in Fandoms (Music, Pop, Disney & Political Memes)",
@@ -102,6 +135,28 @@
       "date_posted": "2026-11-27"
     },
     {
+      "id": "ce3187d5-560e-408b-ab8f-a6948dbe7c9c",
+      "dedupe_key": "51227bdb0fab3c379199c3b7",
+      "title": "Account Executive - Chicago",
+      "summary": "Saviynt — Saviynt's AI-powered identity platform manages and governs human and non-human access to all of an organization's applications, data, and business processes. Customers trust Saviynt to safeguard their digital…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-chicago-51227bdb.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-chicago-saviynt-1138164",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "596dc5e5-27e9-4025-86e7-a7ca8b9639a8",
+      "dedupe_key": "790b951c473e76daee26bbcf",
+      "title": "Full-Stack Engineer",
+      "summary": "OpenTrain AI — Headquarters: United States URL: Full-Stack Engineer, Part-Time AI Code Evaluation - Remote (United States) • $50–$100 per hour equivalent, paid per accepted task • 100% remote • Part-time • Under 20…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
+      "date_posted": "2026-11-27"
+    },
+    {
       "id": "de768699-e78c-4932-9ba8-22023510e3fe",
       "dedupe_key": "4517d822a5e7151c8e597fb0",
       "title": "Consultant - People Science",
@@ -110,6 +165,17 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/consultant-people-science-4517d822.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-consultant-people-science-veeva-systems-1138158",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "1377c431-7bb4-4d2f-b7b0-0ebb8e4c7068",
+      "dedupe_key": "809ba98f92e6fb6c651d8570",
+      "title": "Manager, Technical Support",
+      "summary": "Coupa — Coupa makes margins multiply through its community-generated AI and industry-leading total spend management platform for businesses large and small. Coupa AI is informed by trillions of dollars of direct and…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/manager-technical-support-809ba98f.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-manager-technical-support-coupa-1138159",
       "date_posted": "2026-11-27"
     },
     {
@@ -132,17 +198,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-engineer-us-east-f249c83c.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-engineer-us-east-secure-code-warrior-1138160",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "1377c431-7bb4-4d2f-b7b0-0ebb8e4c7068",
-      "dedupe_key": "809ba98f92e6fb6c651d8570",
-      "title": "Manager, Technical Support",
-      "summary": "Coupa — Coupa makes margins multiply through its community-generated AI and industry-leading total spend management platform for businesses large and small. Coupa AI is informed by trillions of dollars of direct and…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/manager-technical-support-809ba98f.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-manager-technical-support-coupa-1138159",
       "date_posted": "2026-11-27"
     },
     {
@@ -275,61 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-701cf081.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-idmworks-1138145",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "cfc630b1-f96d-4854-b545-fbe8d58dbad6",
-      "dedupe_key": "15572d69c1788fc436a7f93d",
-      "title": "Director of Sales, North America",
-      "summary": "Insider One — Before jumping into all the information about the role and what you can bring to the table, let us introduce ourselves real quick. About us Insider One is the #1 platform that brings everything marketing…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-of-sales-north-america-15572d69.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-director-of-sales-north-america-insider-one-1138143",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "52f1e0db-e7c1-4a75-ac6e-0d6129c87e9e",
-      "dedupe_key": "ce5c3e5a6379fdc394329430",
-      "title": "Regional Sales Manager (Automotive Software Sales)",
-      "summary": "Keyloop — Keyloop bridges the gap between dealers, manufacturers, technology suppliers and car buyers. We empower car dealers and manufacturers to fully embrace digital transformation. How? By creating innovative…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Canada Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/regional-sales-manager-automotive-software-sales-ce5c3e5a.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-regional-sales-manager-automotive-software-sales-keyloop-1138142",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "9fb5da7f-7ef0-4d2d-840b-82bbd9511120",
-      "dedupe_key": "50592b25ab17494382d48d1e",
-      "title": "Lifecycle Marketing Manager",
-      "summary": "Lifeforce — Employment type: Full-time Experience: 4+ years Reports to: Chris Stella, VP Growth About Lifeforce We are in the early stages of a generational shift in how people approach their health. No longer satisfied…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/lifecycle-marketing-manager-50592b25.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-lifecycle-marketing-manager-lifeforce-1138144",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "4df2a5ec-8380-4fee-ac16-9cf1a19be82e",
-      "dedupe_key": "6c58b7f9263e7e631932e8c5",
-      "title": "Creative Director",
-      "summary": "Luxury Presence — Luxury Presence is building the AI growth platform for real estate. Backed by Bessemer Venture Partners and other top investors, we're a Series C company that has hit $100M in annual recurring revenue…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/creative-director-6c58b7f9.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-creative-director-luxury-presence-1138146",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "deb6b5ee-6462-4c62-bdd3-e70cc7a5e5ec",
-      "dedupe_key": "dd0f2c14823159848f9fa7fc",
-      "title": "English to Belarusian Review Lead for UI, Marketing & Product Content",
-      "summary": "Welo Data — About Welo Global Welo Global is a leader in multilingual AI, technology, and content solutions serving over 2,000 clients in 300 languages. The company combines globally scaled multilingual infrastructure…",
-      "source_name": "RemoteOK",
-      "location_or_type": "UK Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/english-to-belarusian-review-lead-for-ui-marketing-product-conten-dd0f2c14.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-english-to-belarusian-review-lead-for-ui-marketing-product-content-welo-data-1138140",
       "date_posted": "2026-11-26"
     }
   ]

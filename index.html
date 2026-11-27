@@ -91,7 +91,7 @@
       color: var(--gumroad);
     }
 
-    /* X-Style Lane Tabs */
+    /* X-Style Lane Tabs & Region Pills */
     .lane-tabs {
       display: flex;
       gap: 6px;
@@ -116,6 +116,41 @@
       background: #ffffff;
       color: #0d1117;
       border-color: #ffffff;
+    }
+
+    .region-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      margin-top: 8px;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .region-bar::-webkit-scrollbar { display: none; }
+    .region-label {
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .region-pill {
+      flex: 0 0 auto;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #11161d;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .region-pill:hover { color: #ffffff; border-color: var(--blue); }
+    .region-pill.active {
+      background: rgba(88, 166, 255, 0.18);
+      color: #ffffff;
+      border-color: var(--blue);
     }
 
     /* Monetized Top Spotlight Strip */
@@ -194,7 +229,7 @@
     }
     .composer-top {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       margin-bottom: 8px;
       flex-wrap: wrap;
@@ -207,7 +242,7 @@
       color: var(--text);
       font-size: 0.82rem;
     }
-    .composer-top input { flex: 1; min-width: 140px; }
+    .composer-top input { flex: 1; min-width: 130px; }
     .composer-card input[name="title"] {
       width: 100%;
       padding: 8px 10px;
@@ -460,7 +495,7 @@
 </head>
 <body>
   <div class="container">
-    <!-- Sticky Header & X-Style Lane Switcher -->
+    <!-- Sticky Header, X-Style Lane Switcher & Regional Trending Bar -->
     <header class="topbar">
       <div class="topbar-row">
         <div class="brand">
@@ -479,6 +514,17 @@
         <button type="button" class="lane-tab" data-lane="trending">🔥 Trending Now</button>
         <button type="button" class="lane-tab" data-lane="football">⚽ Football</button>
         <button type="button" class="lane-tab" data-lane="community">💬 Community</button>
+      </div>
+
+      <div class="region-bar" id="regionBar">
+        <span class="region-label">Around you:</span>
+        <button type="button" class="region-pill active" data-region="ALL">🌍 All</button>
+        <button type="button" class="region-pill" data-region="NG">🇳🇬 Nigeria</button>
+        <button type="button" class="region-pill" data-region="UK">🇬🇧 UK</button>
+        <button type="button" class="region-pill" data-region="US">🇺🇸 US</button>
+        <button type="button" class="region-pill" data-region="EU">🇪🇺 Europe</button>
+        <button type="button" class="region-pill" data-region="AU">🇦🇺 Australia</button>
+        <button type="button" class="region-pill" data-region="GLOBAL">⚡ Global</button>
       </div>
     </header>
 
@@ -506,6 +552,14 @@
             <option value="trending">🔥 Trending Now (Media Req.)</option>
             <option value="breaking">🚨 Breaking News (Media Req.)</option>
             <option value="football">⚽ Football News (Media Req.)</option>
+          </select>
+          <select name="region" id="composerRegion">
+            <option value="NG">🇳🇬 Nigeria</option>
+            <option value="UK">🇬🇧 UK</option>
+            <option value="US">🇺🇸 US</option>
+            <option value="EU">🇪🇺 Europe</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="GLOBAL">🌍 Global</option>
           </select>
         </div>
         <input type="text" name="title" placeholder="Headline or short topic *" required maxlength="160" />
@@ -537,8 +591,31 @@
       STORAGE_BUCKET: "marketplace-images",
       MAX_IMAGE_BYTES: 5 * 1024 * 1024,
       MAX_VIDEO_BYTES: 15 * 1024 * 1024,
-      GUMROAD_DEFAULT: "https://chukwuma448.gumroad.com/l/dvfhm?utm_source=pulsefeed&utm_medium=inline_feed&utm_campaign=viralhook_ai&utm_content=native_card"
+      GUMROAD_DEFAULT: "https://chukwuma448.gumroad.com/l/dvfhm?utm_source=pulsefeed&utm_medium=inline_feed&utm_campaign=viralhook_ai&utm_content=native_card",
+      REGION_STORAGE_KEY: "pulsefeed_selected_region"
     };
+
+    const REGION_BADGE_MAP = {
+      NG: "🇳🇬 Nigeria",
+      UK: "🇬🇧 UK",
+      US: "🇺🇸 US",
+      EU: "🇪🇺 Europe",
+      AU: "🇦🇺 Australia",
+      GLOBAL: "🌍 Global"
+    };
+
+    function detectDefaultRegion() {
+      const saved = localStorage.getItem(CONFIG.REGION_STORAGE_KEY);
+      if (saved && (saved === "ALL" || REGION_BADGE_MAP[saved])) return saved;
+
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (tz === "Africa/Lagos") return "NG";
+      if (tz === "Europe/London") return "UK";
+      if (tz.startsWith("America/")) return "US";
+      if (tz.startsWith("Australia/")) return "AU";
+      if (tz.startsWith("Europe/")) return "EU";
+      return "ALL";
+    }
 
     let allPosts = [];
     let marketOffers = [];
@@ -546,6 +623,7 @@
     let openPostIds = new Set();
     let replyTargetByPost = {};
     let activeLane = "all";
+    let activeRegion = detectDefaultRegion();
     let previewUrl = null;
 
     function escapeHtml(str) {
@@ -692,10 +770,15 @@
 
     /* Composer preview & lane validation */
     const composerLane = document.getElementById("composerLane");
+    const composerRegion = document.getElementById("composerRegion");
     const mediaHint = document.getElementById("mediaHint");
     const mediaInput = document.getElementById("composerMediaInput");
     const imgPrev = document.getElementById("composerImgPreview");
     const vidPrev = document.getElementById("composerVidPreview");
+
+    if (activeRegion !== "ALL" && REGION_BADGE_MAP[activeRegion]) {
+      composerRegion.value = activeRegion;
+    }
 
     function updateMediaHint() {
       const needsMedia = composerLane.value !== "community";
@@ -737,6 +820,7 @@
       const form = e.target;
       const author_name = form.author_name.value.trim() || "Member";
       const feed_lane = form.feed_lane.value;
+      const region = form.region.value || "GLOBAL";
       const title = form.title.value.trim();
       const summary = form.summary.value.trim();
       const file = mediaInput.files && mediaInput.files[0] ? mediaInput.files[0] : null;
@@ -766,6 +850,7 @@
             author_name,
             source_name: author_name,
             feed_lane,
+            region,
             title,
             summary,
             media_url,
@@ -776,6 +861,9 @@
         });
 
         form.reset();
+        if (activeRegion !== "ALL" && REGION_BADGE_MAP[activeRegion]) {
+          composerRegion.value = activeRegion;
+        }
         clearComposerPreview();
         updateMediaHint();
         showToast("✓ Posted to live timeline");
@@ -927,8 +1015,8 @@
       const initials = author.replace(/[^a-zA-Z0-9]/g, "").slice(0, 2).toUpperCase() || "PF";
       const actionUrl = post.cta_url || post.source_url || window.location.href;
       const isPromo = Boolean(post.is_sponsored || post.is_pinned);
+      const regionBadge = REGION_BADGE_MAP[post.region || "GLOBAL"] || "🌍 Global";
 
-      // Order parent comments followed by their direct replies
       const topLevel = comments.filter((c) => !c.parent_comment_id);
       const byParent = {};
       for (const c of comments) {
@@ -965,7 +1053,7 @@
               <div class="avatar">${escapeHtml(initials)}</div>
               <div class="author-meta">
                 <div class="author-name">${escapeHtml(author)}</div>
-                <div class="author-sub">${escapeHtml(post.source_name || "PulseFeed")} · ${timeAgo(post.created_at)}</div>
+                <div class="author-sub">${escapeHtml(post.source_name || "PulseFeed")} · ${escapeHtml(regionBadge)} · ${timeAgo(post.created_at)}</div>
               </div>
             </div>
             ${getLaneBadge(post)}
@@ -1006,20 +1094,32 @@
       `;
     }
 
+    function sortBySelectedRegion(posts, regionCode, minLocalCount = 3) {
+      if (!regionCode || regionCode === "ALL") return posts;
+      const local = posts.filter((p) => (p.region || "GLOBAL") === regionCode);
+      if (local.length >= minLocalCount) return local;
+      const localIds = new Set(local.map((p) => p.id));
+      const others = posts.filter((p) => !localIds.has(p.id));
+      return [...local, ...others];
+    }
+
     function renderTimeline() {
       const timeline = document.getElementById("timeline");
       const q = document.getElementById("searchInput").value.trim().toLowerCase();
 
-      const filtered = allPosts.filter((p) => {
+      const laneAndSearchFiltered = allPosts.filter((p) => {
         if (activeLane !== "all" && !p.is_pinned && p.feed_lane !== activeLane) return false;
         if (!q) return true;
         return (
           (p.title || "").toLowerCase().includes(q) ||
           (p.summary || "").toLowerCase().includes(q) ||
           (p.author_name || "").toLowerCase().includes(q) ||
-          (p.source_name || "").toLowerCase().includes(q)
+          (p.source_name || "").toLowerCase().includes(q) ||
+          (p.region || "").toLowerCase().includes(q)
         );
       });
+
+      const filtered = sortBySelectedRegion(laneAndSearchFiltered, activeRegion);
 
       if (!filtered.length && !marketOffers.length) {
         timeline.innerHTML = `<div class="status-box">No posts in this lane yet. Be the first to post above!</div>`;
@@ -1031,14 +1131,12 @@
 
       filtered.forEach((post, index) => {
         chunks.push(renderPostCard(post));
-        // Inject a monetized offer card every 4 posts
         if ((index + 1) % 4 === 0 && marketOffers.length > 0) {
           chunks.push(renderNativeOfferCard(marketOffers[offerIdx % marketOffers.length]));
           offerIdx++;
         }
       });
 
-      // If fewer than 4 posts exist, still show 1 native offer card at the bottom
       if (filtered.length < 4 && marketOffers.length > 0) {
         chunks.push(renderNativeOfferCard(marketOffers[0]));
       }
@@ -1046,10 +1144,16 @@
       timeline.innerHTML = chunks.join("");
     }
 
+    function syncRegionPills() {
+      document.querySelectorAll("#regionBar .region-pill").forEach((pill) => {
+        pill.classList.toggle("active", pill.dataset.region === activeRegion);
+      });
+    }
+
     async function loadFeed() {
       try {
         const [posts, comments, listings] = await Promise.all([
-          sbFetch("feed_posts?status=eq.published&order=is_pinned.desc,created_at.desc&limit=60"),
+          sbFetch("feed_posts?status=eq.published&order=is_pinned.desc,created_at.desc&limit=80"),
           sbFetch("post_comments?status=eq.approved&order=created_at.asc&limit=1000"),
           sbFetch("market_listings?status=eq.published&order=created_at.desc&limit=20").catch(() => [])
         ]);
@@ -1079,8 +1183,21 @@
       });
     });
 
+    document.querySelectorAll("#regionBar .region-pill").forEach((pill) => {
+      pill.addEventListener("click", () => {
+        activeRegion = pill.dataset.region;
+        localStorage.setItem(CONFIG.REGION_STORAGE_KEY, activeRegion);
+        if (activeRegion !== "ALL" && REGION_BADGE_MAP[activeRegion]) {
+          composerRegion.value = activeRegion;
+        }
+        syncRegionPills();
+        renderTimeline();
+      });
+    });
+
     document.getElementById("searchInput").addEventListener("input", renderTimeline);
 
+    syncRegionPills();
     loadFeed();
     setInterval(loadFeed, 2 * 60 * 1000);
   </script>

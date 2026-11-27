@@ -4,7 +4,23 @@
     <title>PulseFeed — Breaking News, Trending &amp; Football</title>
     <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
     <description>Real-time global and regional breaking news, football updates, remote jobs, and creator tools.</description>
-    <lastBuildDate>Fri, 27 Nov 2026 19:48:09 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 27 Nov 2026 19:53:52 +0000</lastBuildDate>
+    <item>
+      <title>[US] EXCLUSIVE: Hackers breach US Air Force flagship Cloud One computing platform - Reuters</title>
+      <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
+      <guid isPermaLink="false">3be64bc3-7eeb-4a48-8319-28531d2003af</guid>
+      <category>breaking</category>
+      <description>EXCLUSIVE: Hackers breach US Air Force flagship Cloud One computing platform Reuters Hackers break into US Air Force cloud computing platform: Report The Hill Hackers attack and penetrate Air Force’s computing platform NBC News Hackers reportedly breach US air force’s flagship cloud computing platform The Guardian US…</description>
+      <enclosure url="https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&amp;fit=crop&amp;w=1000&amp;q=80" type="image/jpeg" />
+    </item>
+    <item>
+      <title>[NG] FRSC begins ember months campaign in Anambra, warns against overloading</title>
+      <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
+      <guid isPermaLink="false">1e8cdb75-9cd8-4365-a3b8-6af4a46ab267</guid>
+      <category>trending</category>
+      <description>FRSC flags off its 2026 Ember months campaign in Anambra, warning motorists and transport operators against overloading, mix-loading, speeding and drunk dr Read More: https://punchng.com/frsc-begins-ember-months-campaign-in-anambra-warns-against-overloading/</description>
+      <enclosure url="https://cdn.punchng.com/wp-content/uploads/2026/11/27205039/1001228681_1795809039-1080x630.webp" type="image/jpeg" />
+    </item>
     <item>
       <title>[GLOBAL] The best Black Friday deals on smart home gear</title>
       <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
@@ -228,22 +244,6 @@
       <category>trending</category>
       <description>Ben Stiller has a lot of hits among his best movies, like &quot;Tropic Thunder&quot; and &quot;The Royal Tenenbaums,&quot; but he also has plenty of duds.</description>
       <enclosure url="https://i.insider.com/6b0586190b69407d788a5f52?format=jpeg" type="image/jpeg" />
-    </item>
-    <item>
-      <title>[GLOBAL] The best Black Friday deals on AirPods, MacBooks, and other Apple gear</title>
-      <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
-      <guid isPermaLink="false">eb1e9e2e-806c-4563-bab4-220e48600eb1</guid>
-      <category>trending</category>
-      <description>Black Friday is one of the best times of the year to save some cash on a new pair of AirPods or the latest Apple Watch. After all, the holiday savings can help offset the unfortunate price hikes from earlier this year, when Apple raised the cost of some of its most popular gear. Some […]</description>
-      <enclosure url="https://platform.theverge.com/wp-content/uploads/sites/2/2026/10/268836_MacBook_Pro_touchscreen_OLED_handson_ADiBenedetto_0048.jpg?quality=90&amp;strip=all&amp;crop=0,0,100,100" type="image/jpeg" />
-    </item>
-    <item>
-      <title>[EU] Smolensk crash: Experts identify landing errors, rule out explosion</title>
-      <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
-      <guid isPermaLink="false">2c9f8103-476e-4fbf-98a4-e0256d6e87a2</guid>
-      <category>breaking</category>
-      <description>More than 16 years after the Smolensk disaster, prosecutors have released the findings of international experts who ruled out an explosion as the cause of the crash. Former Polish Defence Minister Antoni Macierewicz has rejected their conclusions.</description>
-      <enclosure url="https://images.euronews.com/articles/stories/10/01/12/24/1200x675_cmsv2_5ab24329-b637-5329-9d22-f4b07f93b7c6-10011224.jpg" type="image/jpeg" />
     </item>
   </channel>
 </rss>

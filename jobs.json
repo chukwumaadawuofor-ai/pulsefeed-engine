@@ -1,7 +1,51 @@
 {
-  "updated_at": "2026-11-27T08:57:58Z",
+  "updated_at": "2026-11-27T10:06:25Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "21ac5306-7bc8-443b-8685-dcbc6b89fb8f",
+      "dedupe_key": "5035e3a515b93642f563c4e5",
+      "title": "Senior iOS Engineer, Foundations",
+      "summary": "Raya — We are seeking a Senior iOS Engineer to join Raya Foundations, the platform team that owns the shared foundation every other Raya engineering team builds on. On the client side that means the architecture of our…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-ios-engineer-foundations-5035e3a5.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-ios-engineer-foundations-raya-1138180",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "24adb170-007a-40ae-a197-af0da0e711e2",
+      "dedupe_key": "bce8798fdf38dfcd2131d852",
+      "title": "Sales Engineer",
+      "summary": "Ethena — Who we are Weâre Ethena, an AI platform thatâs revolutionizing the Compliance space. Our team of agents helps Compliance and People leaders run proactive Compliance programs that drive real behavior change…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-engineer-bce8798f.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-engineer-ethena-1138178",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "4d86044e-154e-42cd-99b1-9e88111d1b43",
+      "dedupe_key": "4751c96d9e91f110db5e9f14",
+      "title": "Senior Director, Client Service (FIT)",
+      "summary": "Bounteous — Bounteous is a global AI Services firm where agentic engineering and human experience converge to deliver transformative business outcomes for the enterprise. We help organizations design, build, and scale…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-director-client-service-fit-4751c96d.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-director-client-service-fit-bounteous-1138177",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "4aadbf5b-ee3c-4bdf-be8c-92be6aef6269",
+      "dedupe_key": "66902ad85b553ba2f24cc1d5",
+      "title": "Middle Contact Center Agent (Roadside Assistance)",
+      "summary": "Volkswagen AG — Headquarters: Portugal URL: Annual gross salary range: Min. 16,534 - Max. 18,893€ (depending on experience). Volkswagen Group Services is a Volkswagen Group company oriented towards working for Group…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/middle-contact-center-agent-roadside-assistance-66902ad8.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/volkswagen-ag-middle-contact-center-agent-roadside-assistance",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "7868ed29-b6fc-4808-bf4c-a8e4aa1c3693",
       "dedupe_key": "e2c26dff61cddd1969bed923",
@@ -25,17 +69,6 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "19477d27-4164-44dc-96d9-3af771ab0c9b",
-      "dedupe_key": "b55b3be7a8302672863723cf",
-      "title": "Senior Engineering Manager - Agentic Products",
-      "summary": "Spotify — The Personalization team makes deciding what to play next easier and more enjoyable for every listener. From Blend to Discover Weekly, weâre behind some of Spotifyâs most-loved features. We built them by…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-engineering-manager-agentic-products-b55b3be7.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-engineering-manager-agentic-products-spotify-1138174",
-      "date_posted": "2026-11-27"
-    },
-    {
       "id": "67945ba6-993a-408e-8c39-d303c53185a6",
       "dedupe_key": "760de0d28264329394f67322",
       "title": "Customer Care <> Pet End of Life Arranger",
@@ -44,6 +77,17 @@
       "location_or_type": "Remote",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/customer-care-pet-end-of-life-arranger-760de0d2.html",
       "apply_url": "https://weworkremotely.com/remote-jobs/bare-funeral-group-pty-ltd-customer-care-pet-end-of-life-arranger",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "19477d27-4164-44dc-96d9-3af771ab0c9b",
+      "dedupe_key": "b55b3be7a8302672863723cf",
+      "title": "Senior Engineering Manager - Agentic Products",
+      "summary": "Spotify — The Personalization team makes deciding what to play next easier and more enjoyable for every listener. From Blend to Discover Weekly, weâre behind some of Spotifyâs most-loved features. We built them by…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-engineering-manager-agentic-products-b55b3be7.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-engineering-manager-agentic-products-spotify-1138174",
       "date_posted": "2026-11-27"
     },
     {
@@ -124,17 +168,6 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "b0c514e3-a02a-425e-a81c-531ab9c5e596",
-      "dedupe_key": "5bfce9952e0f3bef3f954d36",
-      "title": "Partner Director, Federal",
-      "summary": "Netomi — About the Company: Netomi is the leading agentic AI platform for enterprise customer experience. We work with the largest global brands like Delta Airlines, MetLife, United, and others to enable agentic…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-director-federal-5bfce995.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-director-federal-netomi-1138167",
-      "date_posted": "2026-11-27"
-    },
-    {
       "id": "f10a5a79-e1eb-46d3-be11-79455f09ac19",
       "dedupe_key": "5694ee3ca27c637864647efc",
       "title": "Paid Media Manager (Remote)",
@@ -157,6 +190,17 @@
       "date_posted": "2026-11-27"
     },
     {
+      "id": "b0c514e3-a02a-425e-a81c-531ab9c5e596",
+      "dedupe_key": "5bfce9952e0f3bef3f954d36",
+      "title": "Partner Director, Federal",
+      "summary": "Netomi — About the Company: Netomi is the leading agentic AI platform for enterprise customer experience. We work with the largest global brands like Delta Airlines, MetLife, United, and others to enable agentic…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-director-federal-5bfce995.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-director-federal-netomi-1138167",
+      "date_posted": "2026-11-27"
+    },
+    {
       "id": "ce3187d5-560e-408b-ab8f-a6948dbe7c9c",
       "dedupe_key": "51227bdb0fab3c379199c3b7",
       "title": "Account Executive - Chicago",
@@ -165,17 +209,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-executive-chicago-51227bdb.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-account-executive-chicago-saviynt-1138164",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "596dc5e5-27e9-4025-86e7-a7ca8b9639a8",
-      "dedupe_key": "790b951c473e76daee26bbcf",
-      "title": "Full-Stack Engineer",
-      "summary": "OpenTrain AI — Headquarters: United States URL: Full-Stack Engineer, Part-Time AI Code Evaluation - Remote (United States) • $50–$100 per hour equivalent, paid per accepted task • 100% remote • Part-time • Under 20…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
       "date_posted": "2026-11-27"
     },
     {
@@ -198,6 +231,17 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/brazilian-subject-matter-expert-in-games-puzzles-play-e3a9c9e8.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-brazilian-subject-matter-expert-in-games-puzzles-play-welo-data-1138162",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "596dc5e5-27e9-4025-86e7-a7ca8b9639a8",
+      "dedupe_key": "790b951c473e76daee26bbcf",
+      "title": "Full-Stack Engineer",
+      "summary": "OpenTrain AI — Headquarters: United States URL: Full-Stack Engineer, Part-Time AI Code Evaluation - Remote (United States) • $50–$100 per hour equivalent, paid per accepted task • 100% remote • Part-time • Under 20…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
       "date_posted": "2026-11-27"
     },
     {
@@ -287,50 +331,6 @@
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/traveling-account-executive-neurology-rare-disease-67482c5e.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-traveling-account-executive-neurology-rare-disease-jobgether-1138154",
       "date_posted": "2026-11-27"
-    },
-    {
-      "id": "eb1704c2-b291-4775-9a42-4a3eccaa0636",
-      "dedupe_key": "26f0d4012e31bc98de0a5910",
-      "title": "Product Marketing Manager - Ostro",
-      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/product-marketing-manager-ostro-26f0d401.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-product-marketing-manager-ostro-veeva-systems-1138153",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "10771718-efde-48c1-9af0-915558492520",
-      "dedupe_key": "d06b67609e3be54c12336759",
-      "title": "Regional Director",
-      "summary": "Fivetran — Headquarters: Remote, Washington, United States, AMER From Fivetran’s founding until now, our mission has remained the same: to make access to data as simple and reliable as electricity. With Fivetran…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/regional-director-d06b6760.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/fivetran-regional-director",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "288c85d1-61ec-489d-a24d-a3e1d94d143d",
-      "dedupe_key": "ecb5d83954752ecc19c64e17",
-      "title": "Commercial Manager - Europe",
-      "summary": "Lyra Health — About Lyra Lyra Health is the leading provider of mental health solutions for employers supporting more than 20 million people globally. The company has delivered 13 million sessions of mental health care…",
-      "source_name": "RemoteOK",
-      "location_or_type": "UK Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/commercial-manager-europe-ecb5d839.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-commercial-manager-europe-lyra-health-1138149",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "091e269d-715e-40a7-923e-202fa615bf55",
-      "dedupe_key": "167adc964c80407af3db29b0",
-      "title": "SEO - Manager",
-      "summary": "Bounteous — Bounteous is a global AI Services firm where agentic engineering and human experience converge to deliver transformative business outcomes for the enterprise. We help organizations design, build, and scale…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/seo-manager-167adc96.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-seo-manager-bounteous-1138148",
-      "date_posted": "2026-11-26"
     }
   ]
 }

@@ -1,7 +1,73 @@
 {
-  "updated_at": "2026-11-27T05:00:02Z",
+  "updated_at": "2026-11-27T06:04:55Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "a2ab831f-0b1b-4fbc-93fa-86c0c13874e3",
+      "dedupe_key": "6b6c9bac398d1ba58db17b7b",
+      "title": "Sales Director - Quality",
+      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
+      "source_name": "RemoteOK",
+      "location_or_type": "UK Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sales-director-quality-6b6c9bac.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-sales-director-quality-veeva-systems-1138168",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "b0c514e3-a02a-425e-a81c-531ab9c5e596",
+      "dedupe_key": "5bfce9952e0f3bef3f954d36",
+      "title": "Partner Director, Federal",
+      "summary": "Netomi — About the Company: Netomi is the leading agentic AI platform for enterprise customer experience. We work with the largest global brands like Delta Airlines, MetLife, United, and others to enable agentic…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-director-federal-5bfce995.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-director-federal-netomi-1138167",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "eecb4647-0093-4f98-8d04-404454c08359",
+      "dedupe_key": "57342986ba1dcbb7972b785a",
+      "title": "Enterprise Account Executive - New York",
+      "summary": "zimperium — Zimperium ® is an industry leader in enterprise mobile security, being the first and only company to provide a complete mobile threat defense system that offers real-time, on device world-class protection…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-account-executive-new-york-57342986.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-account-executive-new-york-zimperium-1138166",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "f10a5a79-e1eb-46d3-be11-79455f09ac19",
+      "dedupe_key": "5694ee3ca27c637864647efc",
+      "title": "Paid Media Manager (Remote)",
+      "summary": "Silverback Strategies — Silverback Strategies is a performance marketing agency built to help marketers grow and capitalize on change. Ad Age, Inc Magazine, The Washington Post, The Washingtonian, and The Washington…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/paid-media-manager-remote-5694ee3c.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-paid-media-manager-remote-silverback-strategies-1138165",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "d8da921f-0bd1-4c2d-90f4-0f03bb96815b",
+      "dedupe_key": "b548d5515801b4ed6a30e96a",
+      "title": "Director, Customer Success - Public Sector",
+      "summary": "Abnormal — Headquarters: Remote - USA About the Role Abnormal AI is looking for a Director of Customer Success, Public Sector to lead the team that drives adoption, retention, and expansion across our federal, state…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-customer-success-public-sector-b548d551.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/abnormal-director-customer-success-public-sector",
+      "date_posted": "2026-11-27"
+    },
+    {
+      "id": "596dc5e5-27e9-4025-86e7-a7ca8b9639a8",
+      "dedupe_key": "790b951c473e76daee26bbcf",
+      "title": "Full-Stack Engineer",
+      "summary": "OpenTrain AI — Headquarters: United States URL: Full-Stack Engineer, Part-Time AI Code Evaluation - Remote (United States) • $50–$100 per hour equivalent, paid per accepted task • 100% remote • Part-time • Under 20…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
+      "date_posted": "2026-11-27"
+    },
     {
       "id": "ce3187d5-560e-408b-ab8f-a6948dbe7c9c",
       "dedupe_key": "51227bdb0fab3c379199c3b7",
@@ -36,14 +102,14 @@
       "date_posted": "2026-11-27"
     },
     {
-      "id": "596dc5e5-27e9-4025-86e7-a7ca8b9639a8",
-      "dedupe_key": "790b951c473e76daee26bbcf",
-      "title": "Full-Stack Engineer",
-      "summary": "OpenTrain AI — Headquarters: United States URL: Full-Stack Engineer, Part-Time AI Code Evaluation - Remote (United States) • $50–$100 per hour equivalent, paid per accepted task • 100% remote • Part-time • Under 20…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/full-stack-engineer-790b951c.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/opentrain-ai-full-stack-engineer",
+      "id": "de768699-e78c-4932-9ba8-22023510e3fe",
+      "dedupe_key": "4517d822a5e7151c8e597fb0",
+      "title": "Consultant - People Science",
+      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/consultant-people-science-4517d822.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-consultant-people-science-veeva-systems-1138158",
       "date_posted": "2026-11-27"
     },
     {
@@ -77,17 +143,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/manager-technical-support-809ba98f.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-manager-technical-support-coupa-1138159",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "de768699-e78c-4932-9ba8-22023510e3fe",
-      "dedupe_key": "4517d822a5e7151c8e597fb0",
-      "title": "Consultant - People Science",
-      "summary": "Veeva Systems — Veeva Systems is a mission-driven organization and pioneer in industry cloud, helping life sciences companies bring therapies to patients faster. As one of the fastest-growing SaaS companies in history…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/consultant-people-science-4517d822.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-consultant-people-science-veeva-systems-1138158",
       "date_posted": "2026-11-27"
     },
     {
@@ -275,61 +330,6 @@
       "location_or_type": "UK Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/english-to-belarusian-review-lead-for-ui-marketing-product-conten-dd0f2c14.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-english-to-belarusian-review-lead-for-ui-marketing-product-content-welo-data-1138140",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "819ea856-60ef-4f93-b819-cb3a1b747989",
-      "dedupe_key": "9108f44c46721f7e50c40aeb",
-      "title": "Enterprise Sales Executive",
-      "summary": "Loadsmart — ARE YOU INTERESTED IN JOINING AN INNOVATIVE LOGISTICS TECHNOLOGY COMPANY? Loadsmart is a growth-stage technology company valued at over $1 billion (a true Tech Unicorn)! We are a collection of industry…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-sales-executive-9108f44c.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-sales-executive-loadsmart-1138141",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "2af0dd43-9036-4268-826f-db9ddc8ac26d",
-      "dedupe_key": "777f70c8cec32df5b79bf659",
-      "title": "Channel Manager, North America Midwest (with LATAM Partner Coverage)",
-      "summary": "Secure Code Warrior — Software development is changing fast, and code is no longer written by humans alone. Secure Code Warrior is the AI Software Governance platform that gives organizations visibility into how their…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/channel-manager-north-america-midwest-with-latam-partner-coverage-777f70c8.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-channel-manager-north-america-midwest-with-latam-partner-coverage-secure-code-warrior-1138137",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "9a1a675e-51b7-4d72-a528-deab83379666",
-      "dedupe_key": "23b834237d6dafe979c05d35",
-      "title": "Head of Customer Support",
-      "summary": "Jobgether — Headquarters: UK This position is listed on behalf of a partner company, who manages all applications and next steps. Our partner is looking for a Head of Customer Support based in United Kingdom. As Head of…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/head-of-customer-support-23b83423.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/jobgether-head-of-customer-support",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "e4100fbc-a3af-4396-ad67-7d14ad25e47e",
-      "dedupe_key": "325e58d2f857cbd3ee28c3f2",
-      "title": "Regional Account Manager - Canada (Technical/Cybersecurity)",
-      "summary": "zimperium — Zimperium is seeking a high-energy, self-motivated Regional Account Manager, to drive revenue in assigned territory through new logo and upsell/cross sell opportunities with existing customers. Reporting to…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Canada Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/regional-account-manager-canada-technical-cybersecurity-325e58d2.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-regional-account-manager-canada-technical-cybersecurity-zimperium-1138136",
-      "date_posted": "2026-11-26"
-    },
-    {
-      "id": "c34da50e-d2e7-47d1-84ed-a623ee97c128",
-      "dedupe_key": "ba24203d1a994ad7f8d93e1d",
-      "title": "Account Manager",
-      "summary": "Everbridge — At Everbridge , we're a fast-growing global provider of SaaS-based critical communications and enterprise safety solutions, helping organizations stay resilient in the face of critical events. As we…",
-      "source_name": "RemoteOK",
-      "location_or_type": "UK Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-manager-ba24203d.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-manager-everbridge-1138135",
       "date_posted": "2026-11-26"
     }
   ]

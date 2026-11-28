@@ -18,13 +18,13 @@ DAILY_BOOKING_CODE = os.environ.get("DAILY_BOOKING_CODE", "").strip()
 
 WAT_TZ = timezone(timedelta(hours=1))
 
-SITE_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/"
-JOBS_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html"
+SITE_URL = "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/"
+JOBS_URL = "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/jobs.html"
 GUMROAD_OFFER_URL = (
     "https://chukwuma448.gumroad.com/l/dvfhm"
     "?utm_source=pulsefeed&utm_medium=social_auto&utm_campaign=viralhook_ai"
 )
-PROMO_BANNER_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/og-banner.png"
+PROMO_BANNER_URL = "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/og-banner.png"
 
 # 2. RSS Feeds mapped by lane (Breaking, Trending, Football) and region
 FEEDS = [

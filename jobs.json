@@ -1,16 +1,49 @@
 {
-  "updated_at": "2026-11-28T07:00:52Z",
+  "updated_at": "2026-11-28T08:29:16Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
     {
-      "id": "a6b06805-bcb1-451f-8549-e8f0316230b6",
-      "dedupe_key": "5ffcae99069523cdd32b3d8a",
-      "title": "Diagnostic Specialist - Appalachia",
-      "summary": "EVERSANA — Company Description At EVERSANA, we are proud to be a Great Place to Work across the globe. Weâre fueled by our vision to create a healthier world. How? Our global team of more than 6,000 employees is…",
+      "id": "c1367ae1-78c4-4158-85f1-85ec5334109c",
+      "dedupe_key": "fb40148a31ce34cd2243f281",
+      "title": "Offensive Cybersecurity Engineers: Build RL Environments for AI Evaluation",
+      "summary": "Terac — Headquarters: United States URL: What We're Researching We're hiring offensive cybersecurity experts for a long-term paid project focused on AI evaluation. Our goal is to build and harden reinforcement learning…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/offensive-cybersecurity-engineers-build-rl-environments-for-ai-ev-fb40148a.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/terac-offensive-cybersecurity-engineers-build-rl-environments-for-ai-evaluation",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "88cb8454-b2af-4d9e-adfb-e0b4e418cc15",
+      "dedupe_key": "28ffb02e89627e69e904c530",
+      "title": "Support Engineer, PAYGO",
+      "summary": "Exa — Headquarters: URL: About Exa We raised a $250M Series C to build the search engine for AIs. Led by a16z, with existing investors Benchmark, Lightspeed, and YC doubling down, the round brings Exa's valuation to…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/support-engineer-paygo-28ffb02e.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/exa-support-engineer-paygo",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "f1b8edb2-9ea3-404d-b005-b2cd9b6330cf",
+      "dedupe_key": "77b29a78d35d815178d854d7",
+      "title": "Area Sales Representative",
+      "summary": "Intuitive — Company Description It started with a simple idea: what if surgery could be less invasive and recovery less painful? Nearly 30 years later, that question still fuels everything we do at Intuitive . As a…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Canada Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/area-sales-representative-77b29a78.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-area-sales-representative-intuitive-1138226",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "91472685-fff4-413d-8a37-3451583c1fc3",
+      "dedupe_key": "dfa45a463ef4f07feffa1bb1",
+      "title": "Strategic Account Manager - Louisiana and Mississippi",
+      "summary": "AbbVie — Company Description About AbbVie At Allergan Aesthetics, an AbbVie company, we develop, manufacture, and market a portfolio of leading aesthetics brands and products. Our aesthetics portfolio includes facial…",
       "source_name": "RemoteOK",
       "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/diagnostic-specialist-appalachia-5ffcae99.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-diagnostic-specialist-appalachia-eversana-1138224",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/strategic-account-manager-louisiana-and-mississippi-dfa45a46.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-strategic-account-manager-louisiana-and-mississippi-abbvie-1138225",
       "date_posted": "2026-11-28"
     },
     {
@@ -22,6 +55,17 @@
       "location_or_type": "UK Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/social-systems-lead-auditor-north-uk-8dc269db.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-social-systems-lead-auditor-north-uk-sgs-1138223",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "a6b06805-bcb1-451f-8549-e8f0316230b6",
+      "dedupe_key": "5ffcae99069523cdd32b3d8a",
+      "title": "Diagnostic Specialist - Appalachia",
+      "summary": "EVERSANA — Company Description At EVERSANA, we are proud to be a Great Place to Work across the globe. Weâre fueled by our vision to create a healthier world. How? Our global team of more than 6,000 employees is…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/diagnostic-specialist-appalachia-5ffcae99.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-diagnostic-specialist-appalachia-eversana-1138224",
       "date_posted": "2026-11-28"
     },
     {
@@ -286,50 +330,6 @@
       "location_or_type": "Remote",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/greek-wolof-46675735.html",
       "apply_url": "https://weworkremotely.com/remote-jobs/one-world-global-services-greek-wolof",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "99e76dd6-d807-4f0e-812b-3f2087a043ad",
-      "dedupe_key": "b5b8be469656c9df0e7379bd",
-      "title": "Customer Support Rep (CSR) US Night shift - Work from home",
-      "summary": "Cypress Global Services, Inc — Headquarters: Navi Mumbai, Maharashtra, India URL: Company Description Cypress Global Services (CGS) is a growing Information Technology (IT) Services firm based in North Houston, TX…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/customer-support-rep-csr-us-night-shift-work-from-home-b5b8be46.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/cypress-global-services-inc-customer-support-rep-csr-us-night-shift-work-from-home",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "bf2146c1-3c94-4918-a062-bc66c6ecda9b",
-      "dedupe_key": "8c955123bf51ab7e45fac944",
-      "title": "Sr Account Manager, EMEA",
-      "summary": "Customer.io — Headquarters: EMEA Remote About Customer.io Over 8,000 companies — from scrappy startups to global brands — use our platform to send billions of emails, push notifications, in-app messages, and SMS every…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sr-account-manager-emea-8c955123.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/customer-io-sr-account-manager-emea",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "ad0bd030-e63b-4785-b2b2-66ab0669c2ce",
-      "dedupe_key": "59c4fc37aaab3053b6091b70",
-      "title": "Sr Account Manager, AMER (Remote)",
-      "summary": "Customer.io — Headquarters: Americas Remote About Customer.io Over 8,000 companies — from scrappy startups to global brands — use our platform to send billions of emails, push notifications, in-app messages, and SMS…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sr-account-manager-amer-remote-59c4fc37.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/customer-io-sr-account-manager-amer-remote",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "f5cda69f-5c2b-4dcc-88c5-8e46929656d1",
-      "dedupe_key": "265fdd1def5e2125c69df730",
-      "title": "Product Readiness Manager (Remote eligible in Bulgaria)",
-      "summary": "Smartsheet — Headquarters: -REMOTE, BULGARIA- For over 20 years, Smartsheet has empowered teams to manage work seamlessly and scale solutions smarter. Now, in our most ambitious chapter yet, we are uniting human teams…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/product-readiness-manager-remote-eligible-in-bulgaria-265fdd1d.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/smartsheet-product-readiness-manager-remote-eligible-in-bulgaria",
       "date_posted": "2026-11-27"
     }
   ]

@@ -415,7 +415,7 @@
       <h2>Digital Templates, E-Books &amp; ViralHook AI</h2>
       <p>Boost content retention with <strong>ViralHook AI ($39+)</strong> and instant digital downloads on Gumroad — plus browse or list community offers and remote jobs below.</p>
       <div class="market-actions">
-        <a id="viralhookBtn" class="btn btn-green" href="https://YOUR-VIRALHOOK-LINK-HERE" target="_blank" rel="noopener noreferrer">Try ViralHook AI ($39+) →</a>
+        <a id="viralhookBtn" class="btn btn-green" href="https://chukwuma448.gumroad.com/l/dvfhm?utm_source=pulsefeed&amp;utm_medium=jobs_hub&amp;utm_campaign=viralhook_ai&amp;utm_content=jobs_hub_banner" target="_blank" rel="noopener noreferrer">Try ViralHook AI ($39+) →</a>
         <a id="gumroadBtn" class="btn btn-gumroad" href="https://chukwuma448.gumroad.com/?utm_source=pulsefeed&amp;utm_medium=jobs_hub&amp;utm_campaign=job_seekers&amp;utm_content=jobs_hub_banner" target="_blank" rel="noopener noreferrer">Get It on Gumroad →</a>
         <button id="openSellTabBtn" type="button" class="btn btn-outline">+ Sell / List Offer</button>
         <a class="btn btn-outline" href="#sponsor">Sponsor Tiers</a>
@@ -525,6 +525,7 @@
       SUPABASE_URL: "https://pzaavnfswisvosgdfbgl.supabase.co",
       SUPABASE_ANON_KEY: "sb_publishable_He61GsY9EO5I6Pf8D8pUZw_jgscYPNp",
       GUMROAD_URL: "https://chukwuma448.gumroad.com/?utm_source=pulsefeed&utm_medium=jobs_hub&utm_campaign=job_seekers&utm_content=jobs_hub_banner",
+      VIRALHOOK_URL: "https://chukwuma448.gumroad.com/l/dvfhm?utm_source=pulsefeed&utm_medium=jobs_hub&utm_campaign=viralhook_ai&utm_content=jobs_hub_banner",
       STORAGE_BUCKET: "marketplace-images",
       MAX_IMAGE_BYTES: 5 * 1024 * 1024
     };
@@ -558,6 +559,13 @@
         return fallback;
       }
     }
+
+    document.getElementById("viralhookBtn").href = appendUtmParams(CONFIG.VIRALHOOK_URL, {
+      utm_source: "pulsefeed",
+      utm_medium: "jobs_hub",
+      utm_campaign: "viralhook_ai",
+      utm_content: "jobs_hub_banner"
+    });
 
     document.getElementById("gumroadBtn").href = appendUtmParams(CONFIG.GUMROAD_URL, {
       utm_source: "pulsefeed",

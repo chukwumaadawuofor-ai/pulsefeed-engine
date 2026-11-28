@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0d1117" />
   <meta name="description" content="PulseFeed Jobs &amp; Gumroad Marketplace — Curated remote jobs, ViralHook AI ($39+), digital templates, and community offers." />
-  <link rel="canonical" href="https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html" />
+  <link rel="canonical" href="https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/jobs.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="PulseFeed NG" />
   <meta property="og:locale" content="en_NG" />
   <meta property="og:title" content="PulseFeed Jobs &amp; Gumroad Marketplace" />
   <meta property="og:description" content="Curated remote jobs, ViralHook AI ($39+), digital templates, and community offers." />
-  <meta property="og:url" content="https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html" />
+  <meta property="og:url" content="https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/jobs.html" />
   <meta property="og:image" content="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&h=630&q=85" />
   <meta property="og:image:secure_url" content="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&h=630&q=85" />
   <meta property="og:image:type" content="image/jpeg" />
@@ -19,7 +19,7 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="PulseFeed Jobs &amp; Gumroad Marketplace" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html" />
+  <meta name="twitter:url" content="https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/jobs.html" />
   <meta name="twitter:title" content="PulseFeed Jobs &amp; Gumroad Marketplace" />
   <meta name="twitter:description" content="Curated remote jobs, ViralHook AI ($39+), digital templates, and community offers." />
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&h=630&q=85" />
@@ -88,6 +88,21 @@
       margin-bottom: 18px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
+    .market-banner-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .market-banner-thumb {
+      width: 84px;
+      height: 84px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 144, 232, 0.5);
+      flex-shrink: 0;
+      background: #0d1117;
+    }
     .badge {
       display: inline-block;
       font-size: 0.72rem;
@@ -112,7 +127,7 @@
       vertical-align: middle;
     }
     .market-banner h2 { font-size: 1.1rem; color: #ffffff; margin-bottom: 5px; }
-    .market-banner p { font-size: 0.9rem; color: var(--muted); margin-bottom: 14px; }
+    .market-banner p { font-size: 0.9rem; color: var(--muted); }
     .market-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .btn {
       display: inline-block;
@@ -411,9 +426,20 @@
 
     <!-- Gumroad Store, ViralHook AI & Creator Offers Card -->
     <section class="market-banner">
-      <span class="badge">Gumroad Store • ViralHook AI ($39+) &amp; Creator Offers</span>
-      <h2>Digital Templates, E-Books &amp; ViralHook AI</h2>
-      <p>Boost content retention with <strong>ViralHook AI ($39+)</strong> and instant digital downloads on Gumroad — plus browse or list community offers and remote jobs below.</p>
+      <div class="market-banner-top">
+        <img
+          class="market-banner-thumb"
+          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=75"
+          alt="ViralHook AI & Creator Offers"
+          loading="lazy"
+          onerror="this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=75'"
+        />
+        <div>
+          <span class="badge">Gumroad Store • ViralHook AI ($39+) &amp; Creator Offers</span>
+          <h2>Digital Templates, E-Books &amp; ViralHook AI</h2>
+          <p>Boost content retention with <strong>ViralHook AI ($39+)</strong> and instant digital downloads on Gumroad — plus browse or list community offers and remote jobs below.</p>
+        </div>
+      </div>
       <div class="market-actions">
         <a id="viralhookBtn" class="btn btn-green" href="https://chukwuma448.gumroad.com/l/dvfhm?utm_source=pulsefeed&amp;utm_medium=jobs_hub&amp;utm_campaign=viralhook_ai&amp;utm_content=jobs_hub_banner" target="_blank" rel="noopener noreferrer">Try ViralHook AI ($39+) →</a>
         <a id="gumroadBtn" class="btn btn-gumroad" href="https://chukwuma448.gumroad.com/?utm_source=pulsefeed&amp;utm_medium=jobs_hub&amp;utm_campaign=job_seekers&amp;utm_content=jobs_hub_banner" target="_blank" rel="noopener noreferrer">Get It on Gumroad →</a>
@@ -512,7 +538,7 @@
       <h3>🌐 Own a Blog, Forum, or Community Page?</h3>
       <p>Paste this 2-line widget to show live remote jobs automatically and drive visitors to your site:</p>
       <textarea id="embedSnippet" class="embed-code" rows="2" readonly>&lt;div id="pulsefeed-jobs-widget" data-limit="6"&gt;&lt;/div&gt;
-&lt;script src="https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/widget.js" async&gt;&lt;/script&gt;</textarea>
+&lt;script src="https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/widget.js" async&gt;&lt;/script&gt;</textarea>
       <div class="market-actions">
         <button id="copyEmbedBtn" type="button" class="btn btn-green">Copy Embed Code</button>
         <a class="btn btn-outline" href="./jobs.xml" target="_blank" rel="noopener noreferrer">RSS Feed (jobs.xml)</a>

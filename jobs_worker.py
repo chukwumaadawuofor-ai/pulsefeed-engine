@@ -36,6 +36,11 @@ CATEGORY_IMAGES = {
     "remote": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&h=630&q=85",
 }
 
+MEDIA_FETCH_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+}
+
 
 def get_supabase_base_url() -> str:
     if not SUPABASE_URL or not SUPABASE_KEY:
@@ -87,7 +92,9 @@ def make_dedupe_key(source: str, title: str, url: str) -> str:
 
 def pick_job_image(title: str, summary: str, location: str = "", explicit_url: str = "") -> str:
     candidate = normalize_str(explicit_url).strip()
-    if candidate.startswith("https://") or candidate.startswith("http://"):
+    if candidate.startswith("http://"):
+        candidate = "https://" + candidate[7:]
+    if candidate.startswith("https://"):
         return candidate
 
     hay = f"{title} {summary} {location}".lower()
@@ -114,6 +121,28 @@ def extract_rss_image(item: ET.Element) -> str:
             if media_url.startswith("http"):
                 return media_url
     return ""
+
+
+def _download_job_photo_bytes(url: str) -> tuple[bytes | None, str, str]:
+    u = (url or "").strip()
+    if u.startswith("http://"):
+        u = "https://" + u[7:]
+    if not u.startswith("https://"):
+        return None, "job.jpg", "image/jpeg"
+    try:
+        resp = requests.get(u, headers=MEDIA_FETCH_HEADERS, timeout=15, allow_redirects=True)
+        if not resp.ok or not resp.content or len(resp.content) > 9_500_000:
+            return None, "job.jpg", "image/jpeg"
+        ctype = (resp.headers.get("Content-Type") or "").split(";")[0].strip().lower()
+        if "png" in ctype or u.lower().endswith(".png"):
+            return resp.content, "job.png", "image/png"
+        if "webp" in ctype or u.lower().endswith(".webp"):
+            return resp.content, "job.webp", "image/webp"
+        if ctype.startswith("image/") or resp.content[:2] == b"\xff\xd8" or resp.content[:8] == b"\x89PNG\r\n\x1a\n":
+            return resp.content, "job.jpg", "image/jpeg"
+    except Exception as exc:
+        print(f"Job photo download skipped: {exc}")
+    return None, "job.jpg", "image/jpeg"
 
 
 def fetch_remoteok(limit: int = 15) -> list[dict]:
@@ -238,6 +267,7 @@ def send_telegram_alert(job: dict) -> None:
     summary = clean_text(job.get("summary", ""), 200)
     slug = slugify(title, job.get("dedupe_key") or title)
     page_url = f"{SITE_BASE_URL}/jobs/{slug}.html"
+    img_url = pick_job_image(title, summary, loc, job.get("image_url") or "")
 
     text = (
         f"🚀 <b>NEW REMOTE JOB</b>\n\n"
@@ -247,9 +277,21 @@ def send_telegram_alert(job: dict) -> None:
         f"👉 <b>View &amp; Apply:</b> {page_url}\n"
         f"🛒 <b>Jobs &amp; Market Hub:</b> {SITE_BASE_URL}/jobs.html"
     )
+    base_tg = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
     try:
+        img_bytes, filename, mime_type = _download_job_photo_bytes(img_url)
+        if img_bytes and len(text) <= 1020:
+            r_photo = requests.post(
+                f"{base_tg}/sendPhoto",
+                data={"chat_id": TELEGRAM_CHANNEL_ID, "caption": text, "parse_mode": "HTML"},
+                files={"photo": (filename, img_bytes, mime_type)},
+                timeout=25,
+            )
+            if r_photo.ok:
+                return
+
         requests.post(
-            f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+            f"{base_tg}/sendMessage",
             data={
                 "chat_id": TELEGRAM_CHANNEL_ID,
                 "text": text,
@@ -404,7 +446,7 @@ def build_static_files(jobs: list[dict]) -> None:
   <div class="wrap">
     <a class="btn btn-outline" href="../jobs.html">← All Live Remote Jobs &amp; Market</a>
     <article class="card">
-      <img class="thumb" src="{og_img}" alt="{html.escape(title)}" loading="lazy" />
+      <img class="thumb" src="{og_img}" alt="{html.escape(title)}" />
       <div class="meta">{html.escape(source)} • {html.escape(loc)} • Posted {html.escape(date_posted)}</div>
       <h1>{html.escape(title)}</h1>
       <p>{html.escape(summary)}</p>

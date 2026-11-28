@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0d1117" />
   <meta name="description" content="PulseFeed delivers real-time breaking news, trending stories, football updates across Nigeria, UK, US, Europe, Australia, and Global feeds, plus remote jobs and ViralHook AI." />
-  <link rel="canonical" href="https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/" />
+  <link rel="canonical" href="https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="PulseFeed NG" />
   <meta property="og:locale" content="en_NG" />
   <meta property="og:title" content="PulseFeed — Breaking News, Trending &amp; Football" />
   <meta property="og:description" content="Live regional and global breaking news, football updates, remote jobs, and creator tools." />
-  <meta property="og:url" content="https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/" />
+  <meta property="og:url" content="https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/" />
   <meta property="og:image" content="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&h=630&q=85" />
   <meta property="og:image:secure_url" content="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&h=630&q=85" />
   <meta property="og:image:type" content="image/jpeg" />
@@ -19,7 +19,7 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="PulseFeed NG Breaking News, Trending & Football" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:url" content="https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/" />
+  <meta name="twitter:url" content="https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/" />
   <meta name="twitter:title" content="PulseFeed — Breaking News, Trending &amp; Football" />
   <meta name="twitter:description" content="Live regional and global breaking news, football updates, remote jobs, and creator tools." />
   <meta name="twitter:image" content="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&h=630&q=85" />
@@ -32,7 +32,7 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "PulseFeed",
-    "url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/",
+    "url": "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/",
     "description": "Real-time breaking news, trending topics, football updates, remote jobs, and creator tools."
   }
   </script>
@@ -197,7 +197,16 @@
       gap: 12px;
       flex-wrap: wrap;
     }
-    .spotlight-text { flex: 1; min-width: 210px; }
+    .spotlight-thumb {
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 144, 232, 0.45);
+      flex-shrink: 0;
+      background: #0d1117;
+    }
+    .spotlight-text { flex: 1; min-width: 180px; }
     .spotlight-tag {
       font-size: 0.68rem;
       font-weight: 800;
@@ -589,6 +598,13 @@
 
     <!-- Monetized Top Spotlight -->
     <section class="spotlight-bar">
+      <img
+        class="spotlight-thumb"
+        src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=75"
+        alt="ViralHook AI Creator Studio"
+        loading="lazy"
+        onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=75'"
+      />
       <div class="spotlight-text">
         <span class="spotlight-tag">★ Featured Creator Tool • ViralHook AI</span>
         <div class="spotlight-title">Faceless Shorts, Reels &amp; TikTok Script Studio ($39+)</div>
@@ -654,6 +670,7 @@
       MAX_IMAGE_BYTES: 5 * 1024 * 1024,
       MAX_VIDEO_BYTES: 15 * 1024 * 1024,
       GUMROAD_DEFAULT: "https://chukwuma448.gumroad.com/l/dvfhm?utm_source=pulsefeed&utm_medium=inline_feed&utm_campaign=viralhook_ai&utm_content=native_card",
+      FALLBACK_PROMO_IMG: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=75",
       REGION_STORAGE_KEY: "pulsefeed_selected_region",
       LIKED_POSTS_KEY: "pulsefeed_liked_posts",
       LIKED_COMMENTS_KEY: "pulsefeed_liked_comments"
@@ -717,6 +734,11 @@
 
     function escapeJs(str) {
       return escapeHtml(str).replace(/'/g, "&#39;");
+    }
+
+    function safeHttpsUrl(raw, fallback = "") {
+      const val = String(raw || "").trim();
+      return /^https:\/\//i.test(val) ? val : fallback;
     }
 
     function timeAgo(iso) {
@@ -999,7 +1021,6 @@
     };
 
     window.toggleCommentLove = async function(postId, commentId) {
-      const postKey = String(postId);
       const commentKey = String(commentId);
       const list = commentsByPost[postId] || [];
       const comment = list.find((c) => String(c.id) === commentKey);
@@ -1119,22 +1140,18 @@
     }
 
     function renderMediaHtml(post) {
-      const url = typeof post.media_url === "string" && /^https:\/\//i.test(post.media_url.trim())
-        ? post.media_url.trim()
-        : "";
+      const url = safeHttpsUrl(post.media_url);
       if (!url) return "";
       const isVid = post.media_type === "video" || /\.(mp4|webm|mov)(\?|$)/i.test(url);
       if (isVid) {
         return `<video class="post-media" src="${escapeHtml(url)}" controls playsinline preload="metadata"></video>`;
       }
-      return `<img class="post-media" src="${escapeHtml(url)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.style.display='none'" />`;
+      return `<img class="post-media" src="${escapeHtml(url)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.onerror=null;this.src='${escapeJs(CONFIG.FALLBACK_PROMO_IMG)}'" />`;
     }
 
     function renderNativeOfferCard(offer) {
-      const url = /^https:\/\//i.test(offer.checkout_url || "") ? offer.checkout_url.trim() : CONFIG.GUMROAD_DEFAULT;
-      const img = /^https:\/\//i.test(offer.image_url || "")
-        ? `<img class="post-media" src="${escapeHtml(offer.image_url.trim())}" alt="${escapeHtml(offer.title)}" loading="lazy" onerror="this.style.display='none'" />`
-        : "";
+      const url = safeHttpsUrl(offer.checkout_url, CONFIG.GUMROAD_DEFAULT);
+      const promoImg = safeHttpsUrl(offer.image_url, CONFIG.FALLBACK_PROMO_IMG);
       return `
         <article class="post-card sponsored">
           <div class="post-header">
@@ -1149,7 +1166,7 @@
           </div>
           <div class="post-title">${escapeHtml(offer.title)}</div>
           <div class="post-body">${escapeHtml(offer.description)}</div>
-          ${img}
+          <img class="post-media" src="${escapeHtml(promoImg)}" alt="${escapeHtml(offer.title)}" loading="lazy" onerror="this.onerror=null;this.src='${escapeJs(CONFIG.FALLBACK_PROMO_IMG)}'" />
           <div class="post-actions">
             <a class="btn btn-gumroad" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Buy / View Offer ↗</a>
             <a class="action-btn" href="./jobs.html">Promote Your Offer</a>
@@ -1164,7 +1181,7 @@
       const replyTarget = replyTargetByPost[post.id];
       const author = post.author_name || post.source_name || "PulseFeed";
       const initials = author.replace(/[^a-zA-Z0-9]/g, "").slice(0, 2).toUpperCase() || "PF";
-      const actionUrl = post.cta_url || post.source_url || window.location.href;
+      const actionUrl = safeHttpsUrl(post.cta_url) || safeHttpsUrl(post.source_url) || window.location.href;
       const isPromo = Boolean(post.is_sponsored || post.is_pinned);
       const regionBadge = REGION_BADGE_MAP[post.region || "GLOBAL"] || "🌍 Global";
       const postLoved = likedPostIds.has(String(post.id));
@@ -1233,10 +1250,10 @@
             <button type="button" class="action-btn" onclick="sharePost(this, '${escapeJs(post.title)}', '${escapeJs(actionUrl)}')">
               🔁 Share
             </button>
-            ${post.cta_url
-              ? `<a class="btn btn-gumroad" href="${escapeHtml(post.cta_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(post.cta_label || "View Offer ↗")}</a>`
-              : (post.source_url
-                  ? `<a class="action-btn" href="${escapeHtml(post.source_url)}" target="_blank" rel="noopener noreferrer">↗ Source</a>`
+            ${safeHttpsUrl(post.cta_url)
+              ? `<a class="btn btn-gumroad" href="${escapeHtml(safeHttpsUrl(post.cta_url))}" target="_blank" rel="noopener noreferrer">${escapeHtml(post.cta_label || "View Offer ↗")}</a>`
+              : (safeHttpsUrl(post.source_url)
+                  ? `<a class="action-btn" href="${escapeHtml(safeHttpsUrl(post.source_url))}" target="_blank" rel="noopener noreferrer">↗ Source</a>`
                   : "")
             }
           </div>

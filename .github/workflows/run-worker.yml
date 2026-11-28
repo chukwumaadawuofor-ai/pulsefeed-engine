@@ -42,6 +42,15 @@ jobs:
           TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
         run: python marketplace_worker.py
 
+      - name: Run Jobs Worker
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+        run: python jobs_worker.py
+
       - name: Run PulseFeed News & Social Worker
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -51,12 +60,14 @@ jobs:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
           SOCIAL_WEBHOOK_URL: ${{ secrets.SOCIAL_WEBHOOK_URL }}
+          DAILY_BOOKING_CODE: ${{ secrets.DAILY_BOOKING_CODE }}
         run: python worker.py
 
-      - name: Commit updated AI & RSS discovery files
+      - name: Commit updated AI, Jobs & RSS discovery files
         run: |
           git config user.name "pulsefeed-bot"
           git config user.email "pulsefeed-bot@users.noreply.github.com"
-          git add sitemap.xml feed.xml llms.txt
-          git diff --staged --quiet || git commit -m "chore: update sitemap, feed.xml, and llms.txt"
+          git add sitemap.xml feed.xml llms.txt jobs.json jobs.xml robots.txt jobs
+          git diff --staged --quiet || git commit -m "chore: update feeds, jobs, and discovery files"
+          git pull --rebase --autostash origin main
           git push

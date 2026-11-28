@@ -1,7 +1,18 @@
 {
-  "updated_at": "2026-11-28T09:50:48Z",
+  "updated_at": "2026-11-28T10:18:04Z",
   "hub_url": "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "e4cf8c07-285e-4786-ae23-61deb02d4728",
+      "dedupe_key": "1cf32dd036cfe7b7ee906a03",
+      "title": "Demo Specialist I",
+      "summary": "HighLevel — About us HighLevel is an AI-powered business operating system that gives agencies, entrepreneurs and SMBs the infrastructure to build, automate and scale. Today, HighLevel supports SMBs across 150+…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/jobs/demo-specialist-i-1cf32dd0.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-demo-specialist-i-highlevel-1138228",
+      "date_posted": "2026-11-28"
+    },
     {
       "id": "daac397a-ca74-42be-a1d0-698ebdf6ac5c",
       "dedupe_key": "8081c4e18523a074a2b3a527",
@@ -319,17 +330,6 @@
       "location_or_type": "Remote",
       "hub_url": "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/jobs/commercial-sales-engineer-east-2a587ed1.html",
       "apply_url": "https://weworkremotely.com/remote-jobs/zscaler-commercial-sales-engineer-east",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "ada0fda1-66b4-4a9c-86eb-048e497bd01f",
-      "dedupe_key": "9d9ee8a944ee02fb57cdca03",
-      "title": "Cloud Systems Administrator",
-      "summary": "OneImaging — Headquarters: URL: Radiology is the second most used healthcare service, used by over 51% of the workforce annually. Despite the critical role of radiology in healthcare, the process for undergoing a…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/jobs/cloud-systems-administrator-9d9ee8a9.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/oneimaging-cloud-systems-administrator",
       "date_posted": "2026-11-27"
     }
   ]

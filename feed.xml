@@ -4,7 +4,23 @@
     <title>PulseFeed — Breaking News, Trending &amp; Football</title>
     <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
     <description>Real-time global and regional breaking news, football updates, remote jobs, and creator tools.</description>
-    <lastBuildDate>Sat, 28 Nov 2026 06:52:53 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 28 Nov 2026 07:00:12 +0000</lastBuildDate>
+    <item>
+      <title>[EU] US military fires at a ship that violated blockade of Iranian ports</title>
+      <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
+      <guid isPermaLink="false">025a8e52-1965-47ae-a9cb-a1854120fc62</guid>
+      <category>breaking</category>
+      <description>US military maintained a &quot;strict&quot; blockade of Iranian ports by firing at a ship that violated the naval containment on Thursday.</description>
+      <enclosure url="https://images.euronews.com/articles/stories/10/01/22/31/1200x675_cmsv2_8cf904e4-2a89-5890-bf87-5408d4553c78-10012231.jpg" type="image/jpeg" />
+    </item>
+    <item>
+      <title>[NG] Oba of Benin announces timetable, restriction for Ugie festival</title>
+      <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
+      <guid isPermaLink="false">80ff1636-424b-4c02-810a-f0a833ebb494</guid>
+      <category>breaking</category>
+      <description>Ize-Osamwonyi appealed to members of the public to respect the tradition prohibiting funeral celebrations during the festivals.</description>
+      <enclosure url="https://cdn.pmnewsnigeria.com/wp-content/uploads/2026/11/IMG-20261027-WA0247.jpg" type="image/jpeg" />
+    </item>
     <item>
       <title>[GLOBAL] How a football team rebuilt after 19 players died in plane crash</title>
       <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
@@ -228,22 +244,6 @@
       <category>trending</category>
       <description>Instead of purely looking forward with its headphone designs, Sony went back to its popular WH-1000XM4 design and made some improvements to make it even better. The 2026 version, called the WH-1000XM4C, sounds nearly as good as the pricier XM6 model (currently $348), but is down to $198 during Black Friday at Amazon,…</description>
       <enclosure url="https://platform.theverge.com/wp-content/uploads/sites/2/2026/10/268823_Sony_XM4C_JHiggins_0006.jpg?quality=90&amp;strip=all&amp;crop=0,0,100,100" type="image/jpeg" />
-    </item>
-    <item>
-      <title>[US] Spanish PM and rivals rally supporters in final pitch for votes - BBC</title>
-      <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
-      <guid isPermaLink="false">64cb7cfb-74df-4e2b-930c-c04523060af9</guid>
-      <category>breaking</category>
-      <description>Spanish PM and rivals rally supporters in final pitch for votes BBC Spain election: Sanchez stood up against Trump. His own voters may be about to bring him down CNN Spain’s Far-Right Era Ended in 1975. Will This Man Change That? The New York Times Spain general election 2026: polls, Sanchez vs Feijoo and what happens…</description>
-      <enclosure url="https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&amp;fit=crop&amp;w=1000&amp;q=80" type="image/jpeg" />
-    </item>
-    <item>
-      <title>[NG] GBV cases hit 888 in Nasarawa</title>
-      <link>https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/</link>
-      <guid isPermaLink="false">babd5f04-7827-4caf-bcd1-0d9d8f892314</guid>
-      <category>trending</category>
-      <description>GBV cases in Nasarawa rose to 888 between January and September 2026 from 852 in 2025, Commissioner Rebecca Kpadji said at the 16 Days of Activism briefing Read More: https://punchng.com/gbv-cases-hit-888-in-nasarawa/</description>
-      <enclosure url="https://cdn.punchng.com/wp-content/uploads/2021/12/20201311/Nasarawa-State-map.jpg" type="image/jpeg" />
     </item>
   </channel>
 </rss>

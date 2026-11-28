@@ -4,7 +4,23 @@
     <title>PulseFeed — Breaking News, Trending &amp; Football</title>
     <link>https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/</link>
     <description>Real-time global and regional breaking news, football updates, remote jobs, and creator tools.</description>
-    <lastBuildDate>Sat, 28 Nov 2026 10:18:24 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 28 Nov 2026 10:21:49 +0000</lastBuildDate>
+    <item>
+      <title>[GLOBAL] Two staff killed in Israeli strike on Gaza medical clinic, MSF says</title>
+      <link>https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/</link>
+      <guid isPermaLink="false">dc6a96a2-0d63-4024-a515-10e61d4a2042</guid>
+      <category>breaking</category>
+      <description>The Israeli military says it targeted &quot;Hamas terrorists&quot; in the strike which has been condemned by the World Health Organization.</description>
+      <enclosure url="https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/b215/live/7a8dcfc0-eacf-11f1-b107-c5fb3c6f82eb.jpg" type="image/jpeg" />
+    </item>
+    <item>
+      <title>[GLOBAL] Seven students killed and nearly 100 injured in explosion in Afghanistan, official says</title>
+      <link>https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/</link>
+      <guid isPermaLink="false">aa5cf95a-0d3e-443f-805d-2e2f6d435d58</guid>
+      <category>breaking</category>
+      <description>A spokesman for Afhganistan&#x27;s interior ministry says the blast was caused by carelessness at an explosives depot nearby.</description>
+      <enclosure url="https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1a2d/live/537ff930-6139-11ee-b101-6f93d6dfbcc2.png" type="image/jpeg" />
+    </item>
     <item>
       <title>[GLOBAL] I moved in with my sister after I lost my job. Now she&#x27;s demanding I pay her $5,000 in rent — what do I do?</title>
       <link>https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/</link>
@@ -228,22 +244,6 @@
       <category>breaking</category>
       <description>According to the governor, the amount is expected to be released within one week through the Office of the Secretary to the State Government (SSG) and the Commissioner for Investment and Commerce.</description>
       <enclosure url="https://cdn.pmnewsnigeria.com/wp-content/uploads/2026/02/IMG-20260208-WA0040-1.jpg" type="image/jpeg" />
-    </item>
-    <item>
-      <title>[NG] SDP presidential candidate promises N200/litre petrol without subsidy</title>
-      <link>https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/</link>
-      <guid isPermaLink="false">bde00142-6490-4b97-a15a-89219647344e</guid>
-      <category>trending</category>
-      <description>SDP presidential candidate Adewole Adebayo promises N200 per litre petrol without subsidy and urges Nigerians to vote out the APC in 2027, at a Lafia town Read More: https://punchng.com/sdp-presidential-candidate-promises-n200-litre-petrol-without-subsidy/</description>
-      <enclosure url="https://cdn.punchng.com/wp-content/uploads/2026/11/28080428/WhatsApp-Image-2026-11-28-at-07.54.00_1795849468-1000x630.webp" type="image/jpeg" />
-    </item>
-    <item>
-      <title>[EU] US military fires at a ship that violated blockade of Iranian ports</title>
-      <link>https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/</link>
-      <guid isPermaLink="false">025a8e52-1965-47ae-a9cb-a1854120fc62</guid>
-      <category>breaking</category>
-      <description>US military maintained a &quot;strict&quot; blockade of Iranian ports by firing at a ship that violated the naval containment on Thursday.</description>
-      <enclosure url="https://images.euronews.com/articles/stories/10/01/22/31/1200x675_cmsv2_8cf904e4-2a89-5890-bf87-5408d4553c78-10012231.jpg" type="image/jpeg" />
     </item>
   </channel>
 </rss>

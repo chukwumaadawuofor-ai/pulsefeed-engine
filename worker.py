@@ -15,6 +15,7 @@ FB_PAGE_ID = os.environ.get("FB_PAGE_ID", "").strip()
 FB_PAGE_ACCESS_TOKEN = os.environ.get("FB_PAGE_ACCESS_TOKEN", "").strip()
 SOCIAL_WEBHOOK_URL = os.environ.get("SOCIAL_WEBHOOK_URL", "").strip()
 DAILY_BOOKING_CODE = os.environ.get("DAILY_BOOKING_CODE", "").strip()
+FORCE_PROMO_BANNER = os.environ.get("FORCE_PROMO_BANNER", "").strip().lower() in ("1", "true", "yes")
 
 WAT_TZ = timezone(timedelta(hours=1))
 
@@ -122,6 +123,11 @@ HEADERS_HTTP = {
     "Accept": "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 }
 
+MEDIA_FETCH_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+}
+
 
 def is_usable_media_url(url: str) -> bool:
     u = (url or "").strip()
@@ -168,6 +174,55 @@ def pick_best_image_url(media_url: str, media_type: str, lane: str, region: str)
     return fallback_url
 
 
+def _download_photo_bytes(url: str) -> tuple[bytes | None, str, str]:
+    """Downloads image bytes from an HTTPS URL; returns (bytes, filename, mime_type)."""
+    u = (url or "").strip()
+    if not u.startswith("https://"):
+        return None, "photo.jpg", "image/jpeg"
+    try:
+        resp = requests.get(u, headers=MEDIA_FETCH_HEADERS, timeout=15, allow_redirects=True)
+        if not resp.ok or not resp.content:
+            return None, "photo.jpg", "image/jpeg"
+        if len(resp.content) > 9_500_000:
+            return None, "photo.jpg", "image/jpeg"
+
+        ctype = (resp.headers.get("Content-Type") or "").split(";")[0].strip().lower()
+        if "png" in ctype or u.lower().endswith(".png"):
+            return resp.content, "photo.png", "image/png"
+        if "webp" in ctype or u.lower().endswith(".webp"):
+            return resp.content, "photo.webp", "image/webp"
+        if ctype.startswith("image/") or resp.content[:2] == b"\xff\xd8" or resp.content[:8] == b"\x89PNG\r\n\x1a\n":
+            return resp.content, "photo.jpg", "image/jpeg"
+    except Exception as e:
+        print(f"[TG] Photo download error ({u[:80]}): {e}")
+    return None, "photo.jpg", "image/jpeg"
+
+
+def _send_tg_photo_with_upload(base_tg: str, caption: str, photo_url: str) -> bool:
+    """Uploads downloaded image bytes via multipart/form-data, with URL fallback if needed."""
+    img_bytes, filename, mime_type = _download_photo_bytes(photo_url)
+    if img_bytes:
+        r = requests.post(
+            f"{base_tg}/sendPhoto",
+            data={"chat_id": TELEGRAM_CHANNEL_ID, "caption": caption[:1020]},
+            files={"photo": (filename, img_bytes, mime_type)},
+            timeout=25,
+        )
+        if r.ok:
+            return True
+        print(f"[TG] multipart sendPhoto failed ({r.status_code}): {r.text[:220]}")
+
+    r_url = requests.post(
+        f"{base_tg}/sendPhoto",
+        data={"chat_id": TELEGRAM_CHANNEL_ID, "photo": photo_url, "caption": caption[:1020]},
+        timeout=20,
+    )
+    if r_url.ok:
+        return True
+    print(f"[TG] url sendPhoto failed ({r_url.status_code}): {r_url.text[:220]}")
+    return False
+
+
 def send_telegram_raw(caption: str, photo_url: str = "") -> bool:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHANNEL_ID:
         print("[TG] Credentials not configured; skipping.")
@@ -176,14 +231,8 @@ def send_telegram_raw(caption: str, photo_url: str = "") -> bool:
     base_tg = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
     try:
         if photo_url.startswith("https://") and len(caption) <= 1020:
-            r = requests.post(
-                f"{base_tg}/sendPhoto",
-                data={"chat_id": TELEGRAM_CHANNEL_ID, "photo": photo_url, "caption": caption},
-                timeout=20,
-            )
-            if r.ok:
+            if _send_tg_photo_with_upload(base_tg, caption, photo_url):
                 return True
-            print(f"[TG] sendPhoto failed ({r.status_code}): {r.text[:220]}")
 
         r = requests.post(
             f"{base_tg}/sendMessage",
@@ -717,7 +766,7 @@ def extract_media_from_entry(entry, article_url: str, lane: str, region: str) ->
         for item in entry.get(key, []):
             href = html.unescape((item.get("url") or "").strip())
             if is_usable_media_url(href):
-                if re.search(r"\.(mp4|webm|mov)(\?|$)", href, re.I):
+                if re.search(r"\.(mp4|webm)(\?|$)", href, re.I):
                     return href, "video"
                 return href, "image"
 
@@ -832,32 +881,17 @@ def send_telegram_post(post: dict) -> bool:
         if media_url.startswith("https://") and media_type == "video":
             r = requests.post(
                 f"{base_tg}/sendVideo",
-                data={"chat_id": TELEGRAM_CHANNEL_ID, "video": media_url, "caption": caption},
+                data={"chat_id": TELEGRAM_CHANNEL_ID, "video": media_url, "caption": caption[:1020]},
                 timeout=20,
             )
             if r.ok:
                 return True
             print(f"[TG] sendVideo failed ({r.status_code}): {r.text[:220]}")
 
-        if media_url.startswith("https://"):
-            r = requests.post(
-                f"{base_tg}/sendPhoto",
-                data={"chat_id": TELEGRAM_CHANNEL_ID, "photo": media_url, "caption": caption},
-                timeout=20,
-            )
-            if r.ok:
-                return True
-            print(f"[TG] sendPhoto failed ({r.status_code}): {r.text[:220]}")
-
-        if fallback_url.startswith("https://") and fallback_url != media_url:
-            r_fb = requests.post(
-                f"{base_tg}/sendPhoto",
-                data={"chat_id": TELEGRAM_CHANNEL_ID, "photo": fallback_url, "caption": caption},
-                timeout=20,
-            )
-            if r_fb.ok:
-                return True
-            print(f"[TG] fallback sendPhoto failed ({r_fb.status_code}): {r_fb.text[:220]}")
+        for candidate_url in (media_url, fallback_url):
+            if candidate_url.startswith("https://") and len(caption) <= 1020:
+                if _send_tg_photo_with_upload(base_tg, caption, candidate_url):
+                    return True
 
         r = requests.post(
             f"{base_tg}/sendMessage",
@@ -945,9 +979,9 @@ def broadcast_unposted(batch_limit: int = 4):
 
 
 def maybe_post_promo_banner():
-    """Publishes a dedicated visual promo card to Telegram & Facebook every 4 hours (WAT)."""
+    """Publishes a dedicated visual promo card to Telegram & Facebook every 4 hours (WAT) or when forced."""
     now_wat = datetime.now(WAT_TZ)
-    if now_wat.hour % 4 != 0 or now_wat.minute >= 30:
+    if not FORCE_PROMO_BANNER and (now_wat.hour % 4 != 0 or now_wat.minute >= 30):
         return
 
     promo_caption = (

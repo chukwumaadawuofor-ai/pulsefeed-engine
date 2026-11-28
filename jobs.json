@@ -1,7 +1,40 @@
 {
-  "updated_at": "2026-11-28T05:53:24Z",
+  "updated_at": "2026-11-28T06:35:23Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "fb31f3d4-3b49-4c70-8b3a-0b344d93cbea",
+      "dedupe_key": "7d8ca07264f55102577ac77f",
+      "title": "Director of Customer Success",
+      "summary": "Instacart — Headquarters: Canada - Remote (ON, AB, BC, or NS Only) We're transforming the grocery industry At Instacart, we invite the world to share love through food because we believe everyone should have access to…",
+      "source_name": "WeWorkRemotely",
+      "location_or_type": "Remote",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-of-customer-success-7d8ca072.html",
+      "apply_url": "https://weworkremotely.com/remote-jobs/instacart-director-of-customer-success",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "206433aa-dc5b-45f3-95cf-0a311a421f8b",
+      "dedupe_key": "9965ae9e10a61e7c14671cde",
+      "title": "Senior Marketing Manager",
+      "summary": "Sibylline Ltd — Company Description Sibylline is a leading intelligence and strategic risk consultancy in the security sector. Since 2010 we have supported businesses, governments and NGOs through the provision of…",
+      "source_name": "RemoteOK",
+      "location_or_type": "UK Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-marketing-manager-9965ae9e.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-marketing-manager-sibylline-ltd-1138222",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "ddbce80c-51ab-4366-b961-17e3c6c92380",
+      "dedupe_key": "c7a5578fab6fc40eac82b0cd",
+      "title": "Director, Sales - Retail Merchandising Analytics",
+      "summary": "NielsenIQ — Company Description R26_0027946 Location: Remote; must be in US at time of application to be considered. Job Description About this job We are seeking an ambitious and results-oriented Director of Sales to…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-sales-retail-merchandising-analytics-c7a5578f.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-director-sales-retail-merchandising-analytics-nielseniq-1138221",
+      "date_posted": "2026-11-28"
+    },
     {
       "id": "b7a6649a-23f8-4eba-981c-593a5b5856da",
       "dedupe_key": "3841d078c85fda484f0efb38",
@@ -297,39 +330,6 @@
       "location_or_type": "Remote",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/customer-success-manager-enterprise-florida-fa98a2fc.html",
       "apply_url": "https://weworkremotely.com/remote-jobs/abnormal-customer-success-manager-enterprise-florida",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "9202f561-1825-476d-990d-a378de5d154c",
-      "dedupe_key": "95d5050ff8818213a8b773ef",
-      "title": "Senior Business Value Consultant",
-      "summary": "Wrike — Headquarters: US - Remote Wrike is the most powerful work management platform. Built for teams and organizations looking to collaborate, create, and exceed every day, Wrike brings everyone and all work into a…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-business-value-consultant-95d5050f.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/wrike-senior-business-value-consultant",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "88613097-0ef8-4a86-bf0d-f55ea08c3970",
-      "dedupe_key": "b9b575b82d6c91a83840c326",
-      "title": "Principal Implementation Engineer, Customer Support",
-      "summary": "Bitwarden — Headquarters: Remote, United Kingdom Bitwarden is the trusted identity security leader for millions of users worldwide, empowering enterprises, developers, and individuals to securely manage and share…",
-      "source_name": "WeWorkRemotely",
-      "location_or_type": "Remote",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/principal-implementation-engineer-customer-support-b9b575b8.html",
-      "apply_url": "https://weworkremotely.com/remote-jobs/bitwarden-principal-implementation-engineer-customer-support",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "7f3e07d2-6390-479e-8d57-5f2be19b7e3a",
-      "dedupe_key": "9000d7bfdf60d40b4b2c038c",
-      "title": "District Manager, Majors Financial Services",
-      "summary": "Snowflake — At Snowflake, we are powering the era of the agentic enterprise. To usher in this new era, we seek AI-native thinkers across every function who are energized by the opportunity to reinvent how they work. You…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/district-manager-majors-financial-services-9000d7bf.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-district-manager-majors-financial-services-snowflake-1138196",
       "date_posted": "2026-11-27"
     }
   ]

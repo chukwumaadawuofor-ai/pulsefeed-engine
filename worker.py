@@ -1,7 +1,6 @@
 import os
 import re
 import html
-import json
 import urllib.parse
 import requests
 import feedparser
@@ -12,6 +11,8 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "").strip()
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHANNEL_ID = os.environ.get("TELEGRAM_CHANNEL_ID", "").strip()
+FB_PAGE_ID = os.environ.get("FB_PAGE_ID", "").strip()
+FB_PAGE_ACCESS_TOKEN = os.environ.get("FB_PAGE_ACCESS_TOKEN", "").strip()
 SOCIAL_WEBHOOK_URL = os.environ.get("SOCIAL_WEBHOOK_URL", "").strip()
 DAILY_BOOKING_CODE = os.environ.get("DAILY_BOOKING_CODE", "").strip()
 
@@ -21,8 +22,9 @@ SITE_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/"
 JOBS_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html"
 GUMROAD_OFFER_URL = (
     "https://chukwuma448.gumroad.com/l/dvfhm"
-    "?utm_source=pulsefeed&utm_medium=telegram_auto&utm_campaign=viralhook_ai"
+    "?utm_source=pulsefeed&utm_medium=social_auto&utm_campaign=viralhook_ai"
 )
+PROMO_BANNER_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/og-banner.png"
 
 # 2. RSS Feeds mapped by lane (Breaking, Trending, Football) and region
 FEEDS = [
@@ -71,16 +73,16 @@ SOCCER_LEAGUES = [
 ]
 
 FALLBACK_BANNERS = {
-    "NG": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80",
-    "US": "https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=1000&q=80",
-    "UK": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1000&q=80",
-    "EU": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1000&q=80",
-    "AU": "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1000&q=80",
-    "GLOBAL": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80",
-    "breaking": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1000&q=80",
-    "trending": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80",
-    "football": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1000&q=80",
-    "betting": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1000&q=80",
+    "NG": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&h=630&q=85",
+    "US": "https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=1200&h=630&q=85",
+    "UK": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&h=630&q=85",
+    "EU": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1200&h=630&q=85",
+    "AU": "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1200&h=630&q=85",
+    "GLOBAL": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&h=630&q=85",
+    "breaking": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&h=630&q=85",
+    "trending": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&h=630&q=85",
+    "football": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1200&h=630&q=85",
+    "betting": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&h=630&q=85",
 }
 
 REGION_LABELS = {
@@ -155,9 +157,17 @@ def get_fallback_banner(lane: str, region: str) -> str:
     return FALLBACK_BANNERS.get(lane, FALLBACK_BANNERS["trending"])
 
 
+def pick_best_image_url(media_url: str, media_type: str, lane: str, region: str) -> str:
+    fallback_url = get_fallback_banner(lane, region)
+    u = (media_url or "").strip()
+    if is_usable_media_url(u) and media_type != "video":
+        return u
+    return fallback_url
+
+
 def send_telegram_raw(caption: str, photo_url: str = "") -> bool:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHANNEL_ID:
-        print("Telegram credentials not configured; skipping.")
+        print("[TG] Credentials not configured; skipping.")
         return False
 
     base_tg = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
@@ -170,19 +180,63 @@ def send_telegram_raw(caption: str, photo_url: str = "") -> bool:
             )
             if r.ok:
                 return True
+            print(f"[TG] sendPhoto failed ({r.status_code}): {r.text[:220]}")
 
         r = requests.post(
             f"{base_tg}/sendMessage",
             data={
                 "chat_id": TELEGRAM_CHANNEL_ID,
                 "text": caption,
-                "disable_web_page_preview": True,
+                "disable_web_page_preview": False,
             },
             timeout=15,
         )
-        return r.ok
+        if r.ok:
+            return True
+        print(f"[TG] sendMessage failed ({r.status_code}): {r.text[:220]}")
+        return False
     except Exception as e:
-        print(f"Telegram raw send error: {e}")
+        print(f"[TG] Raw send error: {e}")
+        return False
+
+
+def post_to_facebook(caption: str, image_url: str = "", link_url: str = SITE_URL) -> bool:
+    """Publishes an HD photo post to the connected Facebook Page and drops the portal link in a comment."""
+    if not FB_PAGE_ID or not FB_PAGE_ACCESS_TOKEN:
+        return False
+
+    photo_target = image_url.strip() if is_usable_media_url(image_url) else FALLBACK_BANNERS["trending"]
+    try:
+        photo_resp = requests.post(
+            f"https://graph.facebook.com/v21.0/{FB_PAGE_ID}/photos",
+            data={
+                "url": photo_target,
+                "caption": caption[:2000],
+                "access_token": FB_PAGE_ACCESS_TOKEN,
+            },
+            timeout=25,
+        )
+        data = photo_resp.json() if photo_resp.text else {}
+        post_id = data.get("post_id") or data.get("id")
+        if not photo_resp.ok or not post_id:
+            print(f"[FB] Publish failed ({photo_resp.status_code}): {str(data)[:240]}")
+            return False
+
+        comment_resp = requests.post(
+            f"https://graph.facebook.com/v21.0/{post_id}/comments",
+            data={
+                "message": f"Read full story & live feed: {link_url}",
+                "access_token": FB_PAGE_ACCESS_TOKEN,
+            },
+            timeout=15,
+        )
+        if not comment_resp.ok:
+            print(f"[FB] Link comment warning ({comment_resp.status_code}): {comment_resp.text[:180]}")
+
+        print(f"[FB] Published post {post_id}")
+        return True
+    except Exception as e:
+        print(f"[FB] Publish error: {e}")
         return False
 
 
@@ -288,7 +342,6 @@ def build_daily_slip_legs(events: list[dict], max_legs: int = 4) -> list[dict]:
         h_odds = ev["home_dec"]
         a_odds = ev["away_dec"]
 
-        # 1. Safe Banker Candidates (1.25 - 1.68)
         if 1.25 <= h_odds <= 1.68:
             small_bankers.append((h_odds, {
                 "event_id": ev["event_id"],
@@ -339,7 +392,6 @@ def build_daily_slip_legs(events: list[dict], max_legs: int = 4) -> list[dict]:
                 "final_score": "",
             }))
 
-        # 2. Big Odd Value Boosters (1.85 - 3.10)
         if 1.85 <= h_odds <= 3.10:
             big_boosters.append((h_odds, {
                 "event_id": ev["event_id"],
@@ -537,9 +589,11 @@ def process_daily_betting_slips():
         total_odds = round(total_odds, 2)
 
         caption = format_daily_slip_post(today_iso, legs, total_odds, DAILY_BOOKING_CODE)
-        sent = send_telegram_raw(caption, FALLBACK_BANNERS["betting"])
+        banner = FALLBACK_BANNERS["betting"]
+        tg_ok = send_telegram_raw(caption, banner)
+        fb_ok = post_to_facebook(caption, banner, SITE_URL)
 
-        if sent:
+        if tg_ok or fb_ok:
             try:
                 requests.post(
                     f"{SUPABASE_URL}/rest/v1/betting_slips?on_conflict=slip_date",
@@ -556,7 +610,7 @@ def process_daily_betting_slips():
                 )
             except Exception as e:
                 print(f"betting_slips save warning: {e}")
-            print(f"Posted daily Smart Combo slip for {today_iso} ({len(legs)} legs, {total_odds}x).")
+            print(f"Posted daily Smart Combo slip for {today_iso} (tg={tg_ok}, fb={fb_ok}).")
         return
 
     if existing_slip and existing_slip.get("status") == "pending" and now_wat.hour >= 21:
@@ -587,9 +641,11 @@ def process_daily_betting_slips():
         b_code = existing_slip.get("booking_code") or ""
 
         recap_caption = format_verified_slip_post(today_iso, legs, total_odds, b_code, won_count)
-        sent = send_telegram_raw(recap_caption, FALLBACK_BANNERS["betting"])
+        banner = FALLBACK_BANNERS["betting"]
+        tg_ok = send_telegram_raw(recap_caption, banner)
+        fb_ok = post_to_facebook(recap_caption, banner, SITE_URL)
 
-        if sent:
+        if tg_ok or fb_ok:
             try:
                 requests.patch(
                     f"{SUPABASE_URL}/rest/v1/betting_slips?slip_date=eq.{today_iso}",
@@ -603,7 +659,7 @@ def process_daily_betting_slips():
                 )
             except Exception as e:
                 print(f"betting_slips EOD patch warning: {e}")
-            print(f"Posted EOD verified slip recap ({won_count}/{len(legs)} won).")
+            print(f"Posted EOD verified slip recap ({won_count}/{len(legs)} won, tg={tg_ok}, fb={fb_ok}).")
 
 
 # ==============================================================================
@@ -758,7 +814,7 @@ def build_social_caption(post: dict) -> str:
 
 def send_telegram_post(post: dict) -> bool:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHANNEL_ID:
-        print("Telegram credentials not configured; skipping.")
+        print("[TG] Credentials not configured; skipping.")
         return False
 
     caption = build_social_caption(post)
@@ -778,6 +834,7 @@ def send_telegram_post(post: dict) -> bool:
             )
             if r.ok:
                 return True
+            print(f"[TG] sendVideo failed ({r.status_code}): {r.text[:220]}")
 
         if media_url.startswith("https://"):
             r = requests.post(
@@ -787,6 +844,7 @@ def send_telegram_post(post: dict) -> bool:
             )
             if r.ok:
                 return True
+            print(f"[TG] sendPhoto failed ({r.status_code}): {r.text[:220]}")
 
         if fallback_url.startswith("https://") and fallback_url != media_url:
             r_fb = requests.post(
@@ -796,6 +854,7 @@ def send_telegram_post(post: dict) -> bool:
             )
             if r_fb.ok:
                 return True
+            print(f"[TG] fallback sendPhoto failed ({r_fb.status_code}): {r_fb.text[:220]}")
 
         r = requests.post(
             f"{base_tg}/sendMessage",
@@ -806,9 +865,12 @@ def send_telegram_post(post: dict) -> bool:
             },
             timeout=15,
         )
-        return r.ok
+        if r.ok:
+            return True
+        print(f"[TG] sendMessage failed ({r.status_code}): {r.text[:200]}")
+        return False
     except Exception as e:
-        print(f"Telegram send error: {e}")
+        print(f"[TG] Send error: {e}")
         return False
 
 
@@ -855,16 +917,51 @@ def broadcast_unposted(batch_limit: int = 4):
     now_iso = datetime.now(timezone.utc).isoformat()
     for post in reversed(posts):
         post_id = post["id"]
-        sent = send_telegram_post(post)
+        caption = build_social_caption(post)
+        best_img = pick_best_image_url(
+            post.get("media_url") or "",
+            post.get("media_type") or "image",
+            post.get("feed_lane") or "trending",
+            post.get("region") or "GLOBAL",
+        )
+
+        tg_ok = send_telegram_post(post)
+        fb_ok = post_to_facebook(caption, best_img, SITE_URL)
         send_social_webhook(post)
 
-        patch_res = requests.patch(
-            f"{SUPABASE_URL}/rest/v1/feed_posts?id=eq.{urllib.parse.quote(str(post_id))}",
-            headers={**HEADERS_SB, "Prefer": "return=minimal"},
-            json={"broadcasted_at": now_iso},
-            timeout=15,
-        )
-        print(f"Broadcasted post {post_id} (tg_ok={sent}, patch={patch_res.status_code})")
+        if tg_ok or fb_ok:
+            patch_res = requests.patch(
+                f"{SUPABASE_URL}/rest/v1/feed_posts?id=eq.{urllib.parse.quote(str(post_id))}",
+                headers={**HEADERS_SB, "Prefer": "return=minimal"},
+                json={"broadcasted_at": now_iso},
+                timeout=15,
+            )
+            print(f"Broadcasted post {post_id} (tg={tg_ok}, fb={fb_ok}, patch={patch_res.status_code})")
+        else:
+            print(f"Skipped marking post {post_id} as broadcasted because no social destination succeeded.")
+
+
+def maybe_post_promo_banner():
+    """Publishes a dedicated visual promo card to Telegram & Facebook every 4 hours (WAT)."""
+    now_wat = datetime.now(WAT_TZ)
+    if now_wat.hour % 4 != 0 or now_wat.minute >= 30:
+        return
+
+    promo_caption = (
+        "🚀🔥 VIRALHOOK AI SCRIPT STUDIO — TURN IDEAS INTO VIRAL VIDEOS!\n\n"
+        "Stop staring at a blank screen. Generate scroll-stopping hooks, Shorts/Reels scripts, "
+        "and high-retention angles in seconds.\n\n"
+        "✅ Instant AI Hooks & Viral Angles\n"
+        "✅ Built for Faceless Creators, TikTok & YouTube Shorts\n"
+        "✅ One-Time Access ($39+)\n\n"
+        f"👉 Get Instant Access: {GUMROAD_OFFER_URL}\n"
+        f"🌐 Live News & Scores: {SITE_URL}\n"
+        f"💼 Remote Jobs & Offers: {JOBS_URL}"
+    )
+
+    tg_ok = send_telegram_raw(promo_caption, PROMO_BANNER_URL)
+    fb_ok = post_to_facebook(promo_caption, PROMO_BANNER_URL, GUMROAD_OFFER_URL)
+    print(f"[PROMO] Broadcasted visual promo banner (tg={tg_ok}, fb={fb_ok})")
 
 
 def export_ai_discovery_files(limit: int = 30):
@@ -962,6 +1059,7 @@ if __name__ == "__main__":
     if not SUPABASE_URL or not SUPABASE_KEY:
         raise RuntimeError("Missing SUPABASE_URL or SUPABASE_KEY environment variables.")
     process_daily_betting_slips()
+    maybe_post_promo_banner()
     ingest_feeds(max_per_feed=2)
     broadcast_unposted(batch_limit=4)
     export_ai_discovery_files(limit=30)

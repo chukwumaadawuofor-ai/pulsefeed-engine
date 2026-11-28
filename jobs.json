@@ -1,7 +1,51 @@
 {
-  "updated_at": "2026-11-28T00:59:57Z",
+  "updated_at": "2026-11-28T02:19:36Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "aa010dc6-7048-4454-b9ec-9190b117f261",
+      "dedupe_key": "a15f1f2015eee9dfd786ee11",
+      "title": "Senior Forward Deployed Engineer (United States)",
+      "summary": "Coder Technologies Inc. — We are looking for a Senior Forward Deployed Engineer to join the Customer Solutions team. You will be the technical authority embedded with our most complex customers, guiding them through…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-forward-deployed-engineer-united-states-a15f1f20.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-forward-deployed-engineer-united-states-coder-technologies-inc-1138209",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "8c9f47a0-9826-4aa4-8898-d23a65a4db32",
+      "dedupe_key": "b825e189ef30cdbd404d6f11",
+      "title": "Associate, External Resource Management",
+      "summary": "Snowflake — At Snowflake, we are powering the era of the agentic enterprise. To usher in this new era, we seek AI-native thinkers across every function who are energized by the opportunity to reinvent how they work. You…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/associate-external-resource-management-b825e189.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-associate-external-resource-management-snowflake-1138208",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "7a4cb826-a809-4ab6-9b87-0f8bf88f7afb",
+      "dedupe_key": "4442aa49fb0075e8586582f6",
+      "title": "Senior Account Executive (US West)",
+      "summary": "Coder Technologies Inc. — Coder is looking for a Senior Account Executive to grow our diverse customer base. Youâll help bring Coderâs platform to some of the largest companies in the world, who are focused on…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-account-executive-us-west-4442aa49.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-account-executive-us-west-coder-technologies-inc-1138207",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "642c1d2b-cf49-4dc5-8c15-9906393a80b1",
+      "dedupe_key": "8180cc5f7fa399ada8aa09b2",
+      "title": "Social Media & Community Manager",
+      "summary": "The Global Talent Co. — Social Media & Community Manager Full-time (flexible, results-based hours), Remote About Us At The Global Talent Co., we provide opportunities to work with leading innovative technology companies…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Africa",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/social-media-community-manager-8180cc5f.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-social-media-community-manager-the-global-talent-co-1138206",
+      "date_posted": "2026-11-28"
+    },
     {
       "id": "7d32d8f3-e28a-4e0d-a939-f2628388b1d1",
       "dedupe_key": "573ab738f3cf86cfa15c7065",
@@ -14,17 +58,6 @@
       "date_posted": "2026-11-28"
     },
     {
-      "id": "17b42d6d-e42d-4fd3-919f-0819c8bcf38c",
-      "dedupe_key": "667c09a04373294130dd967f",
-      "title": "Account Manager - Poland",
-      "summary": "ElevenLabs — About ElevenLabs ElevenLabs is an AI research and product company transforming how we interact with technology. We launched in January 2023 with the first human-like AI voice model. Today, we serve millions…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Europe",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-manager-poland-667c09a0.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-manager-poland-elevenlabs-1138204",
-      "date_posted": "2026-11-28"
-    },
-    {
       "id": "0a727118-5f48-495c-9ac0-e13eb9f43412",
       "dedupe_key": "f53437394a5be87ad61691d3",
       "title": "Senior Software Developer",
@@ -33,6 +66,17 @@
       "location_or_type": "Toronto",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-software-developer-f5343739.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-software-developer-loopio-inc-1138202",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "17b42d6d-e42d-4fd3-919f-0819c8bcf38c",
+      "dedupe_key": "667c09a04373294130dd967f",
+      "title": "Account Manager - Poland",
+      "summary": "ElevenLabs — About ElevenLabs ElevenLabs is an AI research and product company transforming how we interact with technology. We launched in January 2023 with the first human-like AI voice model. Today, we serve millions…",
+      "source_name": "RemoteOK",
+      "location_or_type": "Europe",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-manager-poland-667c09a0.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-manager-poland-elevenlabs-1138204",
       "date_posted": "2026-11-28"
     },
     {
@@ -286,50 +330,6 @@
       "location_or_type": "Europe",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-frontend-engineer-173f1b9a.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-frontend-engineer-lastpass-1138187",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "29a0b400-a1b9-42dc-afd3-cc8fea8e6992",
-      "dedupe_key": "2cfe3b65d9c22ac536c24908",
-      "title": "Customer Service Representative",
-      "summary": "Vultr — Who We Are Vultr is on a mission to make high-performance cloud infrastructure easy to use, affordable, and locally accessible for enterprises and AI innovators around the world. With 33 global cloud data center…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/customer-service-representative-2cfe3b65.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-customer-service-representative-vultr-1138186",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "446d9a34-b50f-4b66-a008-c6bb44349cf7",
-      "dedupe_key": "3bc80eeff9a732e5de1a2b0d",
-      "title": "Senior Energy Markets Analyst, PJM",
-      "summary": "Voltus — Voltus runs demand response programs across North American wholesale markets and utilities. As the Senior Energy Markets Analyst for PJM, you will own our PJM utility programs end to end. You will run one…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-energy-markets-analyst-pjm-3bc80eef.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-energy-markets-analyst-pjm-voltus-1138181",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "10e87a54-9693-4609-b77b-7644a4c9ce6f",
-      "dedupe_key": "d57ef019f1e65cb0c8e57d6d",
-      "title": "Sr Dynamics 365 App Developer (remote)",
-      "summary": "Protective Life — The work we do has an impact on millions of lives, and you can be a part of it. We help protect our customers against lifeâs uncertainties. Regardless of where you work within the company, youâll…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/sr-dynamics-365-app-developer-remote-d57ef019.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-sr-dynamics-365-app-developer-remote-protective-life-1138182",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "1fdba9c2-8931-47c4-818f-856c0f86b9ba",
-      "dedupe_key": "f6f6929a24a0c497351438cf",
-      "title": "Enterprise Sales Engineer - Germany",
-      "summary": "Datadog — As an Enterprise Sales Engineer, you will provide technical expertise through sales presentations, product demonstrations, and supporting technical evaluations (POVs). Sales Engineers help qualify and close…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Europe",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/enterprise-sales-engineer-germany-f6f6929a.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-enterprise-sales-engineer-germany-datadog-1138184",
       "date_posted": "2026-11-27"
     }
   ]

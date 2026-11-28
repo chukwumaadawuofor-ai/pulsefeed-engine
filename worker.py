@@ -24,7 +24,10 @@ GUMROAD_OFFER_URL = (
     "https://chukwuma448.gumroad.com/l/dvfhm"
     "?utm_source=pulsefeed&utm_medium=social_auto&utm_campaign=viralhook_ai"
 )
-PROMO_BANNER_URL = "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine/og-banner.png"
+PROMO_BANNER_URL = (
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71"
+    "?auto=format&fit=crop&w=1200&h=630&q=85"
+)
 
 # 2. RSS Feeds mapped by lane (Breaking, Trending, Football) and region
 FEEDS = [
@@ -1017,7 +1020,7 @@ def export_ai_discovery_files(limit: int = 30):
     </item>"""
         )
 
-    feed_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+    feed_xml = f"""<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
   <channel>
     <title>PulseFeed — Breaking News, Trending &amp; Football</title>

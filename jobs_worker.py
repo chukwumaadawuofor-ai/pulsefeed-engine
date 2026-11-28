@@ -30,10 +30,10 @@ MOJIBAKE_MAP = {
 }
 
 CATEGORY_IMAGES = {
-    "tech": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=75",
-    "support": "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=900&q=75",
-    "writing": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=75",
-    "remote": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=75",
+    "tech": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&h=630&q=85",
+    "support": "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1200&h=630&q=85",
+    "writing": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&h=630&q=85",
+    "remote": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&h=630&q=85",
 }
 
 
@@ -327,6 +327,7 @@ def build_static_files(jobs: list[dict]) -> None:
         loc = clean_text(job.get("location_or_type", "Remote"), 80)
         apply_url = normalize_str(job.get("apply_url") or f"{SITE_BASE_URL}/jobs.html").strip()
         img_url = pick_job_image(title, summary, loc, job.get("image_url") or "")
+        og_img = html.escape(img_url)
         created_raw = str(job.get("created_at") or now_iso)
         date_posted = created_raw[:10] if len(created_raw) >= 10 else now_dt.strftime("%Y-%m-%d")
         valid_through = (now_dt + timedelta(days=30)).strftime("%Y-%m-%dT23:59:59Z")
@@ -371,6 +372,17 @@ def build_static_files(jobs: list[dict]) -> None:
   <title>{html.escape(title)} — Remote Job | PulseFeed</title>
   <meta name="description" content="{html.escape(summary[:155])}" />
   <link rel="canonical" href="{canonical_url}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="PulseFeed NG" />
+  <meta property="og:title" content="{html.escape(title)} — Remote Job" />
+  <meta property="og:description" content="{html.escape(summary[:155])}" />
+  <meta property="og:url" content="{canonical_url}" />
+  <meta property="og:image" content="{og_img}" />
+  <meta property="og:image:secure_url" content="{og_img}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{html.escape(title)} — Remote Job" />
+  <meta name="twitter:description" content="{html.escape(summary[:155])}" />
+  <meta name="twitter:image" content="{og_img}" />
   <script type="application/ld+json">{json.dumps(schema_obj, ensure_ascii=False)}</script>
   <style>
     body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0d1117; color: #f0f6fc; margin: 0; padding: 18px; line-height: 1.6; }}
@@ -392,7 +404,7 @@ def build_static_files(jobs: list[dict]) -> None:
   <div class="wrap">
     <a class="btn btn-outline" href="../jobs.html">← All Live Remote Jobs &amp; Market</a>
     <article class="card">
-      <img class="thumb" src="{html.escape(img_url)}" alt="{html.escape(title)}" loading="lazy" />
+      <img class="thumb" src="{og_img}" alt="{html.escape(title)}" loading="lazy" />
       <div class="meta">{html.escape(source)} • {html.escape(loc)} • Posted {html.escape(date_posted)}</div>
       <h1>{html.escape(title)}</h1>
       <p>{html.escape(summary)}</p>

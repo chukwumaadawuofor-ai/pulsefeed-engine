@@ -79,7 +79,8 @@ def run():
     product_id = product["id"]
     print(f"Broadcasting: {product['title']} (ID: {product_id})")
 
-    # Mark as broadcasted BEFORE/WITH strict verification
+    send_telegram_drop(product)
+
     now_iso = datetime.now(timezone.utc).isoformat()
     update_res = supabase.table("marketplace_products") \
         .update({
@@ -90,9 +91,8 @@ def run():
         .execute()
 
     if not update_res.data:
-        raise RuntimeError(f"CRITICAL: Failed to update broadcast status in Supabase for ID {product_id}. Aborting send to prevent duplicates.")
+        raise RuntimeError(f"CRITICAL: Failed to update broadcast status in Supabase for ID {product_id}.")
 
-    send_telegram_drop(product)
     print("Broadcast sent and locked in Supabase successfully.")
 
 if __name__ == "__main__":

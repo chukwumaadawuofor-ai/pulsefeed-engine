@@ -1,7 +1,51 @@
 {
-  "updated_at": "2026-11-28T04:31:53Z",
+  "updated_at": "2026-11-28T05:53:24Z",
   "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs.html",
   "jobs": [
+    {
+      "id": "b7a6649a-23f8-4eba-981c-593a5b5856da",
+      "dedupe_key": "3841d078c85fda484f0efb38",
+      "title": "Client Manager, Retail Collaboration",
+      "summary": "NielsenIQ — Company Description R26_0024966 At NielsenIQ, we deliver the most complete and clear understanding of consumer buying behavior that reveals new pathways to growth.â¯We are looking for a Client Manager to…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/client-manager-retail-collaboration-3841d078.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-client-manager-retail-collaboration-nielseniq-1138220",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "844f81a7-4058-4363-9c0d-e917df9044b8",
+      "dedupe_key": "ab03829687c028880d685a46",
+      "title": "Senior Microsoft Dynamics 365 Consultant",
+      "summary": "Version 1 — Company Description Version 1 has celebrated 30 years in business and continues to be trusted by global brands to deliver technology and transformation solutions that drive customer success. Our deep…",
+      "source_name": "RemoteOK",
+      "location_or_type": "UK Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-microsoft-dynamics-365-consultant-ab038296.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-microsoft-dynamics-365-consultant-version-1-1138219",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "c18adaff-3f60-484f-9041-adaf610de0b9",
+      "dedupe_key": "09ad27400984d0f8fffc5695",
+      "title": "Account Manager, Financial Services Team",
+      "summary": "NielsenIQ — Company Description R26_0028045 Job Description About this job Does the idea of working for an established company with a start-up culture excite you? Is being on a diverse team with a focus on work life…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-manager-financial-services-team-09ad2740.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-manager-financial-services-team-nielseniq-1138218",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "ac92657e-1b2b-43f3-8074-80a4d4514d0e",
+      "dedupe_key": "88370e3a288d1ea467631a70",
+      "title": "Bilingual Spanish Customer Support Specialist",
+      "summary": "Experian — Company Description Experian is a global data and technology company, powering opportunities for people and businesses around the world. We help to redefine lending practices, uncover and prevent fraud…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/bilingual-spanish-customer-support-specialist-88370e3a.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-bilingual-spanish-customer-support-specialist-experian-1138217",
+      "date_posted": "2026-11-28"
+    },
     {
       "id": "c7ebe4f6-bb9c-47a8-83fa-d37baa1e3226",
       "dedupe_key": "2b6a5a084bb979a3b6c02513",
@@ -102,17 +146,6 @@
       "date_posted": "2026-11-28"
     },
     {
-      "id": "aa010dc6-7048-4454-b9ec-9190b117f261",
-      "dedupe_key": "a15f1f2015eee9dfd786ee11",
-      "title": "Senior Forward Deployed Engineer (United States)",
-      "summary": "Coder Technologies Inc. — We are looking for a Senior Forward Deployed Engineer to join the Customer Solutions team. You will be the technical authority embedded with our most complex customers, guiding them through…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-forward-deployed-engineer-united-states-a15f1f20.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-forward-deployed-engineer-united-states-coder-technologies-inc-1138209",
-      "date_posted": "2026-11-28"
-    },
-    {
       "id": "7a4cb826-a809-4ab6-9b87-0f8bf88f7afb",
       "dedupe_key": "4442aa49fb0075e8586582f6",
       "title": "Senior Account Executive (US West)",
@@ -121,6 +154,17 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-account-executive-us-west-4442aa49.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-account-executive-us-west-coder-technologies-inc-1138207",
+      "date_posted": "2026-11-28"
+    },
+    {
+      "id": "aa010dc6-7048-4454-b9ec-9190b117f261",
+      "dedupe_key": "a15f1f2015eee9dfd786ee11",
+      "title": "Senior Forward Deployed Engineer (United States)",
+      "summary": "Coder Technologies Inc. — We are looking for a Senior Forward Deployed Engineer to join the Customer Solutions team. You will be the technical authority embedded with our most complex customers, guiding them through…",
+      "source_name": "RemoteOK",
+      "location_or_type": "US Only",
+      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/senior-forward-deployed-engineer-united-states-a15f1f20.html",
+      "apply_url": "https://remoteOK.com/remote-jobs/remote-senior-forward-deployed-engineer-united-states-coder-technologies-inc-1138209",
       "date_posted": "2026-11-28"
     },
     {
@@ -286,50 +330,6 @@
       "location_or_type": "US Only",
       "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/district-manager-majors-financial-services-9000d7bf.html",
       "apply_url": "https://remoteOK.com/remote-jobs/remote-district-manager-majors-financial-services-snowflake-1138196",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "1f12c910-f02e-4993-b79c-982054920b74",
-      "dedupe_key": "df410e9dcc24fd3450d4a3ad",
-      "title": "Partner Sales Manager - EMEA Central (Eastern Europe)",
-      "summary": "Snowflake — At Snowflake, we are powering the era of the agentic enterprise. To usher in this new era, we seek AI-native thinkers across every function who are energized by the opportunity to reinvent how they work. You…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Europe",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/partner-sales-manager-emea-central-eastern-europe-df410e9d.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-partner-sales-manager-emea-central-eastern-europe-snowflake-1138198",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "b8d7cbae-4f85-476d-9a83-e20c6b568cf1",
-      "dedupe_key": "b4dab2ef313973404d5f1f21",
-      "title": "MSP Account Executive - DACH",
-      "summary": "Rubrik Job Board — About the Team & Role Managed service providers are how thousands of organisations, from hospitals to public bodies to financial institutions, run and protect their data, and Rubrik's MSP team helps…",
-      "source_name": "RemoteOK",
-      "location_or_type": "Europe",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/msp-account-executive-dach-b4dab2ef.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-msp-account-executive-dach-rubrik-job-board-1138195",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "fb4dfa27-5127-472f-819e-988e51101706",
-      "dedupe_key": "35304db680ab34f83bd3c4bd",
-      "title": "Director, Demand Generation",
-      "summary": "ClickUp — At ClickUp, we're building the future of work: the first truly converged AI workspace unifying tasks, docs, chat, calendar, and enterprise search, all supercharged by context-driven AI. We are an AI-native…",
-      "source_name": "RemoteOK",
-      "location_or_type": "US Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/director-demand-generation-35304db6.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-director-demand-generation-clickup-1138192",
-      "date_posted": "2026-11-27"
-    },
-    {
-      "id": "87313b3f-c2b9-47d3-bac0-bd9b718e461a",
-      "dedupe_key": "cac9e2160c3ad69f9a852769",
-      "title": "Account Manager - UK/I",
-      "summary": "ElevenLabs — About ElevenLabs ElevenLabs is an AI research and product company transforming how we interact with technology. We launched in January 2023 with the first human-like AI voice model. Today, we serve millions…",
-      "source_name": "RemoteOK",
-      "location_or_type": "UK Only",
-      "hub_url": "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine/jobs/account-manager-uk-i-cac9e216.html",
-      "apply_url": "https://remoteOK.com/remote-jobs/remote-account-manager-uk-i-elevenlabs-1138194",
       "date_posted": "2026-11-27"
     }
   ]

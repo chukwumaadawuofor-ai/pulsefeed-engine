@@ -14,7 +14,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY", "").strip()
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID", "@PulseFeedNG").strip()
 
-SITE_BASE_URL = "https://chukwumaadwuofor-ai.github.io/pulsefeed-engine"
+SITE_BASE_URL = "https://chukwumaadawuofor-ai.github.io/pulsefeed-engine"
 GUMROAD_URL = "https://chukwuma448.gumroad.com/"
 
 MOJIBAKE_MAP = {
